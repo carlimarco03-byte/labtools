@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Dilution Calculator | LabTools</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    background:#f5f7fa;
+    margin:40px;
+}
+
+.container {
+    max-width:600px;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+}
+
+input {
+    width:100%;
+    padding:10px;
+    margin:8px 0 20px 0;
+}
+
+button {
+    background:#1e3a5f;
+    color:white;
+    padding:12px 20px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.result {
+    margin-top:20px;
+    padding:15px;
+    background:#eef5ff;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>Dilution Calculator</h1>
+
+
+<p>
+Calculate laboratory dilutions using the equation:
+</p>
+
+
+<h3>C₁ × V₁ = C₂ × V₂</h3>
+
+
+
+<label>
+Stock concentration (C₁)
+</label>
+
+<input id="c1" type="number" placeholder="Example: 10">
+
+
+<label>
+Final concentration (C₂)
+</label>
+
+<input id="c2" type="number" placeholder="Example: 1">
+
+
+<label>
+Final volume (V₂) in mL
+</label>
+
+<input id="v2" type="number" placeholder="Example: 500">
+
+
+<button onclick="calculate()">
+Calculate
+</button>
+
+
+<div class="result" id="result">
+
+Result will appear here
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+function calculate(){
+
+let c1 = Number(document.getElementById("c1").value);
+let c2 = Number(document.getElementById("c2").value);
+let v2 = Number(document.getElementById("v2").value);
+
+
+if(c1 <=0 || c2<=0 || v2<=0){
+
+document.getElementById("result").innerHTML =
+"Please enter valid values.";
+
+return;
+
+}
+
+
+let v1 = (c2*v2)/c1;
+
+let solvent = v2-v1;
+
+
+document.getElementById("result").innerHTML =
+
+"<b>Stock solution required:</b> "
++ v1.toFixed(2)
++ " mL"
++
+"<br><br>"
++
+"<b>Solvent required:</b> "
++ solvent.toFixed(2)
++ " mL";
+
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
