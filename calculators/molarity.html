@@ -638,31 +638,7 @@ Molecular weight (g/mol)
 render();
 
 
-function formatMass(mass){
 
-
-    if(mass >= 1){
-
-        return mass.toFixed(3) + " g";
-
-    }
-
-
-    else if(mass >= 0.001){
-
-        return (mass*1000).toFixed(2) + " mg";
-
-    }
-
-
-    else{
-
-        return (mass*1000000).toFixed(1) + " µg";
-
-    }
-
-
-}
 
 
 
@@ -938,25 +914,6 @@ saveCalculation({
 }
 
 
-
-
-
-function mwInput(){
-
-return document.getElementById("mw").value;
-
-}
-
-    function resetCalculator(){
-
-    // Ricrea il modulo corrente
-    render();
-
-    // Ripristina il messaggio del risultato
-    document.getElementById("result").innerHTML =
-    "Result will appear here";
-
-}
     
 window.onload = function(){
 
