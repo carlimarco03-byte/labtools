@@ -605,6 +605,8 @@ saveCalculation({
 
 });
 
+}
+
 function mwInput(){
 
     return document.getElementById("mw").value;
