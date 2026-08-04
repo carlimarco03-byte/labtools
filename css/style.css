@@ -162,3 +162,60 @@ section{
     }
 
 }
+
+/* ==========================
+   LINKS
+========================== */
+
+a {
+    color: var(--secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--primary);
+}
+
+/* ==========================
+   IMAGES
+========================== */
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* ==========================
+   GRID
+========================== */
+
+.grid {
+    display: grid;
+    gap: 24px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+/* ==========================
+   RESPONSIVE GRID
+========================== */
+
+@media (max-width: 768px) {
+
+    .grid-2,
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+}
