@@ -291,15 +291,21 @@ if(mode==="mass"){
 area.innerHTML = `
 
 
+
 <div class="form-group">
 
 <label>
 Molecular weight (g/mol)
 </label>
 
-<input id="mw" type="number" placeholder="Example: 58.44">
+<input 
+id="mw" 
+type="number" 
+placeholder="Example: 58.44">
 
 </div>
+
+
 
 
 
@@ -309,9 +315,14 @@ Molecular weight (g/mol)
 Concentration value
 </label>
 
-<input id="conc" type="number" placeholder="Example: 0.5">
+<input 
+id="conc" 
+type="number" 
+placeholder="Example: 0.5">
 
 </div>
+
+
 
 
 
@@ -321,11 +332,24 @@ Concentration value
 Concentration unit
 </label>
 
+
 <select id="unit">
 
-<option value="M">M</option>
-<option value="mM">mM</option>
-<option value="uM">µM</option>
+
+<option value="M">
+M
+</option>
+
+
+<option value="mM">
+mM
+</option>
+
+
+<option value="uM">
+µM
+</option>
+
 
 </select>
 
@@ -334,15 +358,44 @@ Concentration unit
 
 
 
+
+
 <div class="form-group">
 
 <label>
-Final volume (mL)
+Final volume
 </label>
 
-<input id="volume" type="number" placeholder="Example:100">
+
+<input 
+id="volume" 
+type="number"
+placeholder="Example:100">
+
+
+<select id="volumeUnit">
+
+
+<option value="L">
+L
+</option>
+
+
+<option value="mL">
+mL
+</option>
+
+
+<option value="uL">
+µL
+</option>
+
+
+</select>
+
 
 </div>
+
 
 `;
 
@@ -566,7 +619,27 @@ let c = Number(document.getElementById("conc").value);
 
 let unit=document.getElementById("unit").value;
 
-let volume=Number(document.getElementById("volume").value)/1000;
+let volume =
+Number(document.getElementById("volume").value);
+
+
+let volumeUnit =
+document.getElementById("volumeUnit").value;
+
+
+
+if(volumeUnit==="mL"){
+
+    volume = volume / 1000;
+
+}
+
+
+if(volumeUnit==="uL"){
+
+    volume = volume / 1000000;
+
+}
 
 
 
