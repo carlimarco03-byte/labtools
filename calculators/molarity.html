@@ -426,7 +426,25 @@ Stock concentration
 
 <input id="stock" type="number">
 
+
+<select id="stockUnit">
+
+<option value="M">
+M
+</option>
+
+<option value="mM">
+mM
+</option>
+
+<option value="uM">
+µM
+</option>
+
+</select>
+
 </div>
+
 
 
 
@@ -438,7 +456,27 @@ Target concentration
 
 <input id="target" type="number">
 
+
+<select id="targetUnit">
+
+<option value="M">
+M
+</option>
+
+<option value="mM">
+mM
+</option>
+
+<option value="uM">
+µM
+</option>
+
+</select>
+
+
 </div>
+
+
 
 
 
@@ -605,23 +643,77 @@ if(mode==="dilution"){
 
 
 
-let stock=Number(document.getElementById("stock").value);
-
-let target=Number(document.getElementById("target").value);
-
-let volume=Number(document.getElementById("finalVolume").value);
+let stock =
+Number(document.getElementById("stock").value);
 
 
+let target =
+Number(document.getElementById("target").value);
 
-let v1=(target*volume)/stock;
+
+let stockUnit =
+document.getElementById("stockUnit").value;
+
+
+let targetUnit =
+document.getElementById("targetUnit").value;
+
+
+let volume =
+Number(document.getElementById("finalVolume").value);
 
 
 
-result=
+
+
+let factor={
+
+"M":1,
+
+"mM":1000,
+
+"uM":1000000
+
+};
+
+
+
+
+// conversione in M
+
+stock = stock / factor[stockUnit];
+
+target = target / factor[targetUnit];
+
+
+
+
+// C1V1=C2V2
+
+let v1 =
+(target*volume)/stock;
+
+
+
+let solvent =
+volume-v1;
+
+
+
+result =
+
 
 "<strong>Stock solution required:</strong><br>"
 +
-v1.toFixed(2)
+v1.toFixed(3)
++
+" mL"
++
+"<br><br>"
++
+"<strong>Solvent required:</strong><br>"
++
+solvent.toFixed(3)
 +
 " mL";
 
