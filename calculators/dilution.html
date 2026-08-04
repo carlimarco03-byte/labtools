@@ -3,145 +3,321 @@
 
 <head>
 
-<title>Dilution Calculator | LabTools</title>
+<meta charset="UTF-8">
 
-<style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-body {
-    font-family: Arial, sans-serif;
-    background:#f5f7fa;
-    margin:40px;
-}
 
-.container {
-    max-width:600px;
-    background:white;
-    padding:30px;
-    border-radius:10px;
-}
+<title>Dilution Calculator | Labistry</title>
 
-input {
-    width:100%;
-    padding:10px;
-    margin:8px 0 20px 0;
-}
 
-button {
-    background:#1e3a5f;
-    color:white;
-    padding:12px 20px;
-    border:none;
-    border-radius:5px;
-    cursor:pointer;
-}
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
-.result {
-    margin-top:20px;
-    padding:15px;
-    background:#eef5ff;
-}
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="../css/style.css">
+
 
 </head>
+
 
 
 <body>
 
 
+
+<header class="site-header">
+
+<div class="container header-content">
+
+
+<a href="../index.html" class="logo">
+
+Labistry
+
+</a>
+
+
+
+<nav>
+
+<a href="../calculators.html">
+Calculators
+</a>
+
+<a href="#">
+Resources
+</a>
+
+<a href="#">
+About
+</a>
+
+
+</nav>
+
+
+</div>
+
+</header>
+
+
+
+
+
+<section>
+
+
 <div class="container">
 
 
-<h1>Dilution Calculator</h1>
+
+<div class="calculator-box">
+
+
+<h1>
+Dilution Calculator
+</h1>
+
 
 
 <p>
+
 Calculate laboratory dilutions using the equation:
+
 </p>
 
 
-<h3>C₁ × V₁ = C₂ × V₂</h3>
 
+<div class="formula">
+
+C₁ × V₁ = C₂ × V₂
+
+</div>
+
+
+
+
+
+<div class="form-group">
 
 
 <label>
+
 Stock concentration (C₁)
+
 </label>
 
-<input id="c1" type="number" placeholder="Example: 10">
+
+<input 
+id="c1" 
+type="number"
+placeholder="Example: 10">
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
 
 
 <label>
+
 Final concentration (C₂)
+
 </label>
 
-<input id="c2" type="number" placeholder="Example: 1">
+
+<input 
+id="c2"
+type="number"
+placeholder="Example: 1">
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
 
 
 <label>
-Final volume (V₂) in mL
+
+Final volume (V₂) mL
+
 </label>
 
-<input id="v2" type="number" placeholder="Example: 500">
+
+<input 
+id="v2"
+type="number"
+placeholder="Example: 500">
 
 
-<button onclick="calculate()">
+</div>
+
+
+
+
+
+<button class="btn" onclick="calculate()">
+
 Calculate
+
 </button>
 
 
-<div class="result" id="result">
+
+
+
+<div class="result-box" id="result">
+
 
 Result will appear here
 
+
+</div>
+
+
+
+
 </div>
 
 
 </div>
+
+
+</section>
+
+
+
+
+
+<section>
+
+
+<div class="container">
+
+
+<h2>
+
+How it works
+
+</h2>
+
+
+<p>
+
+The dilution equation C₁V₁=C₂V₂ allows researchers
+to calculate the amount of stock solution required
+to prepare a solution at a desired concentration.
+
+</p>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+<footer class="footer">
+
+
+<div class="container">
+
+
+<p>
+
+© 2026 Labistry — Free scientific calculators.
+
+</p>
+
+
+</div>
+
+
+</footer>
+
+
 
 
 
 <script>
 
+
 function calculate(){
 
+
 let c1 = Number(document.getElementById("c1").value);
+
 let c2 = Number(document.getElementById("c2").value);
+
 let v2 = Number(document.getElementById("v2").value);
 
 
-if(c1 <=0 || c2<=0 || v2<=0){
+
+
+if(c1 <= 0 || c2 <=0 || v2 <=0){
+
 
 document.getElementById("result").innerHTML =
+
 "Please enter valid values.";
 
+
 return;
+
 
 }
 
 
+
+
 let v1 = (c2*v2)/c1;
+
 
 let solvent = v2-v1;
 
 
+
+
 document.getElementById("result").innerHTML =
 
-"<b>Stock solution required:</b> "
-+ v1.toFixed(2)
-+ " mL"
+
+"<strong>Stock solution required:</strong><br>"
++
+v1.toFixed(2)
++
+" mL"
 +
 "<br><br>"
 +
-"<b>Solvent required:</b> "
-+ solvent.toFixed(2)
-+ " mL";
+"<strong>Solvent required:</strong><br>"
++
+solvent.toFixed(2)
++
+" mL";
+
 
 
 }
 
 
 </script>
+
 
 
 </body>
