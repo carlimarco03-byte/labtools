@@ -104,37 +104,50 @@ function displayHistory(){
 
 
 
-    history.forEach((item,index)=>{
+   history.forEach((item,index)=>{
 
 
-        container.innerHTML += `
+container.innerHTML += `
 
 
-        <div class="history-card">
+<div class="history-card">
 
 
-        <strong>
-        ${item.type}
-        </strong>
+<strong>
+${item.type}
+</strong>
 
 
-        <p>
-        ${item.description}
-        </p>
+<p>
+${item.description}
+</p>
 
 
-        <small>
-        ${item.date}
-        </small>
+<small>
+${item.date}
+</small>
 
 
-        </div>
+
+<br><br>
 
 
-        `;
+<button 
+class="btn"
+onclick="reuseCalculation(${index})">
+
+Reuse
+
+</button>
 
 
-    });
+</div>
+
+
+`;
+
+
+});
 
 
 
