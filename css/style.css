@@ -219,3 +219,72 @@ img {
     }
 
 }
+
+/* ==========================
+   HEADER
+========================== */
+
+.site-header {
+
+    background: white;
+    border-bottom: 1px solid var(--border);
+
+}
+
+.header-content {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px 0;
+
+}
+
+.logo {
+
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--primary);
+
+}
+
+nav {
+
+    display: flex;
+    gap: 30px;
+
+}
+
+nav a {
+
+    color: var(--text);
+    font-weight: 500;
+
+}
+
+/* ==========================
+   HERO
+========================== */
+
+.hero {
+
+    padding: 100px 0;
+
+}
+
+.hero h1 {
+
+    max-width: 700px;
+
+}
+
+.hero-text {
+
+    max-width: 700px;
+
+    font-size: 1.15rem;
+
+    margin: 25px 0 35px;
+
+}
