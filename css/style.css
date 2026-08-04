@@ -694,3 +694,47 @@ font-size:1rem;
 }
 
 }
+
+/* ==========================
+   CALCULATOR BUTTONS
+========================== */
+
+.button-group{
+
+    display:flex;
+
+    gap:15px;
+
+    margin-top:25px;
+
+    margin-bottom:25px;
+
+}
+
+.button-group .btn{
+
+    flex:1;
+
+}
+
+.btn-secondary{
+
+    background:#9CA3AF;
+
+}
+
+.btn-secondary:hover{
+
+    background:#6B7280;
+
+}
+
+@media(max-width:768px){
+
+    .button-group{
+
+        flex-direction:column;
+
+    }
+
+}
