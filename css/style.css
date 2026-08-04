@@ -220,71 +220,125 @@ img {
 
 }
 
-/* ==========================
+/* ===================================
    HEADER
-========================== */
+=================================== */
 
-.site-header {
+.site-header{
 
-    background: white;
-    border-bottom: 1px solid var(--border);
-
-}
-
-.header-content {
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 20px 0;
+    background:white;
+    border-bottom:1px solid var(--border);
 
 }
 
-.logo {
+.header-content{
 
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--primary);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 
-}
-
-nav {
-
-    display: flex;
-    gap: 30px;
+    padding:20px 0;
 
 }
 
-nav a {
+.logo{
 
-    color: var(--text);
-    font-weight: 500;
+    font-size:1.7rem;
+    font-weight:700;
+    color:var(--primary);
 
 }
 
-/* ==========================
+nav{
+
+    display:flex;
+    gap:30px;
+
+}
+
+nav a{
+
+    color:var(--text);
+    font-weight:500;
+
+}
+
+/* ===================================
    HERO
-========================== */
+=================================== */
 
-.hero {
+.hero{
 
-    padding: 100px 0;
-
-}
-
-.hero h1 {
-
-    max-width: 700px;
+    padding:90px 0;
 
 }
 
-.hero-text {
+.hero h1{
 
-    max-width: 700px;
+    max-width:750px;
 
-    font-size: 1.15rem;
+}
 
-    margin: 25px 0 35px;
+.hero-text{
+
+    max-width:650px;
+
+    margin:25px 0 35px;
+
+    font-size:1.15rem;
+
+}
+
+/* ===================================
+   FOOTER
+=================================== */
+
+.footer{
+
+    margin-top:80px;
+
+    padding:40px 0;
+
+    background:white;
+
+    border-top:1px solid var(--border);
+
+}
+
+.footer p{
+
+    text-align:center;
+
+}
+
+/* ===================================
+   MOBILE
+=================================== */
+
+@media(max-width:768px){
+
+.header-content{
+
+flex-direction:column;
+
+gap:20px;
+
+}
+
+nav{
+
+flex-wrap:wrap;
+
+justify-content:center;
+
+}
+
+.btn{
+
+display:block;
+
+text-align:center;
+
+}
 
 }
