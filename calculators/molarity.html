@@ -892,7 +892,17 @@ mol.toFixed(5)
 
 document.getElementById("result").innerHTML=result;
 
+saveCalculation({
 
+type:"Molarity",
+
+description:
+result.replace(/<[^>]*>/g, " "),
+
+date:
+new Date().toLocaleString()
+
+});
 
 }
 
