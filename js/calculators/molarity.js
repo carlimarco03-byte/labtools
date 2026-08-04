@@ -336,3 +336,271 @@ Molecular weight (g/mol)
 
 
 }
+
+function calculate(){
+
+
+
+let result="";
+
+
+
+
+
+if(mode==="mass"){
+
+
+
+let mw = Number(mwInput());
+
+let c = Number(document.getElementById("conc").value);
+
+let compound =
+document.getElementById("compound").value;
+    
+let unit=document.getElementById("unit").value;
+
+let volume =
+Number(document.getElementById("volume").value);
+
+
+let volumeUnit =
+document.getElementById("volumeUnit").value;
+
+
+
+if(volumeUnit==="mL"){
+
+    volume = volume / 1000;
+
+}
+
+
+if(volumeUnit==="uL"){
+
+    volume = volume / 1000000;
+
+}
+
+
+
+if(unit==="mM") c=c/1000;
+
+if(unit==="uM") c=c/1000000;
+
+
+
+let mass = c * mw * volume;
+
+let formattedMass = formatMass(mass);
+
+result =
+
+"<strong>Solution preparation:</strong><br>"
++
+(compound || "Compound")
++
+"<br><br>"
++
+"<strong>Required mass:</strong><br>"
++
+formattedMass;
+
+}
+
+
+
+
+if(mode==="convert"){
+
+
+
+let value=Number(document.getElementById("value").value);
+
+
+let from=document.getElementById("from").value;
+
+let to=document.getElementById("to").value;
+
+
+
+let factor={
+
+"M":1,
+
+"mM":1000,
+
+"uM":1000000
+
+};
+
+
+
+let converted=value*factor[from]/factor[to];
+
+
+
+result=
+
+"<strong>Converted concentration:</strong><br>"
++
+converted
++
+" "
++
+to;
+
+
+}
+
+
+
+
+
+if(mode==="dilution"){
+
+
+
+let stock =
+Number(document.getElementById("stock").value);
+
+
+let target =
+Number(document.getElementById("target").value);
+
+
+let stockUnit =
+document.getElementById("stockUnit").value;
+
+
+let targetUnit =
+document.getElementById("targetUnit").value;
+
+
+let volume =
+Number(document.getElementById("finalVolume").value);
+
+
+
+
+
+let factor={
+
+"M":1,
+
+"mM":1000,
+
+"uM":1000000
+
+};
+
+
+
+
+// conversione in M
+
+stock = stock / factor[stockUnit];
+
+target = target / factor[targetUnit];
+
+
+
+
+// C1V1=C2V2
+
+let v1 =
+(target*volume)/stock;
+
+
+
+let solvent =
+volume-v1;
+
+
+
+result =
+
+
+"<strong>Stock solution required:</strong><br>"
++
+v1.toFixed(3)
++
+" mL"
++
+"<br><br>"
++
+"<strong>Solvent required:</strong><br>"
++
+solvent.toFixed(3)
++
+" mL";
+
+
+}
+
+
+
+
+
+if(mode==="moles"){
+
+
+
+let mass=Number(document.getElementById("mass").value);
+
+let mw=Number(document.getElementById("mwMoles").value);
+
+
+
+let mol=mass/mw;
+
+
+
+result=
+
+"<strong>Moles:</strong><br>"
++
+mol.toFixed(5)
++
+" mol";
+
+
+}
+
+
+
+
+
+document.getElementById("result").innerHTML=result;
+
+let historyDescription = "";
+
+if(mode === "mass"){
+
+    historyDescription =
+        (compound || "Compound") +
+        "<br>" +
+        document.getElementById("conc").value + " " + unit +
+        " • " +
+        document.getElementById("volume").value + " " + volumeUnit +
+        "<br>" +
+        formattedMass;
+
+}
+
+else{
+
+    historyDescription =
+        result.replace(/<[^>]*>/g, " ");
+
+}
+
+saveCalculation({
+
+    type:"Molarity",
+
+    description:historyDescription,
+
+    date:new Date().toLocaleString()
+
+});
