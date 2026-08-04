@@ -631,7 +631,31 @@ Molecular weight (g/mol)
 render();
 
 
+function formatMass(mass){
 
+
+    if(mass >= 1){
+
+        return mass.toFixed(3) + " g";
+
+    }
+
+
+    else if(mass >= 0.001){
+
+        return (mass*1000).toFixed(2) + " mg";
+
+    }
+
+
+    else{
+
+        return (mass*1000000).toFixed(1) + " µg";
+
+    }
+
+
+}
 
 
 
@@ -689,17 +713,11 @@ if(unit==="uM") c=c/1000000;
 
 
 
-let mass=c*mw*volume;
+let mass = c * mw * volume;
 
-
-
-let mg = mass * 1000;
-
-let ug = mass * 1000000;
-
+let formattedMass = formatMass(mass);
 
 result =
-
 
 "<strong>Solution preparation:</strong><br>"
 +
@@ -709,21 +727,7 @@ result =
 +
 "<strong>Required mass:</strong><br>"
 +
-mass.toFixed(5)
-+
-" g"
-+
-"<br>"
-+
-mg.toFixed(3)
-+
-" mg"
-+
-"<br>"
-+
-ug.toFixed(1)
-+
-" µg";
+formattedMass;
 
 }
 
