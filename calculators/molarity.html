@@ -946,6 +946,17 @@ return document.getElementById("mw").value;
 
 }
 
+    function resetCalculator(){
+
+    // Ricrea il modulo corrente
+    render();
+
+    // Ripristina il messaggio del risultato
+    document.getElementById("result").innerHTML =
+    "Result will appear here";
+
+}
+    
 window.onload = function(){
 
     displayHistory();
