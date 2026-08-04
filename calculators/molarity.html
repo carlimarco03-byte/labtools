@@ -3,62 +3,23 @@
 
 <head>
 
-<title>Molarity Calculator | LabTools</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-<style>
-
-body {
-
-font-family: Arial, sans-serif;
-background:#f5f7fa;
-margin:40px;
-
-}
+<title>Molarity Calculator | Labistry</title>
 
 
-.container {
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
-max-width:600px;
-background:white;
-padding:30px;
-margin:auto;
-border-radius:10px;
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 
-input {
-
-width:100%;
-padding:10px;
-margin:10px 0 20px 0;
-
-}
-
-
-button {
-
-background:#1e3a5f;
-color:white;
-padding:12px 20px;
-border:none;
-border-radius:5px;
-cursor:pointer;
-
-}
-
-
-.result {
-
-margin-top:20px;
-padding:15px;
-background:#eef5ff;
-
-}
-
-
-</style>
+<link rel="stylesheet" href="../css/style.css">
 
 
 </head>
@@ -68,78 +29,285 @@ background:#eef5ff;
 <body>
 
 
+
+<header class="site-header">
+
+
+<div class="container header-content">
+
+
+<a href="../index.html" class="logo">
+
+Labistry
+
+</a>
+
+
+
+<nav>
+
+
+<a href="../calculators.html">
+
+Calculators
+
+</a>
+
+
+<a href="#">
+
+Resources
+
+</a>
+
+
+<a href="#">
+
+About
+
+</a>
+
+
+
+</nav>
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+
+<section>
+
+
 <div class="container">
 
 
+<div class="calculator-box">
+
+
+
 <h1>
+
 Molarity Calculator
+
 </h1>
 
 
-<p>
-Calculate the mass of compound required to prepare a solution with a specific molarity.
-</p>
-
-
-<h3>
-Formula:
-</h3>
 
 
 <p>
-mass (g) = molarity × molecular weight × volume (L)
+
+Calculate the mass of compound required to prepare
+a solution with a specific molarity.
+
 </p>
 
+
+
+
+<div class="formula">
+
+mass (g) = M × MW × V(L)
+
+</div>
+
+
+
+
+
+<div class="form-group">
 
 
 <label>
+
 Molecular weight (g/mol)
+
 </label>
 
-<input 
+
+<input
+
 id="mw"
+
 type="number"
+
 placeholder="Example: 58.44">
 
 
+</div>
+
+
+
+
+
+
+<div class="form-group">
+
 
 <label>
+
 Desired concentration (mol/L)
+
 </label>
 
+
 <input
+
 id="molarity"
+
 type="number"
+
 placeholder="Example: 0.5">
 
 
+</div>
+
+
+
+
+
+
+<div class="form-group">
+
 
 <label>
+
 Final volume (mL)
+
 </label>
 
+
 <input
+
 id="volume"
+
 type="number"
+
 placeholder="Example: 100">
 
 
+</div>
 
-<button onclick="calculate()">
+
+
+
+
+
+<button class="btn" onclick="calculate()">
+
 Calculate
+
 </button>
 
 
 
-<div class="result" id="result">
+
+
+
+<div class="result-box" id="result">
+
 
 Result will appear here
 
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+<section>
+
+
+<div class="container">
+
+
+<h2>
+
+How it works
+
+</h2>
+
+
+
+<p>
+
+The molarity calculation determines the amount of
+chemical compound needed to prepare a solution.
+
+The equation is:
+
+</p>
+
+
+
+<div class="formula">
+
+mass = molarity × molecular weight × volume
+
 </div>
 
 
 
+<p>
+
+where volume must be expressed in liters.
+
+</p>
+
+
+
 </div>
+
+
+</section>
+
+
+
+
+
+
+
+<footer class="footer">
+
+
+<div class="container">
+
+
+<p>
+
+© 2026 Labistry — Free scientific calculators.
+
+</p>
+
+
+</div>
+
+
+</footer>
+
+
+
+
+
 
 
 
@@ -149,47 +317,69 @@ Result will appear here
 function calculate(){
 
 
-let mw =
-Number(document.getElementById("mw").value);
 
-
-let molarity =
-Number(document.getElementById("molarity").value);
-
-
-let volume =
-Number(document.getElementById("volume").value);
+let mw = Number(
+document.getElementById("mw").value
+);
 
 
 
-if(mw<=0 || molarity<=0 || volume<=0){
+let molarity = Number(
+document.getElementById("molarity").value
+);
+
+
+
+let volume = Number(
+document.getElementById("volume").value
+);
+
+
+
+
+
+if(mw <= 0 || molarity <=0 || volume <=0){
 
 
 document.getElementById("result").innerHTML =
+
 "Please enter valid values.";
 
 
 return;
 
+
 }
+
+
+
 
 
 
 let volumeLiters = volume / 1000;
 
 
+
+
 let mass =
+
 molarity * mw * volumeLiters;
+
+
+
 
 
 
 document.getElementById("result").innerHTML =
 
-"<b>Required mass:</b> "
+
+
+"<strong>Required mass:</strong><br>"
 +
 mass.toFixed(3)
 +
 " g";
+
 
 
 }
@@ -200,6 +390,9 @@ mass.toFixed(3)
 
 
 
+
+
 </body>
+
 
 </html>
