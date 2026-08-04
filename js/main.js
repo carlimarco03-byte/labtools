@@ -2,17 +2,20 @@ const calculators = [
 
     {
         name: "Dilution Calculator",
+        category: "Solution Preparation",
         url: "calculators/dilution.html"
     },
 
     {
         name: "Molarity Calculator",
+        category: "Chemistry",
         url: "calculators/molarity.html"
     },
 
     {
         name: "PCR Master Mix Calculator",
-        url: "#"
+        category: "Molecular Biology",
+        url: "calculators/pcr-mastermix.html"
     }
 
 ];
@@ -28,7 +31,7 @@ if(input){
     input.addEventListener("input", function(){
 
 
-        const value = input.value.toLowerCase();
+        const value = input.value.toLowerCase().trim();
 
 
         results.innerHTML = "";
@@ -41,7 +44,8 @@ if(input){
 
         const filtered = calculators.filter(calc =>
 
-            calc.name.toLowerCase().includes(value)
+            calc.name.toLowerCase().includes(value) ||
+            calc.category.toLowerCase().includes(value)
 
         );
 
@@ -57,6 +61,10 @@ if(input){
 
                     ${calc.name}
 
+                    <small>
+                    ${calc.category}
+                    </small>
+
                 </a>
 
             </div>
@@ -65,6 +73,21 @@ if(input){
 
 
         });
+
+
+        if(filtered.length === 0){
+
+            results.innerHTML = `
+
+            <div class="search-result">
+
+                No calculator found
+
+            </div>
+
+            `;
+
+        }
 
 
     });
