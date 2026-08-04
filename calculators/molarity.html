@@ -896,15 +896,35 @@ mol.toFixed(5)
 
 document.getElementById("result").innerHTML=result;
 
+let historyDescription = "";
+
+if(mode === "mass"){
+
+    historyDescription =
+        (compound || "Compound") +
+        "<br>" +
+        document.getElementById("conc").value + " " + unit +
+        " • " +
+        document.getElementById("volume").value + " " + volumeUnit +
+        "<br>" +
+        formattedMass;
+
+}
+
+else{
+
+    historyDescription =
+        result.replace(/<[^>]*>/g, " ");
+
+}
+
 saveCalculation({
 
-type:"Molarity",
+    type:"Molarity",
 
-description:
-result.replace(/<[^>]*>/g, " "),
+    description:historyDescription,
 
-date:
-new Date().toLocaleString()
+    date:new Date().toLocaleString()
 
 });
 
