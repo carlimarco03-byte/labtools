@@ -342,3 +342,68 @@ text-align:center;
 }
 
 }
+
+/* ===================================
+   SEARCH
+=================================== */
+
+.search-box{
+
+    margin-top:40px;
+
+    max-width:600px;
+
+}
+
+
+.search-box input{
+
+    width:100%;
+
+    padding:16px;
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+
+    font-size:1rem;
+
+    outline:none;
+
+}
+
+
+.search-box input:focus{
+
+    border-color:var(--secondary);
+
+}
+
+
+#searchResults{
+
+    margin-top:10px;
+
+}
+
+
+.search-result{
+
+    background:white;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    margin-top:10px;
+
+    box-shadow:var(--shadow);
+
+}
+
+
+.search-result a{
+
+    font-weight:600;
+
+}
