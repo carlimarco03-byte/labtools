@@ -653,13 +653,30 @@ let mass=c*mw*volume;
 
 
 
-result=
+let mg = mass * 1000;
+
+let ug = mass * 1000000;
+
+
+result =
 
 "<strong>Required mass:</strong><br>"
 +
-mass.toFixed(4)
+mass.toFixed(5)
 +
-" g";
+" g"
++
+"<br><br>"
++
+mg.toFixed(3)
++
+" mg"
++
+"<br>"
++
+ug.toFixed(1)
++
+" µg";
 
 }
 
