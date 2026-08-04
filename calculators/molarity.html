@@ -290,13 +290,25 @@ if(mode==="mass"){
 
 area.innerHTML = `
 
+<div class="form-group">
 
+<label>
+Compound name (optional)
+</label>
+
+<input 
+id="compound"
+type="text"
+placeholder="Example: NaCl">
+
+</div>
 
 <div class="form-group">
 
 <label>
 Molecular weight (g/mol)
 </label>
+
 
 <input 
 id="mw" 
@@ -617,6 +629,9 @@ let mw = Number(mwInput());
 
 let c = Number(document.getElementById("conc").value);
 
+let compound =
+document.getElementById("compound").value;
+    
 let unit=document.getElementById("unit").value;
 
 let volume =
@@ -660,13 +675,20 @@ let ug = mass * 1000000;
 
 result =
 
+
+"<strong>Solution preparation:</strong><br>"
++
+(compound || "Compound")
++
+"<br><br>"
++
 "<strong>Required mass:</strong><br>"
 +
 mass.toFixed(5)
 +
 " g"
 +
-"<br><br>"
+"<br>"
 +
 mg.toFixed(3)
 +
