@@ -152,3 +152,23 @@ Reuse
 
 
 }
+
+function reuseCalculation(index){
+
+
+let history = getHistory();
+
+
+let item = history[index];
+
+
+
+alert(
+"Reuse feature ready for: "
++
+item.description
+);
+
+
+
+}
