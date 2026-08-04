@@ -18,7 +18,7 @@ function saveCalculation(calculation){
 
     // massimo 20 calcoli salvati
 
-    if(history.length > 20){
+    if(history.length > 5){
 
         history.pop();
 
