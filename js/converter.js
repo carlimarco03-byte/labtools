@@ -159,69 +159,68 @@ if(unit === "ugmL"){
 let output = "";
 
 
-output += "<strong>Conversion results:</strong><br><br>";
+output += 
+"<strong>Conversion results</strong><br><br>";
+
+
+
+output += 
+"<strong>Molar concentration</strong><br>";
 
 
 
 output +=
-"M: "
-+
 formatNumber(molarity)
 +
-"<br>";
+" M<br>";
 
 
 
 output +=
-"mM: "
-+
 formatNumber(molarity * 1000)
 +
-"<br>";
+" mM<br>";
 
 
 
 output +=
-"µM: "
-+
 formatNumber(molarity * 1000000)
 +
-"<br>";
+" µM<br>";
 
 
 
 
 
-if(mw && mw > 0){
+if(mw && mw>0){
 
 
 output += "<br>";
 
+output +=
+"<strong>Mass concentration</strong><br>";
+
+
 
 output +=
-"g/L: "
-+
 formatNumber(molarity * mw)
 +
-"<br>";
+" g/L<br>";
 
 
 
 output +=
-"mg/mL: "
-+
 formatNumber(molarity * mw)
 +
-"<br>";
+" mg/mL<br>";
 
 
 
 output +=
-"µg/mL: "
-+
 formatNumber(molarity * mw * 1000)
 +
-"<br>";
+" µg/mL<br>";
+
 
 
 }
