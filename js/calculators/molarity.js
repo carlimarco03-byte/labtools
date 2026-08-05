@@ -340,8 +340,9 @@ Molecular weight (g/mol)
 function calculate(){
 
 
-
 let result="";
+
+let historyDescription="";
 
 
 
@@ -573,7 +574,7 @@ mol.toFixed(5)
 
 document.getElementById("result").innerHTML=result;
 
-let historyDescription = "";
+
 
 if(mode === "mass"){
 
