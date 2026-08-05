@@ -231,6 +231,25 @@ formatNumber(molarity * mw * 1000)
 
 document.getElementById("result").innerHTML = output;
 
+if(output !== lastConversion){
+
+    saveCalculation({
+
+        type:"Concentration Converter",
+
+        description:
+        output.replace(/<[^>]*>/g, " "),
+
+        date:
+        new Date().toLocaleString()
+
+    });
+
+
+    lastConversion = output;
+
+}
+    
 saveCalculation({
 
     type:"Concentration Converter",
