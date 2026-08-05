@@ -1,9 +1,209 @@
 function convert(){
 
+
+let value =
+Number(document.getElementById("value").value);
+
+
+let unit =
+document.getElementById("unit").value;
+
+
+let mw =
+Number(document.getElementById("mw").value);
+
+
+
+if(!value || value <= 0){
+
     document.getElementById("result").innerHTML =
-    "Conversion engine coming in the next step...";
+    "Enter a valid concentration.";
+
+    return;
 
 }
+
+
+
+let molarity;
+
+
+
+// Conversioni da concentrazioni molari
+
+if(unit === "M"){
+
+    molarity = value;
+
+}
+
+
+if(unit === "mM"){
+
+    molarity = value / 1000;
+
+}
+
+
+if(unit === "uM"){
+
+    molarity = value / 1000000;
+
+}
+
+
+
+// Conversioni da concentrazioni in massa
+
+if(unit === "gL"){
+
+
+    if(!mw || mw <= 0){
+
+        document.getElementById("result").innerHTML =
+        "Enter molecular weight for mass conversions.";
+
+        return;
+
+    }
+
+
+    molarity = value / mw;
+
+
+}
+
+
+
+if(unit === "mgmL"){
+
+
+    if(!mw || mw <= 0){
+
+        document.getElementById("result").innerHTML =
+        "Enter molecular weight for mass conversions.";
+
+        return;
+
+    }
+
+
+    // mg/mL = g/L
+
+    molarity = value / mw;
+
+
+}
+
+
+
+if(unit === "ugmL"){
+
+
+    if(!mw || mw <= 0){
+
+        document.getElementById("result").innerHTML =
+        "Enter molecular weight for mass conversions.";
+
+        return;
+
+    }
+
+
+    // µg/mL → g/L
+
+    let gL = value / 1000;
+
+
+    molarity = gL / mw;
+
+
+}
+
+
+
+
+
+let output = "";
+
+
+output += "<strong>Conversion results:</strong><br><br>";
+
+
+
+output +=
+"M: "
++
+formatNumber(molarity)
++
+"<br>";
+
+
+
+output +=
+"mM: "
++
+formatNumber(molarity * 1000)
++
+"<br>";
+
+
+
+output +=
+"µM: "
++
+formatNumber(molarity * 1000000)
++
+"<br>";
+
+
+
+
+
+if(mw && mw > 0){
+
+
+output += "<br>";
+
+
+output +=
+"g/L: "
++
+formatNumber(molarity * mw)
++
+"<br>";
+
+
+
+output +=
+"mg/mL: "
++
+formatNumber(molarity * mw)
++
+"<br>";
+
+
+
+output +=
+"µg/mL: "
++
+formatNumber(molarity * mw * 1000)
++
+"<br>";
+
+
+}
+
+
+
+document.getElementById("result").innerHTML = output;
+
+
+}
+
+
+
+
 
 document.addEventListener("DOMContentLoaded", function(){
 
