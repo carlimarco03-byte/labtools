@@ -243,7 +243,16 @@ saveCalculation({
 
 }
 
+function resetConverter(){
 
+    document.getElementById("value").value = "";
+
+    document.getElementById("mw").value = "";
+
+    document.getElementById("result").innerHTML =
+    "Result will appear here";
+
+}
 
 
 
