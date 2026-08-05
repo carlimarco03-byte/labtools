@@ -35,7 +35,7 @@ Compound name (optional)
 <input 
 id="compound"
 type="text"
-placeholder="Example: NaCl">
+placeholder="NaCl">
 
 </div>
 
@@ -50,7 +50,7 @@ Molecular weight (g/mol)
 <input
 id="mw"
 type="number"
-placeholder="Example: 58.44">
+placeholder="58.44">
 
 </div>
 
@@ -69,7 +69,7 @@ Concentration
 <input
 id="conc"
 type="number"
-placeholder="Example: 0.5">
+placeholder="0.5">
 
 <select
 id="unit"
@@ -109,7 +109,7 @@ Final volume
 <input
 id="volume"
 type="number"
-placeholder="Example: 100">
+placeholder="100">
 
 <select id="volumeUnit">
 
