@@ -1,5 +1,37 @@
+function updateMWVisibility(){
+
+
+let unit =
+document.getElementById("unit").value;
+
+
+let mwGroup =
+document.getElementById("mwGroup");
+
+
+
+if(
+unit==="M" ||
+unit==="mM" ||
+unit==="uM"
+){
+
+    mwGroup.style.display = "none";
+
+}
+
+else{
+
+    mwGroup.style.display = "block";
+
+}
+
+
+}
+
 function convert(){
 
+updateMWVisibility();
 
 let value =
 Number(document.getElementById("value").value);
