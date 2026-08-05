@@ -16,7 +16,7 @@ function saveCalculation(calculation){
     history.unshift(calculation);
 
 
-    // massimo 20 calcoli salvati
+    // massimo 5 calcoli salvati
 
     if(history.length > 5){
 
