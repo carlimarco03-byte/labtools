@@ -77,9 +77,12 @@ Concentration
 <input
 id="value"
 type="number"
-placeholder="0.5">
+placeholder="0.5"
+oninput="convert()">
 
-<select id="unit">
+<select
+id="unit"
+onchange="convert()">
 
 <option value="M">M</option>
 
@@ -109,7 +112,8 @@ Molecular Weight (g/mol)
 <input
 id="mw"
 type="number"
-placeholder="58.44">
+placeholder="58.44"
+oninput="convert()">
 
 <small id="mwInfo">
 
