@@ -61,26 +61,15 @@ placeholder="Example: 58.44">
 <div class="form-group">
 
 <label>
-Concentration value
+Concentration
 </label>
 
-<input 
-id="conc" 
-type="number" 
+<div class="input-with-unit">
+
+<input
+id="conc"
+type="number"
 placeholder="Example: 0.5">
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-<label>
-Concentration unit
-</label>
-
 
 <select
 id="unit"
@@ -99,6 +88,8 @@ onchange="updateUnitUI()">
 <option value="ugmL">µg/mL</option>
 
 </select>
+
+</div>
 
 </div>
 
