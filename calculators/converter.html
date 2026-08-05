@@ -64,7 +64,58 @@ Convert laboratory concentration units instantly between molarity and mass conce
 
 <div id="calculatorArea">
 
-<!-- Calculator fields -->
+<div class="form-group">
+
+<label>
+Concentration
+</label>
+
+<div class="input-with-unit">
+
+<input
+id="value"
+type="number"
+placeholder="0.5">
+
+<select id="unit">
+
+<option value="M">M</option>
+
+<option value="mM">mM</option>
+
+<option value="uM">µM</option>
+
+<option value="gL">g/L</option>
+
+<option value="mgmL">mg/mL</option>
+
+<option value="ugmL">µg/mL</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+Molecular Weight (g/mol)
+</label>
+
+<input
+id="mw"
+type="number"
+placeholder="58.44">
+
+<small id="mwInfo">
+
+Required only when converting between molarity and mass concentration.
+
+</small>
+
+</div>
 
 </div>
 
