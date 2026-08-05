@@ -357,10 +357,10 @@ if(mode==="mass"){
 
 let c = Number(document.getElementById("conc").value);
 
-if(mw <=0 || c <=0){
+if(c <= 0){
 
     document.getElementById("result").innerHTML =
-    "Please enter valid values.";
+    "Please enter a valid concentration.";
 
     return;
 
