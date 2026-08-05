@@ -104,33 +104,24 @@ onchange="updateUnitUI()">
 Final volume
 </label>
 
+<div class="input-with-unit">
 
-<input 
-id="volume" 
+<input
+id="volume"
 type="number"
-placeholder="Example:100">
-
+placeholder="Example: 100">
 
 <select id="volumeUnit">
 
+<option value="L">L</option>
 
-<option value="L">
-L
-</option>
+<option value="mL" selected>mL</option>
 
-
-<option value="mL">
-mL
-</option>
-
-
-<option value="uL">
-µL
-</option>
-
+<option value="uL">µL</option>
 
 </select>
 
+</div>
 
 </div>
 
