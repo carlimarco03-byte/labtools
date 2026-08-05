@@ -767,3 +767,27 @@ font-size:1rem;
     flex-shrink:0;
 
 }
+
+.input-with-unit{
+
+    display:flex;
+    gap:10px;
+    align-items:center;
+
+}
+
+@media(max-width:768px){
+
+    .input-with-unit{
+
+        gap:8px;
+
+    }
+
+    .input-with-unit select{
+
+        min-width:85px;
+
+    }
+
+}
