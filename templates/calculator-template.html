@@ -17,6 +17,16 @@
 
 </head>
 
+<script src="../js/history.js"></script>
+
+<script src="../js/core/helpers.js"></script>
+
+<script src="../js/core/formatting.js"></script>
+
+<script src="../js/core/units.js"></script>
+
+<script src="../js/core/validation.js"></script>
+  
 <body>
 
 <header class="site-header">
@@ -61,13 +71,17 @@ Calculator description.
 
 <div class="button-group">
 
-<button class="btn">
+<button
+class="btn"
+onclick="calculate()">
 
 Calculate
 
 </button>
 
-<button class="btn btn-secondary">
+<button
+class="btn btn-secondary"
+onclick="resetCalculator()">
 
 Reset
 
@@ -75,7 +89,7 @@ Reset
 
 </div>
 
-<div class="result-box">
+<div class="result-box" id="result">
 
 Result will appear here
 
@@ -93,7 +107,9 @@ Calculation History
 
 </div>
 
-<button class="btn">
+<button
+class="btn"
+onclick="clearHistory()">
 
 Clear History
 
