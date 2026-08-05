@@ -356,6 +356,15 @@ let mw = Number(mwInput());
 
 let c = Number(document.getElementById("conc").value);
 
+if(mw <=0 || c <=0){
+
+    document.getElementById("result").innerHTML =
+    "Please enter valid values.";
+
+    return;
+
+}
+
 let compound =
 document.getElementById("compound").value;
     
