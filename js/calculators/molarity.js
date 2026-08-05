@@ -653,6 +653,29 @@ function formatMass(mass){
 
 }
 
+function updateUnitUI(){
+
+    const unit = document.getElementById("unit").value;
+
+    const mwGroup = document.getElementById("mwGroup");
+
+    if(
+        unit === "gL" ||
+        unit === "mgmL" ||
+        unit === "ugmL"
+    ){
+
+        mwGroup.style.display = "none";
+
+    }
+
+    else{
+
+        mwGroup.style.display = "block";
+
+    }
+
+}
 
 function resetCalculator(){
 
