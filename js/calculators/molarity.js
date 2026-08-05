@@ -39,16 +39,17 @@ placeholder="Example: NaCl">
 
 </div>
 
-<div class="form-group">
+<div
+class="form-group"
+id="mwGroup">
 
 <label>
 Molecular weight (g/mol)
 </label>
 
-
-<input 
-id="mw" 
-type="number" 
+<input
+id="mw"
+type="number"
 placeholder="Example: 58.44">
 
 </div>
@@ -81,7 +82,9 @@ Concentration unit
 </label>
 
 
-<select id="unit">
+<select
+id="unit"
+onchange="updateUnitUI()">
 
 <option value="M">M</option>
 
