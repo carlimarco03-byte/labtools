@@ -353,7 +353,7 @@ if(mode==="mass"){
 
 
 
-let mw = Number(mwInput());
+
 
 let c = Number(document.getElementById("conc").value);
 
@@ -393,17 +393,59 @@ if(volumeUnit==="uL"){
 
 }
 
+let mass;
 
+if(unit === "M" || unit === "mM" || unit === "uM"){
 
-if(unit==="mM") c=c/1000;
+    let mw = Number(mwInput());
 
-if(unit==="uM") c=c/1000000;
+    if(mw <= 0){
 
+        document.getElementById("result").innerHTML =
+        "Please enter a valid molecular weight.";
 
+        return;
 
-let mass = c * mw * volume;
+    }
+
+    if(unit === "mM"){
+
+        c = c / 1000;
+
+    }
+
+    if(unit === "uM"){
+
+        c = c / 1000000;
+
+    }
+
+    mass = c * mw * volume;
+
+}
+
+else if(unit === "gL"){
+
+    mass = c * volume;
+
+}
+
+else if(unit === "mgmL"){
+
+    mass = (c * volume) / 1000;
+
+}
+
+else if(unit === "ugmL"){
+
+    mass = (c * volume) / 1000000;
+
+}
 
 let formattedMass = formatMass(mass);
+
+
+
 
 result =
 
