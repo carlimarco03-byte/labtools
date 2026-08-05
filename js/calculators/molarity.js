@@ -449,7 +449,7 @@ let formattedMass = formatMass(mass);
 
 result =
 
-"<strong>Solution preparation:</strong><br>"
+"<strong>Required compound mass</strong><br>"
 +
 (compound || "Compound")
 +
