@@ -83,21 +83,17 @@ Concentration unit
 
 <select id="unit">
 
+<option value="M">M</option>
 
-<option value="M">
-M
-</option>
+<option value="mM">mM</option>
 
+<option value="uM">µM</option>
 
-<option value="mM">
-mM
-</option>
+<option value="gL">g/L</option>
 
+<option value="mgmL">mg/mL</option>
 
-<option value="uM">
-µM
-</option>
-
+<option value="ugmL">µg/mL</option>
 
 </select>
 
