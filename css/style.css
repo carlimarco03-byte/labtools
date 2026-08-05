@@ -791,3 +791,12 @@ font-size:1rem;
     }
 
 }
+
+.form-group small{
+
+    display:block;
+    margin-top:6px;
+    color:var(--muted);
+    font-size:.9rem;
+
+}
