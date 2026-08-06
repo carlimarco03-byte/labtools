@@ -32,7 +32,9 @@ function renderTable() {
 
 <th>Target</th>
 
-<th>Volume</th>
+<th>Volume/rxn</th>
+
+<th>Master Mix</th>
 
 <th>MM</th>
 
@@ -68,7 +70,13 @@ function renderTable() {
 
 <td>${component.target ?? "-"} ${component.targetUnit ?? ""}</td>
 
-<td>AUTO</td>
+<td>
+${component.volumeReaction.toFixed(2)} µL
+</td>
+
+<td>
+${component.volumeMasterMix.toFixed(2)} µL
+</td>
 
 <td>${component.includeMM ? "✓" : "—"}</td>
 
