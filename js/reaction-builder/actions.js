@@ -7,3 +7,46 @@ function updateComponentName(id, value) {
     component.name = value;
 
 }
+
+function setupReactionListeners(){
+
+    document
+    .getElementById("reactionVolume")
+    .addEventListener("input", function(){
+
+        reactionSettings.volume =
+        Number(this.value);
+
+    });
+
+
+    document
+    .getElementById("reactionNumber")
+    .addEventListener("input", function(){
+
+        reactionSettings.reactions =
+        Number(this.value);
+
+    });
+
+
+    document
+    .getElementById("extraReactions")
+    .addEventListener("input", function(){
+
+        reactionSettings.extra =
+        Number(this.value);
+
+    });
+
+
+    document
+    .getElementById("overage")
+    .addEventListener("input", function(){
+
+        reactionSettings.overage =
+        Number(this.value);
+
+    });
+
+}
