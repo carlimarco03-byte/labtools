@@ -84,13 +84,19 @@ ${formatVolume(component.volumeMasterMix)}
 
 <td>
 
+${
+component.locked
+?
+""
+:
+`
 <button 
 class="menu-btn"
 data-id="${component.id}">
-
 ⋮
-
 </button>
+`
+}
 
 </td>
 
