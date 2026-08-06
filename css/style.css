@@ -858,6 +858,35 @@ font-size:1rem;
 
     gap:20px;
 
+    align-items:end;
+
+}
+
+
+.settings-grid .form-group{
+
+    margin-bottom:0;
+
+}
+
+
+.settings-grid input{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+}
+
+
+.settings-grid .form-group div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
 }
 
 
