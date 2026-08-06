@@ -73,11 +73,11 @@ function renderTable() {
 <td>${component.target ?? "-"} ${component.targetUnit ?? ""}</td>
 
 <td>
-${component.volumeReaction.toFixed(2)} µL
+${formatVolume(component.volumeReaction)}
 </td>
 
 <td>
-${component.volumeMasterMix.toFixed(2)} µL
+${formatVolume(component.volumeMasterMix)}
 </td>
 
 <td>${component.includeMM ? "✓" : "—"}</td>
