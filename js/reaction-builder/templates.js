@@ -1,15 +1,22 @@
 const PCR_TEMPLATE = [
 
 {
-    id: 1,
-    name: "Buffer",
-    type: "buffer",
-    method: "concentration",
-    stock: 10,
-    stockUnit: "X",
-    target: 1,
-    targetUnit: "X",
-    includeMM: true
+    id:1,
+    name:"Buffer",
+    type:"buffer",
+    method:"concentration",
+
+    stock:10,
+    stockUnit:"X",
+
+    target:1,
+    targetUnit:"X",
+
+    volumeReaction:0,
+
+    volumeMasterMix:0,
+
+    includeMM:true
 },
 
 {
