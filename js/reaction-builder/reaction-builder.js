@@ -19,3 +19,5 @@ calculateVolumes();
 render();
 
 setupReactionListeners();
+
+setupComponentMenu();
