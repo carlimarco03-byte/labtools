@@ -98,28 +98,7 @@ value="${component.name}">
 
 <td>
 
-${
-component.stock
-?
-`
-<div class="value-unit">
-
-<input
-class="table-input"
-type="number"
-data-id="${component.id}"
-data-field="stock"
-value="${component.stock}">
-
-<span>
-${component.stockUnit ?? ""}
-</span>
-
-</div>
-`
-:
-"-"
-}
+${renderStock(component)}
 
 </td>
 
