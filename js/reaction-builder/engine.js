@@ -72,7 +72,7 @@ function calculateVolumes(){
 
     });
 
-
+checkReactionVolume();
 
     calculateMasterMix();
 
@@ -118,6 +118,37 @@ function calculateMasterMix(){
 
         }
 
+        function checkReactionVolume(){
+
+
+    let totalVolume = 0;
+
+
+    components.forEach(component => {
+
+
+        if(component.type !== "water"){
+
+            totalVolume += component.volumeReaction;
+
+        }
+
+
+    });
+
+
+    if(totalVolume > reactionSettings.volume){
+
+
+        console.warn(
+            "Component volumes exceed reaction volume"
+        );
+
+
+    }
+
+
+}
 
     });
 
