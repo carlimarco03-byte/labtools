@@ -118,7 +118,14 @@ function calculateMasterMix(){
 
         }
 
-        function checkReactionVolume(){
+        
+
+    });
+
+
+}
+
+function checkReactionVolume(){
 
 
     let totalVolume = 0;
@@ -146,11 +153,6 @@ function calculateMasterMix(){
 
 
     }
-
-
-}
-
-    });
 
 
 }
