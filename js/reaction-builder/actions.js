@@ -221,9 +221,16 @@ function setupComponentMenu(){
 
             if(action === "delete"){
 
-                deleteComponent(id);
+    deleteComponent(id);
 
-            }
+}
+
+
+if(action === "duplicate"){
+
+    duplicateComponent(id);
+
+}
 
 
             menu.classList.remove("active");
@@ -271,5 +278,54 @@ function deleteComponent(id){
     calculateVolumes();
 
     render();
+
+}
+
+function duplicateComponent(id){
+
+
+    const component =
+    components.find(
+        c => c.id === id
+    );
+
+
+    if(!component){
+        return;
+    }
+
+
+
+    const newComponent =
+    structuredClone(component);
+
+
+
+    newComponent.id =
+    Date.now();
+
+
+
+    newComponent.name += " copy";
+
+
+
+    newComponent.volumeReaction = 0;
+
+    newComponent.volumeMasterMix = 0;
+
+
+
+    components.push(
+        newComponent
+    );
+
+
+
+    calculateVolumes();
+
+
+    render();
+
 
 }
