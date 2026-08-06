@@ -46,8 +46,7 @@ const PCR_TEMPLATE = [
     stock:20,
     stockUnit:"ng/µL",
 
-    target:null,
-    targetUnit:null,
+    volume:2,
 
     volumeReaction:0,
     volumeMasterMix:0,
@@ -72,7 +71,7 @@ const PCR_TEMPLATE = [
 
 
 {
-    id:6,
+    id:5,
     name:"Water",
     type:"water",
     method:"auto",
