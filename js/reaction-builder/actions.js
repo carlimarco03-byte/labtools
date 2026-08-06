@@ -108,6 +108,9 @@ function resetCalculator(){
 
     render();
 
+
+}
+
 document
 .getElementById("resetButton")
 .addEventListener("click", function(){
@@ -116,5 +119,3 @@ document
 
 });
     
-}
-
