@@ -20,4 +20,3 @@ render();
 
 setupReactionListeners();
 
-setupComponentMenu();
