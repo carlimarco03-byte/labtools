@@ -198,4 +198,78 @@ function setupComponentMenu(){
     });
 
 
+
+    menu
+    .querySelectorAll("button")
+    .forEach(actionButton => {
+
+
+        actionButton.addEventListener("click", function(event){
+
+
+            event.stopPropagation();
+
+
+            const action =
+            this.dataset.action;
+
+
+            const id =
+            Number(menu.dataset.componentId);
+
+
+
+            if(action === "delete"){
+
+                deleteComponent(id);
+
+            }
+
+
+            menu.classList.remove("active");
+
+
+        });
+
+
+    });
+
+
+}
+
+function deleteComponent(id){
+
+
+    const component =
+    components.find(
+        c => c.id === id
+    );
+
+
+    if(!component){
+        return;
+    }
+
+
+    if(component.type === "water"){
+
+        alert(
+        "Water cannot be removed from the PCR reaction."
+        );
+
+        return;
+
+    }
+
+
+    components =
+    components.filter(
+        c => c.id !== id
+    );
+
+
+    calculateVolumes();
+
+    render();
+
 }
