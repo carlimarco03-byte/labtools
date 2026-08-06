@@ -64,7 +64,10 @@ function calculateVolumes(){
 
 
             component.volumeReaction =
-            reactionSettings.volume - usedVolume;
+Math.max(
+    0,
+    reactionSettings.volume - usedVolume
+);
 
 
         }
@@ -144,15 +147,15 @@ function checkReactionVolume(){
     });
 
 
-    if(totalVolume > reactionSettings.volume){
+   if(totalVolume > reactionSettings.volume){
 
 
-        console.warn(
-            "Component volumes exceed reaction volume"
-        );
+    console.warn(
+    "Reaction volume too small for current components"
+    );
 
 
-    }
+}
 
 
 }
