@@ -253,9 +253,9 @@ function deleteComponent(id){
 
     if(component.type === "water"){
 
-        alert(
-        "Water cannot be removed from the PCR reaction."
-        );
+       showReactionWarning(
+"Water cannot be removed from the PCR reaction."
+);
 
         return;
 
