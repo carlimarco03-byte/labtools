@@ -115,7 +115,9 @@ data-id="${component.id}">
 `;
 
     area.innerHTML = html;
-
+    
+    setupDynamicUI();
+    
     setupComponentMenu();
     setupEditableFields();
 }
