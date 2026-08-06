@@ -117,7 +117,7 @@ data-id="${component.id}">
     area.innerHTML = html;
 
     setupComponentMenu();
-    
+    setupEditableFields();
 }
 
 function renderCards() {
