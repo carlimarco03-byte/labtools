@@ -69,21 +69,18 @@ const PCR_TEMPLATE = [
     includeMM: true
 },
 
-{
-    id: 5,
-    name: "DNA",
-    type: "template",
-    method: "fixedVolume",
-    volume: 2,
-    includeMM: false
-},
+
 
 {
-    id: 6,
-    name: "Water",
-    type: "water",
-    method: "auto",
-    includeMM: true
+    id:6,
+    name:"Water",
+    type:"water",
+    method:"auto",
+
+    volumeReaction:0,
+    volumeMasterMix:0,
+
+    includeMM:true
 }
 
 ];
