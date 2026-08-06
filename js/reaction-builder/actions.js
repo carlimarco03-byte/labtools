@@ -14,8 +14,8 @@ function setupReactionListeners(){
     .getElementById("reactionVolume")
     .addEventListener("input", function(){
 
-        reactionSettings.volume =
-        Number(this.value);
+       reactionSettings.volume =
+Math.max(0, Number(this.value));
 
         calculateVolumes();
 
@@ -28,8 +28,8 @@ render();
     .getElementById("reactionNumber")
     .addEventListener("input", function(){
 
-        reactionSettings.reactions =
-        Number(this.value);
+       reactionSettings.reactions =
+Math.max(0, Number(this.value));
 
         calculateVolumes();
 
@@ -42,8 +42,8 @@ render();
     .getElementById("extraReactions")
     .addEventListener("input", function(){
 
-        reactionSettings.extra =
-        Number(this.value);
+     reactionSettings.extra =
+Math.max(0, Number(this.value));
 
         calculateVolumes();
 
@@ -56,8 +56,8 @@ render();
     .getElementById("overage")
     .addEventListener("input", function(){
 
-        reactionSettings.overage =
-        Number(this.value);
+       reactionSettings.overage =
+Math.max(0, Number(this.value));
 
         calculateVolumes();
 
