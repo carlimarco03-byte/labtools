@@ -833,3 +833,36 @@ font-size:1rem;
     background:#fafcff;
 
 }
+
+.reaction-settings{
+
+    background:white;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:14px;
+
+    padding:20px;
+
+    margin-bottom:25px;
+
+}
+
+
+.settings-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:20px;
+
+}
+
+
+.reaction-settings h2{
+
+    margin-top:0;
+
+}
