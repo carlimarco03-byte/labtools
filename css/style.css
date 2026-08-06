@@ -807,8 +807,7 @@ font-size:1rem;
     border-collapse:collapse;
     margin-top:20px;
     background:white;
-    table-layout:fixed;
-
+    
 }
 
 .reaction-table th{
@@ -1079,7 +1078,7 @@ font-size:1rem;
 
 .value-unit .table-input{
 
-    width:90px;
+    width:75px;
 
 }
 
