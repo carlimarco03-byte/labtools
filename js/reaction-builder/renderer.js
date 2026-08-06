@@ -26,11 +26,11 @@ function renderTable() {
 
 <th>Component</th>
 
-<th>Method</th>
+
 
 <th>Stock</th>
 
-<th>Target</th>
+<th>Final / Added</th>
 
 <th>Volume/rxn</th>
 
@@ -59,14 +59,14 @@ function renderTable() {
 <td>
 
 <input
-    type="text"
-    value="${component.name}"
-    class="component-name"
-    oninput="updateComponentName(${component.id}, this.value)">
+class="table-input component-name"
+data-id="${component.id}"
+type="text"
+value="${component.name}">
 
 </td>
 
-<td>${component.method}</td>
+
 
 <td>${component.stock ?? "-"} ${component.stockUnit ?? ""}</td>
 
