@@ -66,3 +66,55 @@ render();
     });
 
 }
+
+function resetCalculator(){
+
+
+    components =
+    structuredClone(PCR_TEMPLATE);
+
+
+    reactionSettings = {
+
+        volume:25,
+
+        reactions:1,
+
+        extra:0,
+
+        overage:5
+
+    };
+
+
+    document.getElementById("reactionVolume").value =
+    reactionSettings.volume;
+
+
+    document.getElementById("reactionNumber").value =
+    reactionSettings.reactions;
+
+
+    document.getElementById("extraReactions").value =
+    reactionSettings.extra;
+
+
+    document.getElementById("overage").value =
+    reactionSettings.overage;
+
+
+    calculateVolumes();
+
+
+    render();
+
+document
+.getElementById("resetButton")
+.addEventListener("click", function(){
+
+    resetCalculator();
+
+});
+    
+}
+
