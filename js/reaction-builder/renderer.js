@@ -52,7 +52,15 @@ function renderTable() {
 
 <tr>
 
-<td>${component.name}</td>
+<td>
+
+<input
+    type="text"
+    value="${component.name}"
+    data-id="${component.id}"
+    class="component-name">
+
+</td>
 
 <td>${component.method}</td>
 
