@@ -57,8 +57,8 @@ function renderTable() {
 <input
     type="text"
     value="${component.name}"
-    data-id="${component.id}"
-    class="component-name">
+    class="component-name"
+    oninput="updateComponentName(${component.id}, this.value)">
 
 </td>
 
