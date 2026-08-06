@@ -1,96 +1,92 @@
-function renderComponents() {
+function render() {
+
+    if (window.innerWidth >= 992) {
+
+        renderTable();
+
+    } else {
+
+        renderCards();
+
+    }
+
+}
+
+function renderTable() {
 
     const area = document.getElementById("calculatorArea");
 
-    area.innerHTML = "";
+    let html = `
+
+<table class="reaction-table">
+
+<thead>
+
+<tr>
+
+<th>Component</th>
+
+<th>Method</th>
+
+<th>Stock</th>
+
+<th>Target</th>
+
+<th>Volume</th>
+
+<th>MM</th>
+
+<th></th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`;
 
     components.forEach(component => {
 
-        area.innerHTML += `
+        html += `
 
-<div class="component-card">
+<tr>
 
-    <div class="component-header">
+<td>${component.name}</td>
 
-        <div>
+<td>${component.method}</td>
 
-            <h3>${component.name}</h3>
+<td>${component.stock ?? "-"} ${component.stockUnit ?? ""}</td>
 
-            <small>${component.type}</small>
+<td>${component.target ?? "-"} ${component.targetUnit ?? ""}</td>
 
-        </div>
+<td>AUTO</td>
 
-        <button class="menu-btn">
+<td>${component.includeMM ? "✓" : "—"}</td>
 
-            ⋮
+<td>⋮</td>
 
-        </button>
-
-    </div>
-
-    <div class="component-body">
-
-        <div class="form-group">
-
-            <label>Method</label>
-
-            <input
-            type="text"
-            value="${component.method}"
-            disabled>
-
-        </div>
-
-        <div class="form-group">
-
-            <label>Stock</label>
-
-            <input
-            type="text"
-            value="${component.stock ?? "-"} ${component.stockUnit ?? ""}"
-            disabled>
-
-        </div>
-
-        <div class="form-group">
-
-            <label>Target</label>
-
-            <input
-            type="text"
-            value="${component.target ?? "-"} ${component.targetUnit ?? ""}"
-            disabled>
-
-        </div>
-
-        <div class="form-group">
-
-            <label>Calculated Volume</label>
-
-            <input
-            type="text"
-            value="AUTO"
-            disabled>
-
-        </div>
-
-        <label>
-
-            <input
-            type="checkbox"
-            ${component.includeMM ? "checked" : ""}
-            disabled>
-
-            Include in Master Mix
-
-        </label>
-
-    </div>
-
-</div>
+</tr>
 
 `;
 
     });
+
+    html += `
+
+</tbody>
+
+</table>
+
+`;
+
+    area.innerHTML = html;
+
+}
+
+function renderCards() {
+
+    document.getElementById("calculatorArea").innerHTML =
+    "<p>Mobile layout coming soon.</p>";
 
 }
