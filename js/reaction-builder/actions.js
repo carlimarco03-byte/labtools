@@ -357,3 +357,11 @@ function setupEditableFields(){
     });
 
 }
+
+function setupDynamicUI(){
+
+    setupComponentMenu();
+
+    setupEditableFields();
+
+}
