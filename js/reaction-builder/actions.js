@@ -17,6 +17,10 @@ function setupReactionListeners(){
         reactionSettings.volume =
         Number(this.value);
 
+        calculateVolumes();
+
+render();
+
     });
 
 
@@ -26,6 +30,10 @@ function setupReactionListeners(){
 
         reactionSettings.reactions =
         Number(this.value);
+
+        calculateVolumes();
+
+render();
 
     });
 
@@ -37,6 +45,10 @@ function setupReactionListeners(){
         reactionSettings.extra =
         Number(this.value);
 
+        calculateVolumes();
+
+render();
+
     });
 
 
@@ -46,6 +58,10 @@ function setupReactionListeners(){
 
         reactionSettings.overage =
         Number(this.value);
+
+        calculateVolumes();
+
+render();
 
     });
 
