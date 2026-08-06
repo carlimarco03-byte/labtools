@@ -15,3 +15,5 @@ let reactionSettings = {
 
 
 render();
+
+setupReactionListeners();
