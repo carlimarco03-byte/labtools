@@ -82,7 +82,17 @@ ${formatVolume(component.volumeMasterMix)}
 
 <td>${component.includeMM ? "✓" : "—"}</td>
 
-<td>⋮</td>
+<td>
+
+<button 
+class="menu-btn"
+data-id="${component.id}">
+
+⋮
+
+</button>
+
+</td>
 
 </tr>
 
