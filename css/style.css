@@ -807,6 +807,7 @@ font-size:1rem;
     border-collapse:collapse;
     margin-top:20px;
     background:white;
+    table-layout:fixed;
 
 }
 
@@ -817,6 +818,58 @@ font-size:1rem;
     background:#f5f7fb;
     border-bottom:2px solid #dbe3ea;
     font-weight:600;
+
+}
+
+/* COLUMN WIDTHS */
+
+.reaction-table th:nth-child(1),
+.reaction-table td:nth-child(1){
+
+    width:25%;
+    text-align:left;
+
+}
+
+
+.reaction-table th:nth-child(2),
+.reaction-table td:nth-child(2){
+
+    width:20%;
+
+}
+
+
+.reaction-table th:nth-child(3),
+.reaction-table td:nth-child(3){
+
+    width:20%;
+
+}
+
+
+.reaction-table th:nth-child(4),
+.reaction-table td:nth-child(4){
+
+    width:15%;
+
+}
+
+
+.reaction-table th:nth-child(5),
+.reaction-table td:nth-child(5){
+
+    width:10%;
+    text-align:center;
+
+}
+
+
+.reaction-table th:nth-child(6),
+.reaction-table td:nth-child(6){
+
+    width:10%;
+    text-align:center;
 
 }
 
@@ -961,7 +1014,7 @@ font-size:1rem;
 
 .table-input{
 
-    width:70px;
+    width:90px;
 
     border:1px solid transparent;
 
@@ -969,7 +1022,7 @@ font-size:1rem;
 
     font:inherit;
 
-    padding:4px;
+    padding:6px;
 
     text-align:right;
 
@@ -1026,6 +1079,14 @@ font-size:1rem;
 
 .value-unit .table-input{
 
-    width:70px;
+    width:90px;
+
+}
+
+.component-name{
+
+    text-align:left;
+
+    width:100%;
 
 }
