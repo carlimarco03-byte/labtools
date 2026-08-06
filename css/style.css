@@ -803,14 +803,52 @@ font-size:1rem;
 
 .component-card{
 
-    border:1px solid #dddddd;
+    background:white;
 
-    border-radius:12px;
+    border:1px solid #e5e7eb;
+
+    border-radius:14px;
 
     padding:20px;
 
-    margin-bottom:15px;
+    margin-bottom:20px;
 
-    background:white;
+}
+
+.component-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.component-header h3{
+
+    margin:0;
+
+}
+
+.component-body{
+
+    display:grid;
+
+    gap:15px;
+
+}
+
+.menu-btn{
+
+    background:none;
+
+    border:none;
+
+    font-size:20px;
+
+    cursor:pointer;
 
 }
