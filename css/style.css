@@ -801,54 +801,35 @@ font-size:1rem;
 
 }
 
-.component-card{
+.reaction-table{
 
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
     background:white;
 
-    border:1px solid #e5e7eb;
+}
 
-    border-radius:14px;
+.reaction-table th{
 
-    padding:20px;
-
-    margin-bottom:20px;
+    padding:14px;
+    text-align:left;
+    background:#f5f7fb;
+    border-bottom:2px solid #dbe3ea;
+    font-weight:600;
 
 }
 
-.component-header{
+.reaction-table td{
 
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:20px;
+    padding:14px;
+    border-bottom:1px solid #ececec;
+    vertical-align:middle;
 
 }
 
-.component-header h3{
+.reaction-table tr:hover{
 
-    margin:0;
-
-}
-
-.component-body{
-
-    display:grid;
-
-    gap:15px;
-
-}
-
-.menu-btn{
-
-    background:none;
-
-    border:none;
-
-    font-size:20px;
-
-    cursor:pointer;
+    background:#fafcff;
 
 }
