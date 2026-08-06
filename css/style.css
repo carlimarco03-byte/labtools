@@ -800,3 +800,17 @@ font-size:1rem;
     font-size:.9rem;
 
 }
+
+.component-card{
+
+    border:1px solid #dddddd;
+
+    border-radius:12px;
+
+    padding:20px;
+
+    margin-bottom:15px;
+
+    background:white;
+
+}
