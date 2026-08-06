@@ -68,7 +68,18 @@ value="${component.name}">
 
 
 
-<td>${component.stock ?? "-"} ${component.stockUnit ?? ""}</td>
+<td>
+
+<input
+class="table-input"
+type="number"
+data-id="${component.id}"
+data-field="stock"
+value="${component.stock ?? ""}">
+
+${component.stockUnit ?? ""}
+
+</td>
 
 <td>${component.target ?? "-"} ${component.targetUnit ?? ""}</td>
 
