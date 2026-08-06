@@ -70,6 +70,8 @@ value="${component.name}">
 
 <td>
 
+<div class="value-unit">
+
 <input
 class="table-input"
 type="number"
@@ -77,7 +79,11 @@ data-id="${component.id}"
 data-field="stock"
 value="${component.stock ?? ""}">
 
+<span>
 ${component.stockUnit ?? ""}
+</span>
+
+</div>
 
 </td>
 
