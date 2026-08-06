@@ -332,29 +332,70 @@ function duplicateComponent(id){
 
 function setupEditableFields(){
 
+
     document
-    .querySelectorAll(".component-name")
+    .querySelectorAll("[data-field]")
     .forEach(input => {
+
 
         input.addEventListener("change", function(){
 
-            const id = Number(this.dataset.id);
+
+            const id =
+            Number(this.dataset.id);
+
+
+            const field =
+            this.dataset.field;
+
 
             const component =
-                components.find(c => c.id === id);
+            components.find(
+                c => c.id === id
+            );
+
 
             if(!component){
                 return;
             }
 
-            component.name =
-                this.value.trim() || component.name;
+
+
+            let value =
+            this.value;
+
+
+
+            if(this.type === "number"){
+
+                value =
+                Number(value);
+
+
+                if(isNaN(value)){
+                    return;
+                }
+
+            }
+
+
+
+            component[field] =
+            value;
+
+
+
+            calculateVolumes();
+
 
             render();
 
+
         });
 
+
     });
+
 
 }
 
