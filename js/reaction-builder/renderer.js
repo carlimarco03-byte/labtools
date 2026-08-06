@@ -118,8 +118,7 @@ data-id="${component.id}">
     
     setupDynamicUI();
     
-    setupComponentMenu();
-    setupEditableFields();
+   
 }
 
 function renderCards() {
