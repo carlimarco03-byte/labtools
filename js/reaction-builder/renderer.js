@@ -48,7 +48,9 @@ function renderTable() {
 
 `;
 
-    components.forEach(component => {
+   [...components]
+.sort((a,b)=>a.order-b.order)
+.forEach(component => {
 
         html += `
 
