@@ -45,7 +45,7 @@ render();
     .addEventListener("input", function(){
 
     reactionSettings.reactions =
-positiveValue(this.value);
+Math.max(1, positiveValue(this.value));
 
         this.value = reactionSettings.reactions;
 
