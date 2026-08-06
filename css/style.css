@@ -961,15 +961,37 @@ font-size:1rem;
 
 .table-input{
 
-    width:100%;
+    width:70px;
 
-    border:none;
+    border:1px solid transparent;
 
     background:transparent;
 
     font:inherit;
 
     padding:4px;
+
+    text-align:right;
+
+    border-radius:4px;
+
+}
+
+
+.table-input:hover{
+
+    border-color:#d1d5db;
+
+}
+
+
+.table-input:focus{
+
+    outline:none;
+
+    border-color:#3b82f6;
+
+    background:white;
 
 }
 
@@ -989,6 +1011,8 @@ font-size:1rem;
     align-items:center;
 
     gap:6px;
+
+    justify-content:flex-start;
 
 }
 
