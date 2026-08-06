@@ -895,3 +895,24 @@ font-size:1rem;
     margin-top:0;
 
 }
+
+.reaction-warning{
+
+    display:none;
+
+    margin-top:15px;
+
+    padding:10px;
+
+    border-radius:6px;
+
+    font-size:14px;
+
+}
+
+
+.reaction-warning.active{
+
+    display:block;
+
+}
