@@ -85,14 +85,14 @@ const PCR_TEMPLATE = [
     name:"Water",
     type:"water",
     method:"auto",
-
+    locked:true,
     order:1,
 
     volumeReaction:0,
     volumeMasterMix:0,
 
     includeMM:true
-    locked:true
+    
 }
 
 ];
