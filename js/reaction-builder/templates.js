@@ -37,8 +37,24 @@ const PCR_TEMPLATE = [
     includeMM:true
 },
 
+
+
 {
-    id:3,
+    id: 3,
+    name: "Reverse Primer",
+    type: "primer",
+    method: "concentration",
+    stock: 10,
+    stockUnit: "µM",
+    target: 0.5,
+    targetUnit: "µM",
+     volumeReaction:0,
+    volumeMasterMix:0,
+    includeMM: true
+},
+
+{
+    id:4,
     name:"DNA",
     type:"template",
     method:"fixedVolume",
@@ -56,22 +72,6 @@ const PCR_TEMPLATE = [
 
     includeMM:false
 },
-
-{
-    id: 4,
-    name: "Reverse Primer",
-    type: "primer",
-    method: "concentration",
-    stock: 10,
-    stockUnit: "µM",
-    target: 0.5,
-    targetUnit: "µM",
-     volumeReaction:0,
-    volumeMasterMix:0,
-    includeMM: true
-},
-
-
 
 {
     id:5,
