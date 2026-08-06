@@ -329,3 +329,31 @@ function duplicateComponent(id){
 
 
 }
+
+function setupEditableFields(){
+
+    document
+    .querySelectorAll(".component-name")
+    .forEach(input => {
+
+        input.addEventListener("change", function(){
+
+            const id = Number(this.dataset.id);
+
+            const component =
+                components.find(c => c.id === id);
+
+            if(!component){
+                return;
+            }
+
+            component.name =
+                this.value.trim() || component.name;
+
+            render();
+
+        });
+
+    });
+
+}
