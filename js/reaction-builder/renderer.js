@@ -12,6 +12,34 @@ function render() {
 
 }
 
+function renderStock(component){
+
+    if(!component.stock){
+        return "-";
+    }
+
+
+    return `
+
+    <div class="value-unit">
+
+        <input
+        class="table-input"
+        type="number"
+        data-id="${component.id}"
+        data-field="stock"
+        value="${component.stock}">
+
+        <span>
+        ${component.stockUnit ?? ""}
+        </span>
+
+    </div>
+
+    `;
+
+}
+
 function renderTable() {
 
     const area = document.getElementById("calculatorArea");
