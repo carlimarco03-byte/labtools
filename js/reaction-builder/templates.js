@@ -6,6 +6,8 @@ const PCR_TEMPLATE = [
     type:"buffer",
     method:"concentration",
 
+    order:2,
+
     stock:10,
     stockUnit:"X",
 
@@ -24,7 +26,7 @@ const PCR_TEMPLATE = [
     name:"Forward Primer",
     type:"primer",
     method:"concentration",
-
+    order:3,
     stock:10,
     stockUnit:"µM",
 
@@ -44,6 +46,7 @@ const PCR_TEMPLATE = [
     name: "Reverse Primer",
     type: "primer",
     method: "concentration",
+    order:4,
     stock: 10,
     stockUnit: "µM",
     target: 0.5,
@@ -58,7 +61,7 @@ const PCR_TEMPLATE = [
     name:"DNA",
     type:"template",
     method:"fixedVolume",
-
+    order:5,
     stock:20,
     stockUnit:"ng/µL",
 
@@ -78,6 +81,8 @@ const PCR_TEMPLATE = [
     name:"Water",
     type:"water",
     method:"auto",
+
+    order:1,
 
     volumeReaction:0,
     volumeMasterMix:0,
