@@ -110,6 +110,8 @@ data-id="${component.id}">
 
     area.innerHTML = html;
 
+    setupComponentMenu();
+    
 }
 
 function renderCards() {
