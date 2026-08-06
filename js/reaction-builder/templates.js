@@ -19,6 +19,7 @@ const PCR_TEMPLATE = [
     volumeMasterMix:0,
 
     includeMM:true
+    locked:false
 },
 
 {
@@ -37,6 +38,7 @@ const PCR_TEMPLATE = [
     volumeMasterMix:0,
 
     includeMM:true
+    locked:false
 },
 
 
@@ -54,6 +56,7 @@ const PCR_TEMPLATE = [
      volumeReaction:0,
     volumeMasterMix:0,
     includeMM: true
+    locked:false
 },
 
 {
@@ -74,6 +77,7 @@ const PCR_TEMPLATE = [
     volumeMasterMix:0,
 
     includeMM:false
+    locked:true
 },
 
 {
@@ -88,6 +92,7 @@ const PCR_TEMPLATE = [
     volumeMasterMix:0,
 
     includeMM:true
+    locked:true
 }
 
 ];
