@@ -48,6 +48,9 @@ const PCR_TEMPLATE = [
 
     volume:2,
 
+    target:null,
+    targetUnit:null,
+
     volumeReaction:0,
     volumeMasterMix:0,
 
