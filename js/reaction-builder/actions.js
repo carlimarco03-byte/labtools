@@ -140,4 +140,62 @@ document
     resetCalculator();
 
 });
-    
+
+function setupComponentMenu(){
+
+
+    const menu =
+    document.getElementById("componentMenu");
+
+
+    if(!menu){
+        return;
+    }
+
+
+    document
+    .querySelectorAll(".menu-btn")
+    .forEach(button => {
+
+
+        button.addEventListener("click", function(event){
+
+
+            event.stopPropagation();
+
+
+            const id =
+            this.dataset.id;
+
+
+            menu.dataset.componentId = id;
+
+
+            menu.style.left =
+            event.pageX + "px";
+
+
+            menu.style.top =
+            event.pageY + "px";
+
+
+            menu.classList.add("active");
+
+
+        });
+
+
+    });
+
+
+
+    document.addEventListener("click", function(){
+
+
+        menu.classList.remove("active");
+
+
+    });
+
+
+}
