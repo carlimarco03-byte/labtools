@@ -130,6 +130,7 @@ function calculateMasterMix(){
 
 function checkReactionVolume(){
 
+    clearReactionWarning();
 
     let totalVolume = 0;
 
@@ -150,12 +151,53 @@ function checkReactionVolume(){
    if(totalVolume > reactionSettings.volume){
 
 
-    console.warn(
-    "Reaction volume too small for current components"
-    );
+    showReactionWarning(
+"Reaction volume too small for current components"
+);
 
 
 }
+
+
+}
+
+function showReactionWarning(message){
+
+
+    const warning =
+    document.getElementById("reactionWarning");
+
+
+    if(!warning){
+        return;
+    }
+
+
+    warning.innerHTML =
+    "⚠️ " + message;
+
+
+    warning.classList.add("active");
+
+
+}
+
+function clearReactionWarning(){
+
+
+    const warning =
+    document.getElementById("reactionWarning");
+
+
+    if(!warning){
+        return;
+    }
+
+
+    warning.innerHTML="";
+
+
+    warning.classList.remove("active");
 
 
 }
