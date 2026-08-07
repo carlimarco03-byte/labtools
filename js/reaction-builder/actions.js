@@ -406,3 +406,57 @@ function setupDynamicUI(){
     setupEditableFields();
 
 }
+
+document
+.getElementById("addComponentButton")
+.addEventListener("click", function(){
+
+    addComponent();
+
+});
+
+function addComponent(){
+
+    const newComponent = {
+
+        id: Date.now(),
+
+        name:"New component",
+
+        type:"reagent",
+
+        method:"concentration",
+
+        order: components.length + 1,
+
+
+        stock:10,
+
+        stockUnit:"µM",
+
+
+        target:0.5,
+
+        targetUnit:"µM",
+
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+
+        includeMM:true,
+
+        locked:false
+
+    };
+
+
+    components.push(newComponent);
+
+
+    calculateVolumes();
+
+    render();
+
+}
