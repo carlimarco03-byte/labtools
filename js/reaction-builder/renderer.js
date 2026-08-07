@@ -62,11 +62,15 @@ function renderName(component){
 
 function renderTarget(component){
 
-    if(component.type==="water"){
+   if(component.type==="water"){
 
-        return "—";
+return `
+<div class="value-unit">
+<span>—</span>
+</div>
+`;
 
-    }
+}
 
     if(component.type==="template"){
 
