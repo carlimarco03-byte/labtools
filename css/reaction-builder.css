@@ -292,24 +292,16 @@ REACTION BUILDER TABLE
 
     grid-template-columns:
 
-    2fr        /* Component */
-
-    1.1fr      /* Stock */
-
-    1.3fr      /* Final/added */
-
-    1fr        /* Volume/rxn */
-
-    1.2fr      /* Mastermix */
-
-    70px       /* MM */
-
-    50px;      /* Menu */
+    180px   /* Component */
+    120px   /* Stock */
+    130px   /* Final/added */
+    120px   /* Volume/rxn */
+    130px   /* Mastermix */
+    60px    /* MM */
+    45px;   /* Menu */
 
 
     align-items:center;
-
-    width:100%;
 
 }
 
