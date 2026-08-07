@@ -124,6 +124,13 @@ function renderMasterMix(component){
 
 function renderInclude(component){
 
+    if(component.type === "water"){
+
+        return "—";
+
+    }
+
+
     return component.includeMM ? "✓" : "—";
 
 }
