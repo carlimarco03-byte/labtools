@@ -432,7 +432,11 @@ function setupAddComponentModal(){
     const cancel =
     document.getElementById("cancelComponent");
 
+    
+    const confirm =
+    document.getElementById("confirmComponent");
 
+    
     if(!button || !modal){
 
         return;
@@ -453,5 +457,83 @@ function setupAddComponentModal(){
 
     });
 
+    confirm.addEventListener("click", function(){
+
+    createComponentFromPreset();
+
+        modal.classList.remove("active");
+
+});
+    
+}
+
+function createComponentFromPreset(){
+
+    const type =
+    document.getElementById("componentType").value;
+
+
+    const preset =
+    COMPONENT_PRESETS[type];
+
+
+    if(!preset){
+
+        return;
+
+    }
+
+
+    const newComponent = {
+
+        id: Date.now(),
+
+        ...structuredClone(preset),
+
+        order:0,
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        locked:false
+
+    };
+
+
+    const dnaIndex =
+    components.findIndex(
+        c => c.type === "template"
+    );
+
+
+    if(dnaIndex !== -1){
+
+        components.splice(
+            dnaIndex,
+            0,
+            newComponent
+        );
+
+    }
+    else{
+
+        components.push(newComponent);
+
+    }
+
+
+    components
+    .sort((a,b)=>a.order-b.order)
+    .forEach((component,index)=>{
+
+        component.order=index+1;
+
+    });
+
+
+    calculateVolumes();
+
+    render();
 
 }
