@@ -360,64 +360,8 @@ function setupDynamicUI(){
 
 }
 
-document
-.getElementById("addComponentButton")
-.addEventListener("click", function(){
-
-    addComponent();
-
-});
-
-function addComponent(){
-
-    const newComponent = {
-
-        id: Date.now(),
-
-        name:"New component",
-
-        type:"reagent",
-
-        method:"concentration",
-
-       order:
-components.find(c => c.type === "template").order - 0.1,
 
 
-        stock:10,
-
-        stockUnit:"µM",
-
-        target:0.5,
-
-        targetUnit:"µM",
-
-        volumeReaction:0,
-
-        volumeMasterMix:0,
-
-        includeMM:true,
-
-        locked:false
-
-    };
-
-
-    components.push(newComponent);
-
-components
-.sort((a, b) => a.order - b.order)
-.forEach((component, index) => {
-
-    component.order = index + 1;
-
-});
-    
-    calculateVolumes();
-
-    render();
-
-}
 
 function setupAddComponentModal(){
 
@@ -523,13 +467,11 @@ function createComponentFromPreset(){
     }
 
 
-    components
-    .sort((a,b)=>a.order-b.order)
-    .forEach((component,index)=>{
+   components.forEach((component,index)=>{
 
-        component.order=index+1;
+    component.order = index + 1;
 
-    });
+});
 
 
     calculateVolumes();
