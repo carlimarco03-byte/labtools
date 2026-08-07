@@ -233,7 +233,57 @@ Delete
 
 </footer>
 
+<div id="addComponentModal" class="modal">
 
+    <div class="modal-content">
+
+        <h3>Add Component</h3>
+
+        <div class="form-group">
+
+            <label>Type</label>
+
+            <select id="componentType">
+
+                <option value="primer">Primer</option>
+
+                <option value="probe">Probe</option>
+
+                <option value="polymerase">DNA Polymerase</option>
+
+                <option value="dntps">dNTP Mix</option>
+
+                <option value="mgcl2">MgCl₂</option>
+
+                <option value="other">Other</option>
+
+            </select>
+
+        </div>
+
+        <div class="modal-buttons">
+
+            <button
+                id="cancelComponent"
+                class="btn btn-secondary">
+
+                Cancel
+
+            </button>
+
+            <button
+                id="confirmComponent"
+                class="btn">
+
+                Add
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 <script src="../js/reaction-builder/templates.js"></script>
 
