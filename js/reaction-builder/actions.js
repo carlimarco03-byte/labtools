@@ -378,8 +378,8 @@ function addComponent(){
 
         method:"concentration",
 
-        order:
-        Math.max(...components.map(c=>c.order))+1,
+       order:
+components.find(c => c.type === "template").order - 0.1,
 
 
         stock:10,
@@ -403,7 +403,14 @@ function addComponent(){
 
     components.push(newComponent);
 
+components
+.sort((a, b) => a.order - b.order)
+.forEach((component, index) => {
 
+    component.order = index + 1;
+
+});
+    
     calculateVolumes();
 
     render();
