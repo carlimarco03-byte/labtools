@@ -36,22 +36,25 @@ const COMPONENT_PRESETS = {
 
     },
 
-    polymerase: {
+    polymerase:{
 
-        name: "DNA Polymerase",
+    name:"DNA Polymerase",
 
-        type: "polymerase",
+    type:"polymerase",
 
-        method: "fixedVolume",
+    method:"activity",
 
-        stock: 5,
-        stockUnit: "U/µL",
+    stock:5,
 
-        volume: 0.25,
+    stockUnit:"U/µL",
 
-        includeMM: true
+    target:1.25,
 
-    },
+    targetUnit:"U",
+
+    includeMM:true
+
+},
 
     dntps: {
 
