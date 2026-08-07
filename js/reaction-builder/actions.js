@@ -258,15 +258,18 @@ function deleteComponent(id){
     }
 
 
-    if(component.type === "water"){
+    if(
+    component.type === "water" ||
+    component.type === "template"
+){
 
-       showReactionWarning(
-"Water cannot be removed from the PCR reaction."
-);
+    showReactionWarning(
+        "This component cannot be removed."
+    );
 
-        return;
+    return;
 
-    }
+}
 
 
     components =
