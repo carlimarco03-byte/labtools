@@ -603,23 +603,29 @@ REACTION BUILDER TABLE
 
 }
 
+
+/* ================================
+INPUTS
+================================ */
+
+
 .table-input{
 
-width:80px;
+    width:80px;
 
-box-sizing:border-box;
+    box-sizing:border-box;
 
-border:1px solid transparent;
+    padding:6px 8px;
 
-background:transparent;
+    border:1px solid transparent;
 
-font:inherit;
+    background:transparent;
 
-padding:6px;
+    font:inherit;
 
-text-align:right;
+    border-radius:6px;
 
-border-radius:4px;
+    text-align:center;
 
 }
 
@@ -631,26 +637,49 @@ border-radius:4px;
 }
 
 
-
-
-
 .table-input:focus{
 
-    outline:2px solid #3b82f6;
+    outline:2px solid var(--secondary);
 
-    border-radius:4px;
+    background:white;
 
 }
 
+
+
+/* ================================
+COMPONENT NAME
+================================ */
+
+
+.component-name{
+
+    width:100%;
+
+    max-width:180px;
+
+    text-align:left;
+
+}
+
+
+
+/* ================================
+VALUE + UNIT
+================================ */
+
+
 .value-unit{
 
+    width:100%;
+
     display:flex;
+
+    justify-content:center;
 
     align-items:center;
 
     gap:6px;
-
-    justify-content:flex-start;
 
 }
 
@@ -659,7 +688,15 @@ border-radius:4px;
 
     white-space:nowrap;
 
+    color:var(--muted);
+
 }
+
+
+
+
+
+
 
 
 
@@ -670,15 +707,7 @@ border-radius:4px;
 
 }
 
-.component-name{
 
-text-align:left;
-
-width:100%;
-
-box-sizing:border-box;
-
-}
 
 /* ==============================
 REACTION BUILDER TABLE
@@ -698,13 +727,14 @@ REACTION BUILDER TABLE
     display:grid;
 
     grid-template-columns:
-    minmax(160px,2fr)
-    minmax(100px,1fr)
-    minmax(120px,1.2fr)
-    minmax(100px,1fr)
-    minmax(120px,1.2fr)
-    60px
-    45px;
+
+2fr
+1fr
+1fr
+1fr
+1fr
+60px
+45px;
 
     width:max-content;
 
