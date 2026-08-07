@@ -48,15 +48,28 @@ function renderStock(component){
 
 function renderName(component){
 
-    return `
+if(component.locked){
 
-    <input
-        class="table-input component-name"
-        data-id="${component.id}"
-        type="text"
-        value="${component.name}">
+return `
 
-    `;
+<span class="component-name locked-name">
+    ${component.name}
+</span>
+
+`;
+
+}
+
+
+return `
+
+<input
+    class="table-input component-name"
+    data-id="${component.id}"
+    type="text"
+    value="${component.name}">
+
+`;
 
 }
 
