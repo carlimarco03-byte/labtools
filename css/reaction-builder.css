@@ -742,3 +742,9 @@ REACTION BUILDER TABLE
 border:1px solid red;
 
 }
+
+.reaction-row > div:not(:first-child){
+
+    justify-content:flex-end;
+
+}
