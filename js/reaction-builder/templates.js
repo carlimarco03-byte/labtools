@@ -91,7 +91,7 @@ const PCR_TEMPLATE = [
     volumeReaction:0,
     volumeMasterMix:0,
 
-    includeMM:false
+    includeMM:true
     
 }
 
