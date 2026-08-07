@@ -514,66 +514,59 @@ box-sizing:border-box;
 
 }
 
-/* ===================================
-REACTION GRID TABLE
-=================================== */
+/* ==============================
+REACTION BUILDER TABLE
+============================== */
+
+.reaction-table-container{
+
+    width:100%;
+
+    overflow-x:auto;
+
+}
 
 
 .reaction-grid{
 
-display:grid;
+    display:grid;
 
-grid-template-columns:
+    grid-template-columns:
+    minmax(160px,2fr)
+    minmax(100px,1fr)
+    minmax(120px,1.2fr)
+    minmax(100px,1fr)
+    minmax(120px,1.2fr)
+    60px
+    45px;
 
-2fr
-1fr
-1.2fr
-1fr
-1.2fr
-60px
-45px;
+    width:max-content;
 
+    min-width:100%;
 
-width:100%;
-
-align-items:center;
+    align-items:center;
 
 }
-
 
 
 .reaction-grid > div{
 
-padding:14px 12px;
-
-min-width:0;
+    padding:12px 15px;
 
 }
-
 
 
 .reaction-header{
 
-background:#f5f7fb;
+    font-weight:600;
 
-font-weight:600;
-
-border-bottom:2px solid #dbe3ea;
+    background:#f5f7fb;
 
 }
-
 
 
 .reaction-row{
 
-border-bottom:1px solid #ececec;
-
-}
-
-
-
-.reaction-row:hover{
-
-background:#fafcff;
+    border-bottom:1px solid #ececec;
 
 }
