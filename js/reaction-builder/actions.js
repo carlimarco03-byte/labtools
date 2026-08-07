@@ -365,6 +365,14 @@ function setupDynamicUI(){
 
 function setupAddComponentModal(){
 
+    if(window.addComponentInitialized){
+
+        return;
+
+    }
+
+    window.addComponentInitialized = true;
+
     const button =
     document.getElementById("addComponentButton");
 
@@ -467,9 +475,35 @@ function createComponentFromPreset(){
     }
 
 
-   components.forEach((component,index)=>{
+   components.forEach(component => {
 
-    component.order = index + 1;
+    if(component.type === "water"){
+
+        component.order = 1;
+
+    }
+
+    else if(component.type === "template"){
+
+        component.order = 999;
+
+    }
+
+});
+
+
+let order = 2;
+
+components
+.filter(c =>
+    c.type !== "water" &&
+    c.type !== "template"
+)
+.forEach(component => {
+
+    component.order = order;
+
+    order++;
 
 });
 
