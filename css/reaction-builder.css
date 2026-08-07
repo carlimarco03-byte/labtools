@@ -720,3 +720,45 @@ border:1px solid red;
     text-align:left;
 
 }
+
+/* =================================
+TABLE ACTIONS
+================================= */
+
+
+.table-actions{
+
+    margin-top:15px;
+
+    display:flex;
+
+    justify-content:flex-start;
+
+}
+
+
+
+/* =================================
+GENERAL ACTIONS
+================================= */
+
+
+.calculator-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    margin-top:20px;
+
+}
+
+.btn-reset{
+
+    padding:8px 18px;
+
+    font-size:0.9rem;
+
+    border-radius:8px;
+
+}
