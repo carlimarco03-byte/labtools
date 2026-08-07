@@ -25,7 +25,16 @@ function calculateVolumes(){
 
         }
 
+else if(component.method === "activity"){
 
+
+    component.volumeReaction =
+    component.target /
+    component.stock;
+
+
+}
+    
         else if(component.method === "fixedVolume"){
 
 
