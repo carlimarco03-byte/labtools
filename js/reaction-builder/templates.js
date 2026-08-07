@@ -24,7 +24,7 @@ const PCR_TEMPLATE = [
 
 {
     id:2,
-    name:"Primer F",
+    name:"Forward Primer",
     type:"primer",
     method:"concentration",
     order:3,
@@ -45,7 +45,7 @@ const PCR_TEMPLATE = [
 
 {
     id: 3,
-    name: "Primer R",
+    name: "Reverse Primer",
     type: "primer",
     method: "concentration",
     order:4,
@@ -91,7 +91,7 @@ const PCR_TEMPLATE = [
     volumeReaction:0,
     volumeMasterMix:0,
 
-    includeMM:true
+    includeMM:false
     
 }
 
