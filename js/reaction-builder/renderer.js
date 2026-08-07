@@ -215,7 +215,7 @@ html += `
 
 });
 
-
+console.log(html);
 area.innerHTML = html;
 
 
