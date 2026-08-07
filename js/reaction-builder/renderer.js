@@ -15,8 +15,14 @@ function render() {
 function renderStock(component){
 
     if(!component.stock){
-        return "-";
-    }
+
+    return `
+        <div class="value-unit empty-cell">
+            <span>—</span>
+        </div>
+    `;
+
+}
 
 
     return `
