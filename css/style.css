@@ -1082,6 +1082,12 @@ font-size:1rem;
 
 }
 
+.empty-cell{
+
+    justify-content:flex-start;
+
+}
+
 .component-name{
 
     text-align:left;
@@ -1090,8 +1096,4 @@ font-size:1rem;
 
 }
 
-.empty-cell{
 
-    justify-content:flex-start;
-
-}
