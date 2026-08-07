@@ -142,11 +142,7 @@ const area = document.getElementById("calculatorArea");
 
 let html = `
 
-<div class="reaction-table-container">
-
-
 <div class="reaction-grid reaction-header">
-
     <div>Component</div>
     <div>Stock</div>
     <div>Final/added</div>
@@ -154,7 +150,6 @@ let html = `
     <div>Mastermix</div>
     <div>MM</div>
     <div>Menu</div>
-
 </div>
 
 `;
@@ -164,70 +159,48 @@ let html = `
 .sort((a,b)=>a.order-b.order)
 .forEach(component=>{
 
-
 html += `
 
 <div class="reaction-grid reaction-row">
-
 
     <div>
         ${renderName(component)}
     </div>
 
-
     <div>
         ${renderStock(component)}
     </div>
-
 
     <div>
         ${renderTarget(component)}
     </div>
 
-
     <div>
         ${renderReactionVolume(component)}
     </div>
-
 
     <div>
         ${renderMasterMix(component)}
     </div>
 
-
     <div>
         ${renderInclude(component)}
     </div>
-
 
     <div>
         ${renderMenu(component)}
     </div>
 
-
 </div>
-
 
 `;
 
 });
 
 
-html += `
-
-</div>
-
-`;
-
-
-console.log(html);
-
-
 area.innerHTML = html;
 
-
 setupDynamicUI();
-
 
 }
 
