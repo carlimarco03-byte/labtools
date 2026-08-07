@@ -812,7 +812,7 @@ font-size:1rem;
 
 .reaction-table th{
 
-    padding:14px;
+    padding:14px 18px;
     text-align:left;
     background:#f5f7fb;
     border-bottom:2px solid #dbe3ea;
@@ -874,7 +874,7 @@ font-size:1rem;
 
 .reaction-table td{
 
-    padding:14px;
+    padding:14px 18px;
     border-bottom:1px solid #ececec;
     vertical-align:middle;
 
@@ -1087,5 +1087,11 @@ font-size:1rem;
     text-align:left;
 
     width:100%;
+
+}
+
+.empty-cell{
+
+    justify-content:flex-start;
 
 }
