@@ -570,3 +570,9 @@ REACTION BUILDER TABLE
     border-bottom:1px solid #ececec;
 
 }
+
+.reaction-grid > div{
+
+border:1px solid red;
+
+}
