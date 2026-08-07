@@ -136,7 +136,7 @@ function renderMenu(component){
 }
 
 function renderTable(){
-alert("NUOVO RENDER TABLE");
+
 const area = document.getElementById("calculatorArea");
 
 
