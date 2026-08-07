@@ -137,19 +137,23 @@ function renderInclude(component){
 
 function renderMenu(component){
 
-    if(component.locked){
+    if(
+        component.locked ||
+        component.type === "template"
+    ){
 
         return "";
 
     }
 
+
     return `
 
-        <button
-            class="menu-btn"
-            data-id="${component.id}">
-            ⋮
-        </button>
+    <button
+        class="menu-btn"
+        data-id="${component.id}">
+        ⋮
+    </button>
 
     `;
 
