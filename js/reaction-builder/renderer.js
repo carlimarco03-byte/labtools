@@ -131,117 +131,93 @@ function renderMenu(component){
 
 }
 
-function renderTable() {
+function renderTable(){
 
-    const area = document.getElementById("calculatorArea");
-
-    let html = `
-
-<table class="reaction-table">
-
-<thead>
-
-<tr>
-
-<th>Component</th>
+const area = document.getElementById("calculatorArea");
 
 
+let html = `
 
-<th>Stock</th>
+<div class="reaction-grid reaction-header">
 
-<th>Final / Added</th>
+    <div>Component</div>
 
-<th>Volume/rxn</th>
+    <div>Stock</div>
 
-<th>Master Mix</th>
+    <div>Final/added</div>
 
-<th>MM</th>
+    <div>Volume/rxn</div>
 
-<th></th>
+    <div>Mastermix</div>
 
-</tr>
+    <div>MM</div>
 
-</thead>
+    <div></div>
 
-<tbody>
+</div>
 
 `;
 
-   [...components]
+
+
+[...components]
 .sort((a,b)=>a.order-b.order)
-.forEach(component => {
-
-        html += `
-
-<tr>
-
-<td>
-
-<input
-class="table-input component-name"
-data-id="${component.id}"
-type="text"
-value="${component.name}">
-
-</td>
+.forEach(component=>{
 
 
+html += `
 
-<td>
+<div class="reaction-grid reaction-row">
 
-${renderStock(component)}
 
-</td>
+    <div>
+        ${renderName(component)}
+    </div>
 
-<td>${component.target ?? "-"} ${component.targetUnit ?? ""}</td>
 
-<td>
-${formatVolume(component.volumeReaction)}
-</td>
+    <div>
+        ${renderStock(component)}
+    </div>
 
-<td>
-${formatVolume(component.volumeMasterMix)}
-</td>
 
-<td>${component.includeMM ? "✓" : "—"}</td>
+    <div>
+        ${renderTarget(component)}
+    </div>
 
-<td>
 
-${
-component.locked
-?
-""
-:
-`
-<button 
-class="menu-btn"
-data-id="${component.id}">
-⋮
-</button>
-`
-}
+    <div>
+        ${renderReactionVolume(component)}
+    </div>
 
-</td>
 
-</tr>
+    <div>
+        ${renderMasterMix(component)}
+    </div>
+
+
+    <div>
+        ${renderInclude(component)}
+    </div>
+
+
+    <div>
+        ${renderMenu(component)}
+    </div>
+
+
+</div>
 
 `;
 
-    });
+});
 
-    html += `
 
-</tbody>
+area.innerHTML = html;
 
-</table>
 
-`;
+setupDynamicUI();
 
-    area.innerHTML = html;
-    
-    setupDynamicUI();
-    
-   
+
 }
 
 function renderCards() {
