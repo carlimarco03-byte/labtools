@@ -46,6 +46,91 @@ function renderStock(component){
 
 }
 
+function renderName(component){
+
+    return `
+
+    <input
+        class="table-input component-name"
+        data-id="${component.id}"
+        type="text"
+        value="${component.name}">
+
+    `;
+
+}
+
+function renderTarget(component){
+
+    if(component.type==="water"){
+
+        return "—";
+
+    }
+
+    if(component.type==="template"){
+
+        return `${component.volume ?? 2} µL`;
+
+    }
+
+    return `
+
+    <div class="value-unit">
+
+        <input
+            class="table-input"
+            type="number"
+            data-id="${component.id}"
+            data-field="target"
+            value="${component.target ?? ""}">
+
+        <span>${component.targetUnit ?? ""}</span>
+
+    </div>
+
+    `;
+
+}
+
+function renderReactionVolume(component){
+
+    return formatVolume(component.volumeReaction);
+
+}
+
+function renderMasterMix(component){
+
+    return formatVolume(component.volumeMasterMix);
+
+}
+
+function renderInclude(component){
+
+    return component.includeMM ? "✓" : "—";
+
+}
+
+function renderMenu(component){
+
+    if(component.locked){
+
+        return "";
+
+    }
+
+    return `
+
+        <button
+            class="menu-btn"
+            data-id="${component.id}">
+            ⋮
+        </button>
+
+    `;
+
+}
+
 function renderTable() {
 
     const area = document.getElementById("calculatorArea");
