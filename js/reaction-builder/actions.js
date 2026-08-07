@@ -427,23 +427,21 @@ function addComponent(){
 
         method:"concentration",
 
-        order: components.length + 1,
+        order:
+        Math.max(...components.map(c=>c.order))+1,
 
 
         stock:10,
 
         stockUnit:"µM",
 
-
         target:0.5,
 
         targetUnit:"µM",
 
-
         volumeReaction:0,
 
         volumeMasterMix:0,
-
 
         includeMM:true,
 
