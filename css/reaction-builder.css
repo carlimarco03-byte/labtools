@@ -261,54 +261,228 @@ font-size:1rem;
 
 }
 
-.reaction-table{
+/* ======================================================
+REACTION BUILDER TABLE
+====================================================== */
+
+
+.reaction-table-container{
 
     width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
+
+    overflow-x:auto;
+
+    margin-top:25px;
+
     background:white;
-    
+
+    border-radius:12px;
+
+    border:1px solid var(--border);
+
 }
 
-.reaction-table th,
-.reaction-table td{
+
+
+/* GRID PRINCIPALE */
+
+.reaction-row{
+
+    display:grid;
+
+    grid-template-columns:
+
+    2fr        /* Component */
+
+    1.1fr      /* Stock */
+
+    1.3fr      /* Final/added */
+
+    1fr        /* Volume/rxn */
+
+    1.2fr      /* Mastermix */
+
+    70px       /* MM */
+
+    50px;      /* Menu */
+
+
+    align-items:center;
+
+    width:100%;
+
+}
+
+
+
+/* HEADER */
+
+.reaction-header{
+
+    background:#f5f7fb;
+
+    font-weight:600;
+
+    color:var(--text);
+
+    border-bottom:2px solid var(--border);
+
+}
+
+
+
+/* CELLE */
+
+.reaction-row > div{
+
+    padding:14px 16px;
+
+    min-width:0;
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+
+
+/* RIGHE DATI */
+
+.reaction-row:not(.reaction-header){
+
+    border-bottom:1px solid #ececec;
+
+}
+
+
+
+.reaction-row:not(.reaction-header):hover{
+
+    background:#fafcff;
+
+}
+
+
+
+/* COMPONENT NAME */
+
+.component-name{
+
+    width:100%;
+
+    text-align:left;
+
+}
+
+
+
+/* INPUT */
+
+.table-input{
+
+    width:80px;
+
+    padding:6px 8px;
+
+    border:1px solid transparent;
+
+    background:transparent;
+
+    font:inherit;
+
+    border-radius:6px;
+
+}
+
+
+.table-input:hover{
+
+    border-color:#d1d5db;
+
+}
+
+
+.table-input:focus{
+
+    outline:2px solid var(--secondary);
+
+    background:white;
+
+}
+
+
+
+/* NUMERI */
+
+.value-unit{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+}
+
+
+.value-unit span{
 
     white-space:nowrap;
 
-}
-
-.reaction-table th{
-
-    padding:14px 18px;
-    text-align:left;
-    background:#f5f7fb;
-    border-bottom:2px solid #dbe3ea;
-    font-weight:600;
+    color:var(--muted);
 
 }
 
 
 
-.reaction-table td{
+/* MENU */
 
-    padding:14px 18px;
-    border-bottom:1px solid #ececec;
-    vertical-align:middle;
+.menu-btn{
+
+    width:32px;
+
+    height:32px;
+
+    border:none;
+
+    background:none;
+
+    cursor:pointer;
+
+    font-size:22px;
+
+    line-height:1;
 
 }
 
-.reaction-table th:last-child,
-.reaction-table td:last-child{
 
-    width:50px;
+.menu-btn:hover{
 
-    text-align:center;
+    background:#eef2f7;
+
+    border-radius:6px;
 
 }
 
-.reaction-table tr:hover{
 
-    background:#fafcff;
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .reaction-table-container{
+
+        overflow-x:auto;
+
+    }
+
+
+    .reaction-row{
+
+        min-width:900px;
+
+    }
 
 }
 
