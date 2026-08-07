@@ -5,15 +5,17 @@
 
 .calculator-box{
 
-    background:white;
+background:white;
 
-    padding:35px;
+padding:35px;
 
-    border-radius:var(--radius);
+border-radius:var(--radius);
 
-    box-shadow:var(--shadow);
+box-shadow:var(--shadow);
 
-    max-width:700px;
+max-width:1200px;
+
+margin:auto;
 
 }
 
@@ -437,19 +439,21 @@ font-size:1rem;
 
 .table-input{
 
-    width:90px;
+width:80px;
 
-    border:1px solid transparent;
+box-sizing:border-box;
 
-    background:transparent;
+border:1px solid transparent;
 
-    font:inherit;
+background:transparent;
 
-    padding:6px;
+font:inherit;
 
-    text-align:right;
+padding:6px;
 
-    border-radius:4px;
+text-align:right;
+
+border-radius:4px;
 
 }
 
@@ -492,11 +496,7 @@ font-size:1rem;
 }
 
 
-.value-unit .table-input{
 
-    width:75px;
-
-}
 
 .empty-cell{
 
@@ -506,9 +506,74 @@ font-size:1rem;
 
 .component-name{
 
-    text-align:left;
+text-align:left;
 
-    width:100%;
+width:100%;
+
+box-sizing:border-box;
 
 }
 
+/* ===================================
+REACTION GRID TABLE
+=================================== */
+
+
+.reaction-grid{
+
+display:grid;
+
+grid-template-columns:
+
+2fr
+1fr
+1.2fr
+1fr
+1.2fr
+60px
+45px;
+
+
+width:100%;
+
+align-items:center;
+
+}
+
+
+
+.reaction-grid > div{
+
+padding:14px 12px;
+
+min-width:0;
+
+}
+
+
+
+.reaction-header{
+
+background:#f5f7fb;
+
+font-weight:600;
+
+border-bottom:2px solid #dbe3ea;
+
+}
+
+
+
+.reaction-row{
+
+border-bottom:1px solid #ececec;
+
+}
+
+
+
+.reaction-row:hover{
+
+background:#fafcff;
+
+}
