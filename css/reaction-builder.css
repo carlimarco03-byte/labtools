@@ -325,7 +325,9 @@ REACTION TABLE
 
 .reaction-table td{
 
-    padding:12px 16px;
+    height:55px;
+
+    padding:10px 16px;
 
     border-bottom:1px solid #ececec;
 
@@ -371,11 +373,15 @@ REACTION TABLE
 
 .table-input{
 
-    width:75px;
+    width:65px;
 
-    text-align:center;
+    height:32px;
 
-    padding:6px;
+    padding:4px 6px;
+
+    text-align:right;
+
+    box-sizing:border-box;
 
 }
 
@@ -391,13 +397,19 @@ REACTION TABLE
 
     align-items:center;
 
-    gap:5px;
+    gap:6px;
+
+    height:100%;
 
 }
 
 
 
 .value-unit span{
+
+    width:45px;
+
+    text-align:left;
 
     white-space:nowrap;
 
