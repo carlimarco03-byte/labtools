@@ -282,26 +282,22 @@ REACTION BUILDER TABLE
 
 }
 
+/* =====================================
+REACTION TABLE
+===================================== */
 
 
-/* GRID PRINCIPALE */
+.reaction-table{
 
-.reaction-row{
+    width:100%;
 
-    display:grid;
+    border-collapse:collapse;
 
-    grid-template-columns:
+    background:white;
 
-    180px   /* Component */
-    120px   /* Stock */
-    130px   /* Final/added */
-    120px   /* Volume/rxn */
-    130px   /* Mastermix */
-    60px    /* MM */
-    45px;   /* Menu */
+    border-radius:12px;
 
-
-    align-items:center;
+    overflow:hidden;
 
 }
 
@@ -309,13 +305,15 @@ REACTION BUILDER TABLE
 
 /* HEADER */
 
-.reaction-header{
+.reaction-table th{
 
     background:#f5f7fb;
 
-    font-weight:600;
+    padding:14px 16px;
 
-    color:var(--text);
+    text-align:center;
+
+    font-weight:600;
 
     border-bottom:2px solid var(--border);
 
@@ -325,31 +323,21 @@ REACTION BUILDER TABLE
 
 /* CELLE */
 
-.reaction-row > div{
+.reaction-table td{
 
-    padding:14px 16px;
-
-    min-width:0;
-
-    display:flex;
-
-    align-items:center;
-
-}
-
-
-
-/* RIGHE DATI */
-
-.reaction-row:not(.reaction-header){
+    padding:12px 16px;
 
     border-bottom:1px solid #ececec;
 
+    vertical-align:middle;
+
+    text-align:center;
+
 }
 
 
 
-.reaction-row:not(.reaction-header):hover{
+.reaction-table tr:hover{
 
     background:#fafcff;
 
@@ -357,11 +345,21 @@ REACTION BUILDER TABLE
 
 
 
-/* COMPONENT NAME */
+/* PRIMA COLONNA */
+
+.component-cell{
+
+    text-align:left !important;
+
+}
+
+
+
+/* INPUT NOME */
 
 .component-name{
 
-    width:100%;
+    width:180px;
 
     text-align:left;
 
@@ -369,60 +367,39 @@ REACTION BUILDER TABLE
 
 
 
-/* INPUT */
+/* INPUT NUMERICI */
 
 .table-input{
 
-    width:80px;
+    width:75px;
 
-    padding:6px 8px;
+    text-align:center;
 
-    border:1px solid transparent;
-
-    background:transparent;
-
-    font:inherit;
-
-    border-radius:6px;
-
-}
-
-
-.table-input:hover{
-
-    border-color:#d1d5db;
-
-}
-
-
-.table-input:focus{
-
-    outline:2px solid var(--secondary);
-
-    background:white;
+    padding:6px;
 
 }
 
 
 
-/* NUMERI */
+/* UNITÀ */
 
 .value-unit{
 
     display:flex;
 
+    justify-content:center;
+
     align-items:center;
 
-    gap:6px;
+    gap:5px;
 
 }
+
 
 
 .value-unit span{
 
     white-space:nowrap;
-
-    color:var(--muted);
 
 }
 
@@ -430,11 +407,14 @@ REACTION BUILDER TABLE
 
 /* MENU */
 
+.menu-cell{
+
+    width:50px;
+
+}
+
+
 .menu-btn{
-
-    width:32px;
-
-    height:32px;
 
     border:none;
 
@@ -444,18 +424,9 @@ REACTION BUILDER TABLE
 
     font-size:22px;
 
-    line-height:1;
-
 }
 
 
-.menu-btn:hover{
-
-    background:#eef2f7;
-
-    border-radius:6px;
-
-}
 
 
 
