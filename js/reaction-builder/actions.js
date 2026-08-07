@@ -356,6 +356,8 @@ function setupDynamicUI(){
 
     setupEditableFields();
 
+    setupAddComponentModal();
+
 }
 
 document
@@ -414,5 +416,42 @@ components
     calculateVolumes();
 
     render();
+
+}
+
+function setupAddComponentModal(){
+
+    const button =
+    document.getElementById("addComponentButton");
+
+
+    const modal =
+    document.getElementById("addComponentModal");
+
+
+    const cancel =
+    document.getElementById("cancelComponent");
+
+
+    if(!button || !modal){
+
+        return;
+
+    }
+
+
+    button.addEventListener("click", function(){
+
+        modal.classList.add("active");
+
+    });
+
+
+    cancel.addEventListener("click", function(){
+
+        modal.classList.remove("active");
+
+    });
+
 
 }
