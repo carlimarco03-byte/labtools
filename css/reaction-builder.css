@@ -319,7 +319,11 @@ REACTION TABLE
 
 }
 
+.reaction-table th:nth-child(5){
 
+    background:#eef6ff;
+
+}
 
 /* CELLE */
 
@@ -337,7 +341,15 @@ REACTION TABLE
 
 }
 
+/* ================================
+MASTER MIX COLUMN
+================================ */
 
+.reaction-table td:nth-child(5){
+
+    font-weight:600;
+
+}
 
 .reaction-table tr:hover{
 
@@ -763,3 +775,4 @@ border:1px solid red;
     justify-content:flex-end;
 
 }
+
