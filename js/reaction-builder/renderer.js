@@ -142,20 +142,26 @@ const area = document.getElementById("calculatorArea");
 
 let html = `
 
-<div class="reaction-table-container">
+<table class="reaction-table">
+
+<thead>
+
+<tr>
+
+<th>Component</th>
+<th>Stock</th>
+<th>Final/added</th>
+<th>Volume/rxn</th>
+<th>Mastermix</th>
+<th>MM</th>
+<th>Menu</th>
+
+</tr>
+
+</thead>
 
 
-    <div class="reaction-row reaction-header">
-
-        <div>Component</div>
-        <div>Stock</div>
-        <div>Final/added</div>
-        <div>Volume/rxn</div>
-        <div>Mastermix</div>
-        <div>MM</div>
-        <div>Menu</div>
-
-    </div>
+<tbody>
 
 `;
 
@@ -167,45 +173,59 @@ let html = `
 
 html += `
 
-    <div class="reaction-row">
+<tr>
 
 
-        <div>
-            ${renderName(component)}
-        </div>
+<td class="component-cell">
+
+${renderName(component)}
+
+</td>
 
 
-        <div>
-            ${renderStock(component)}
-        </div>
+<td>
+
+${renderStock(component)}
+
+</td>
 
 
-        <div>
-            ${renderTarget(component)}
-        </div>
+<td>
+
+${renderTarget(component)}
+
+</td>
 
 
-        <div>
-            ${renderReactionVolume(component)}
-        </div>
+<td>
+
+${renderReactionVolume(component)}
+
+</td>
 
 
-        <div>
-            ${renderMasterMix(component)}
-        </div>
+<td>
+
+${renderMasterMix(component)}
+
+</td>
 
 
-        <div>
-            ${renderInclude(component)}
-        </div>
+<td class="mm-cell">
+
+${renderInclude(component)}
+
+</td>
 
 
-        <div>
-            ${renderMenu(component)}
-        </div>
+<td class="menu-cell">
+
+${renderMenu(component)}
+
+</td>
 
 
-    </div>
+</tr>
 
 `;
 
@@ -214,7 +234,9 @@ html += `
 
 html += `
 
-</div>
+</tbody>
+
+</table>
 
 `;
 
