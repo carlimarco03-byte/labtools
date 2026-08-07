@@ -361,7 +361,9 @@ REACTION TABLE
 
 .component-name{
 
-    width:180px;
+    width:100%;
+    min-width:150px;
+    max-width:220px;
 
     text-align:left;
 
