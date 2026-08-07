@@ -142,26 +142,22 @@ const area = document.getElementById("calculatorArea");
 
 let html = `
 
+<div class="reaction-table-container">
+
+
 <div class="reaction-grid reaction-header">
 
     <div>Component</div>
-
     <div>Stock</div>
-
     <div>Final/added</div>
-
     <div>Volume/rxn</div>
-
     <div>Mastermix</div>
-
     <div>MM</div>
-
-    <div></div>
+    <div>Menu</div>
 
 </div>
 
 `;
-
 
 
 [...components]
@@ -211,11 +207,22 @@ html += `
 
 </div>
 
+
 `;
 
 });
 
+
+html += `
+
+</div>
+
+`;
+
+
 console.log(html);
+
+
 area.innerHTML = html;
 
 
