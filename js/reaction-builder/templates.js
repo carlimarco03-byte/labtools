@@ -277,7 +277,161 @@ const REACTION_TEMPLATES = {
 
 ],
 
-    "qPCR (Probe)": [],
+    "qPCR (Probe)": [
+
+    {
+        id:201,
+
+        name:"Water",
+
+        type:"water",
+
+        method:"auto",
+
+        locked:true,
+
+        order:1,
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:true
+    },
+
+    {
+        id:202,
+
+        name:"2X Probe Master Mix",
+
+        type:"mastermix",
+
+        method:"concentration",
+
+        order:2,
+
+        stock:2,
+
+        stockUnit:"X",
+
+        target:1,
+
+        targetUnit:"X",
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:true
+    },
+
+    {
+        id:203,
+
+        name:"Forward Primer",
+
+        type:"primer",
+
+        method:"concentration",
+
+        order:3,
+
+        stock:10,
+
+        stockUnit:"µM",
+
+        target:0.5,
+
+        targetUnit:"µM",
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:true
+    },
+
+    {
+        id:204,
+
+        name:"Reverse Primer",
+
+        type:"primer",
+
+        method:"concentration",
+
+        order:4,
+
+        stock:10,
+
+        stockUnit:"µM",
+
+        target:0.5,
+
+        targetUnit:"µM",
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:true
+    },
+
+    {
+        id:205,
+
+        name:"Probe",
+
+        type:"probe",
+
+        method:"concentration",
+
+        order:5,
+
+        stock:10,
+
+        stockUnit:"µM",
+
+        target:0.2,
+
+        targetUnit:"µM",
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:true
+    },
+
+    {
+        id:206,
+
+        name:"DNA",
+
+        type:"template",
+
+        method:"fixedVolume",
+
+        order:6,
+
+        stock:20,
+
+        stockUnit:"ng/µL",
+
+        volume:2,
+
+        target:null,
+
+        targetUnit:null,
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:false
+    }
+
+],
 
     "RT-PCR": [],
 
