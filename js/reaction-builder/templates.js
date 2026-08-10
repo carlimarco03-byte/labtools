@@ -60,11 +60,57 @@ const PCR_TEMPLATE = [
 },
 
 {
+    id:6,
+
+    name:"dNTP Mix",
+
+    type:"dntps",
+
+    method:"concentration",
+
+    order:5,
+
+    stock:10,
+    stockUnit:"mM",
+
+    target:0.2,
+    targetUnit:"mM",
+
+    volumeReaction:0,
+    volumeMasterMix:0,
+
+    includeMM:true
+},
+
+{
+    id:7,
+
+    name:"DNA Polymerase",
+
+    type:"polymerase",
+
+    method:"activity",
+
+    order:6,
+
+    stock:5,
+    stockUnit:"U/µL",
+
+    target:1.25,
+    targetUnit:"U",
+
+    volumeReaction:0,
+    volumeMasterMix:0,
+
+    includeMM:true
+},    
+
+{
     id:4,
     name:"DNA",
     type:"template",
     method:"fixedVolume",
-    order:5,
+    order:7,
     stock:20,
     stockUnit:"ng/µL",
 
