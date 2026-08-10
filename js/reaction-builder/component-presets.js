@@ -8,7 +8,7 @@ const COMPONENT_PRESETS = {
 
         method: "concentration",
 
-        stock: 10,
+        stock: 20,
         stockUnit: "µM",
 
         target: 0.5,
