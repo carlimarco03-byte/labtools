@@ -28,7 +28,7 @@ const PCR_TEMPLATE = [
     type:"primer",
     method:"concentration",
     order:3,
-    stock:10,
+    stock:20,
     stockUnit:"µM",
 
     target:0.5,
@@ -49,7 +49,7 @@ const PCR_TEMPLATE = [
     type: "primer",
     method: "concentration",
     order:4,
-    stock: 10,
+    stock: 20,
     stockUnit: "µM",
     target: 0.5,
     targetUnit: "µM",
@@ -206,7 +206,7 @@ const REACTION_TEMPLATES = {
 
         order:3,
 
-        stock:10,
+        stock:20,
 
         stockUnit:"µM",
 
@@ -232,7 +232,7 @@ const REACTION_TEMPLATES = {
 
         order:4,
 
-        stock:10,
+        stock:20,
 
         stockUnit:"µM",
 
@@ -336,7 +336,7 @@ const REACTION_TEMPLATES = {
 
         order:3,
 
-        stock:10,
+        stock:20,
 
         stockUnit:"µM",
 
@@ -362,7 +362,7 @@ const REACTION_TEMPLATES = {
 
         order:4,
 
-        stock:10,
+        stock:20,
 
         stockUnit:"µM",
 
