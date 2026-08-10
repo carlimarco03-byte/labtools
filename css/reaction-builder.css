@@ -346,6 +346,30 @@ MASTER MIX COLUMN
 
     box-sizing:border-box;
 
+    border:1px solid #d9e0e7;
+
+    background:#ffffff;
+
+    border-radius:5px;
+
+    font:inherit;
+
+}
+
+.table-input:hover{
+
+    border-color:#b8c4d0;
+
+}
+
+.table-input:focus{
+
+    outline:none;
+
+    border-color:var(--secondary);
+
+    box-shadow:0 0 0 2px rgba(59,130,246,0.10);
+
 }
 
 
