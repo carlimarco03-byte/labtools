@@ -50,11 +50,22 @@ function calculateVolumes(){
 
 else if(component.method === "activity"){
 
+    if(
+        component.stock <= 0 ||
+        component.target <= 0
+    ){
 
-    component.volumeReaction =
-    component.target /
-    component.stock;
+        component.volumeReaction = 0;
 
+    }
+
+    else {
+
+        component.volumeReaction =
+        component.target /
+        component.stock;
+
+    }
 
 }
     
@@ -134,16 +145,23 @@ function calculateMasterMix(){
     components.forEach(component => {
 
 
-        if(component.includeMM){
+        if(
+    component.includeMM &&
+    component.volumeReaction > 0
+){
 
+    component.volumeMasterMix =
 
-            component.volumeMasterMix =
+    component.volumeReaction *
+    totalReactions;
 
-            component.volumeReaction *
-            totalReactions;
+}
 
+else {
 
-        }
+    component.volumeMasterMix = 0;
+
+}
 
         else {
 
