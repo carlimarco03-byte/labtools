@@ -14,34 +14,36 @@ function render() {
 
 function renderStock(component){
 
-    if(!component.stock){
+    if(
+        component.stock === null ||
+        component.stock === undefined
+    ){
+
+        return `
+            <div class="value-unit empty-cell">
+                <span>—</span>
+            </div>
+        `;
+
+    }
 
     return `
-        <div class="value-unit empty-cell">
-            <span>—</span>
+
+        <div class="value-unit">
+
+            <input
+                class="table-input"
+                type="number"
+                min="0"
+                data-id="${component.id}"
+                data-field="stock"
+                value="${component.stock}">
+
+            <span>
+                ${component.stockUnit ?? ""}
+            </span>
+
         </div>
-    `;
-
-}
-
-
-    return `
-
-    <div class="value-unit">
-
-        <input
-        class="table-input"
-        type="number"
-        min="0"
-        data-id="${component.id}"
-        data-field="stock"
-        value="${component.stock}">
-
-        <span>
-        ${component.stockUnit ?? ""}
-        </span>
-
-    </div>
 
     `;
 
