@@ -1,5 +1,20 @@
 function calculateVolumes(){
 
+    components.forEach(component=>{
+
+    if(component.stock < 0){
+
+        component.stock = 0;
+
+    }
+
+    if(component.target < 0){
+
+        component.target = 0;
+
+    }
+
+});
 
     let usedVolume = 0;
 
@@ -10,20 +25,28 @@ function calculateVolumes(){
         if(component.method === "concentration"){
 
 
-            let volume =
-            (
-                component.target *
-                reactionSettings.volume
-            )
-            /
-            component.stock;
+    if(component.stock <= 0){
+
+        component.volumeReaction = 0;
+
+    }
+
+    else {
+
+        let volume =
+        (
+            component.target *
+            reactionSettings.volume
+        )
+        /
+        component.stock;
 
 
-            component.volumeReaction =
-            volume;
+        component.volumeReaction = volume;
 
+    }
 
-        }
+}
 
 else if(component.method === "activity"){
 
