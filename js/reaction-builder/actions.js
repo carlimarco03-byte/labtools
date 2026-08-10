@@ -369,7 +369,59 @@ function setupDynamicUI(){
 
 }
 
+function updateComponentPreview(){
 
+    const type =
+        document.getElementById("componentType").value;
+
+    const preview =
+        document.getElementById("componentPreview");
+
+    if(!preview){
+        return;
+    }
+
+    const preset =
+        COMPONENT_PRESETS[type];
+
+    if(!preset){
+        preview.innerHTML = "";
+        return;
+    }
+
+
+    preview.innerHTML = `
+
+        <div class="preview-row">
+
+            <span class="preview-label">
+                Stock
+            </span>
+
+            <span class="preview-value">
+                ${preset.stock ?? "—"}
+                ${preset.stockUnit ?? ""}
+            </span>
+
+        </div>
+
+
+        <div class="preview-row">
+
+            <span class="preview-label">
+                Final / added
+            </span>
+
+            <span class="preview-value">
+                ${preset.target ?? "—"}
+                ${preset.targetUnit ?? ""}
+            </span>
+
+        </div>
+
+    `;
+
+}
 
 
 function setupAddComponentModal(){
