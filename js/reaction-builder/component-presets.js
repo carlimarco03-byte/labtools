@@ -18,6 +18,7 @@ const COMPONENT_PRESETS = {
 
     },
 
+
     probe: {
 
         name: "Probe",
@@ -36,25 +37,25 @@ const COMPONENT_PRESETS = {
 
     },
 
-    polymerase:{
 
-    name:"DNA Polymerase",
+    polymerase: {
 
-    type:"polymerase",
+        name: "DNA Polymerase",
 
-    method:"activity",
+        type: "polymerase",
 
-    stock:5,
+        method: "activity",
 
-    stockUnit:"U/µL",
+        stock: 5,
+        stockUnit: "U/µL",
 
-    target:1.25,
+        target: 1.25,
+        targetUnit: "U",
 
-    targetUnit:"U",
+        includeMM: true
 
-    includeMM:true
+    },
 
-},
 
     dntps: {
 
@@ -74,6 +75,7 @@ const COMPONENT_PRESETS = {
 
     },
 
+
     mgcl2: {
 
         name: "MgCl₂",
@@ -92,11 +94,12 @@ const COMPONENT_PRESETS = {
 
     },
 
+
     other: {
 
-        name: "New Component",
+        name: "Other",
 
-        type: "reagent",
+        type: "other",
 
         method: "concentration",
 
