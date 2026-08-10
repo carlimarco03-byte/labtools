@@ -206,7 +206,7 @@ function checkReactionVolume(){
     if(smallVolumeComponent){
 
         showReactionWarning(
-            `${smallVolumeComponent.name}: volume below 0.1 µL. Consider preparing a dilution.`
+            `${smallVolumeComponent.name}: volume below 0.1 µL. Check volume or consider preparing a dilution.`
         );
 
     }
