@@ -167,9 +167,10 @@ function checkReactionVolume(){
 
     let totalVolume = 0;
 
+    let smallVolumeComponent = null;
+
 
     components.forEach(component => {
-
 
         if(component.type !== "water"){
 
@@ -178,19 +179,37 @@ function checkReactionVolume(){
         }
 
 
+        if(
+            component.type !== "water" &&
+            component.volumeReaction > 0 &&
+            component.volumeReaction < 0.1
+        ){
+
+            smallVolumeComponent = component;
+
+        }
+
     });
 
 
-   if(totalVolume > reactionSettings.volume){
+    if(totalVolume > reactionSettings.volume){
+
+        showReactionWarning(
+            "Reaction volume too small for current components"
+        );
+
+        return;
+
+    }
 
 
-    showReactionWarning(
-"Reaction volume too small for current components"
-);
+    if(smallVolumeComponent){
 
+        showReactionWarning(
+            `${smallVolumeComponent.name}: volume below 0.1 µL. Consider preparing a dilution.`
+        );
 
-}
-
+    }
 
 }
 
