@@ -96,3 +96,17 @@ const PCR_TEMPLATE = [
 }
 
 ];
+
+const REACTION_TEMPLATES = {
+
+    "PCR": PCR_TEMPLATE,
+
+    "qPCR (SYBR)": [],
+
+    "qPCR (Probe)": [],
+
+    "RT-PCR": [],
+
+    "Blank Mix": []
+
+};
