@@ -127,54 +127,37 @@ checkReactionVolume();
 
 function calculateMasterMix(){
 
-
     let totalReactions =
-
-    reactionSettings.reactions
-    +
-    reactionSettings.extra;
-
+        reactionSettings.reactions
+        +
+        reactionSettings.extra;
 
 
     totalReactions =
-    totalReactions *
-    (1 + reactionSettings.overage / 100);
-
+        totalReactions *
+        (1 + reactionSettings.overage / 100);
 
 
     components.forEach(component => {
 
-
         if(
-    component.includeMM &&
-    component.volumeReaction > 0
-){
+            component.includeMM &&
+            component.volumeReaction > 0
+        ){
 
-    component.volumeMasterMix =
-
-    component.volumeReaction *
-    totalReactions;
-
-}
-
-else {
-
-    component.volumeMasterMix = 0;
-
-}
-
-        else {
-
-
-            component.volumeMasterMix = 0;
-
+            component.volumeMasterMix =
+                component.volumeReaction *
+                totalReactions;
 
         }
 
-        
+        else {
+
+            component.volumeMasterMix = 0;
+
+        }
 
     });
-
 
 }
 
