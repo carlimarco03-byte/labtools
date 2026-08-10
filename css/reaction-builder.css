@@ -824,3 +824,59 @@ ADD COMPONENT MODAL
     margin-top:25px;
 
 }
+
+/* ===================================
+   COMPONENT PREVIEW
+=================================== */
+
+.component-preview {
+
+    margin-top: 16px;
+
+    padding: 12px 14px;
+
+    background: #f8fafc;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+}
+
+
+.preview-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 6px 0;
+
+}
+
+
+.preview-row + .preview-row {
+
+    border-top: 1px solid #e5e7eb;
+
+}
+
+
+.preview-label {
+
+    color: var(--muted);
+
+    font-size: 0.9rem;
+
+}
+
+
+.preview-value {
+
+    font-weight: 600;
+
+    color: var(--text);
+
+}
