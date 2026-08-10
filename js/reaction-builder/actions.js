@@ -367,6 +367,8 @@ function setupDynamicUI(){
 
     setupAddComponentModal();
 
+    setupTemplateSelector();
+
 }
 
 function updateComponentPreview(){
@@ -586,5 +588,52 @@ components
     calculateVolumes();
 
     render();
+
+}
+
+function setupTemplateSelector(){
+
+    if(window.templateSelectorInitialized){
+
+        return;
+
+    }
+
+    window.templateSelectorInitialized = true;
+
+
+    const selector =
+        document.getElementById("template");
+
+
+    if(!selector){
+        return;
+    }
+
+
+    selector.addEventListener("change", function(){
+
+        const templateName =
+            this.value;
+
+
+        const template =
+            REACTION_TEMPLATES[templateName];
+
+
+        if(!template){
+            return;
+        }
+
+
+        components =
+            structuredClone(template);
+
+
+        calculateVolumes();
+
+        render();
+
+    });
 
 }
