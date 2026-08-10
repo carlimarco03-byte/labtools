@@ -32,6 +32,7 @@ function renderStock(component){
         <input
         class="table-input"
         type="number"
+        min="0"
         data-id="${component.id}"
         data-field="stock"
         value="${component.stock}">
@@ -98,6 +99,7 @@ return `
         <input
             class="table-input"
             type="number"
+            min="0"
             data-id="${component.id}"
             data-field="target"
             value="${component.target ?? ""}">
