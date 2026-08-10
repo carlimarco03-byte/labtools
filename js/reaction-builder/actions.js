@@ -449,6 +449,9 @@ function setupAddComponentModal(){
     const confirm =
     document.getElementById("confirmComponent");
 
+    const typeSelect =
+    document.getElementById("componentType");
+
     
     if(!button || !modal){
 
@@ -456,10 +459,21 @@ function setupAddComponentModal(){
 
     }
 
+    if(typeSelect){
+
+    typeSelect.addEventListener("change", function(){
+
+        updateComponentPreview();
+
+    });
+
+}
 
     button.addEventListener("click", function(){
 
         modal.classList.add("active");
+
+        updateComponentPreview();
 
     });
 
