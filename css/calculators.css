@@ -198,3 +198,165 @@ margin:auto;
     font-size:.9rem;
 
 }
+
+/* ===================================
+   MOBILE CALCULATORS
+=================================== */
+
+@media (max-width: 768px) {
+
+    /* Calculator container */
+
+    .calculator-box {
+
+        width: 100%;
+
+        padding: 22px 18px;
+
+        border-radius: 10px;
+
+    }
+
+
+    /* Calculator title */
+
+    .calculator-box h1 {
+
+        font-size: 2rem;
+
+        line-height: 1.2;
+
+        margin-bottom: 14px;
+
+    }
+
+
+    /* Calculator description */
+
+    .calculator-box > p {
+
+        font-size: 0.95rem;
+
+        line-height: 1.5;
+
+    }
+
+
+    /* Form */
+
+    .form-group {
+
+        margin-bottom: 18px;
+
+    }
+
+
+    .form-group label {
+
+        font-size: 0.95rem;
+
+    }
+
+
+    /* Inputs */
+
+    .form-group input,
+    .form-group select {
+
+        width: 100%;
+
+        min-height: 46px;
+
+        padding: 11px 12px;
+
+        font-size: 16px;
+
+    }
+
+
+    /* Formula */
+
+    .formula {
+
+        padding: 13px 10px;
+
+        font-size: 1rem;
+
+        overflow-x: auto;
+
+        white-space: nowrap;
+
+    }
+
+
+    /* Result */
+
+    .result-box {
+
+        margin-top: 25px;
+
+        padding: 16px;
+
+        font-size: 0.95rem;
+
+        overflow-wrap: break-word;
+
+    }
+
+
+    .result-box strong {
+
+        font-size: 1.15rem;
+
+    }
+
+
+    /* Input + unit */
+
+    .input-with-unit {
+
+        width: 100%;
+
+        gap: 8px;
+
+    }
+
+
+    .input-with-unit input {
+
+        min-width: 0;
+
+        width: 100%;
+
+    }
+
+
+    .input-with-unit select {
+
+        min-width: 85px;
+
+        width: auto;
+
+    }
+
+
+    /* Buttons */
+
+    .button-group {
+
+        flex-direction: column;
+
+        gap: 10px;
+
+    }
+
+
+    .button-group .btn {
+
+        width: 100%;
+
+        min-height: 46px;
+
+    }
+
+}
