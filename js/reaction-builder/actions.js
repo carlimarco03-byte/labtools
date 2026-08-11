@@ -94,28 +94,31 @@ function resetCalculator(){
     const selector =
         document.getElementById("template");
 
-
     const templateName =
         selector ? selector.value : "PCR";
 
+    let selectedTemplate;
 
-    const selectedTemplate =
-        REACTION_TEMPLATES[templateName];
+    if(
+        typeof REACTION_TEMPLATES !== "undefined" &&
+        REACTION_TEMPLATES[templateName]
+    ){
 
-
-    if(selectedTemplate){
-
-        components =
-            structuredClone(selectedTemplate);
+        selectedTemplate =
+            REACTION_TEMPLATES[templateName];
 
     }
 
     else{
 
-        components =
-            structuredClone(PCR_TEMPLATE);
+        selectedTemplate =
+            PCR_TEMPLATE;
 
     }
+
+
+    components =
+        structuredClone(selectedTemplate);
 
 
     reactionSettings = {
