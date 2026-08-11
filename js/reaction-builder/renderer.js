@@ -278,7 +278,141 @@ setupDynamicUI();
 
 function renderCards() {
 
-    document.getElementById("calculatorArea").innerHTML =
-    "<p>Mobile layout coming soon.</p>";
+    const area = document.getElementById("calculatorArea");
+
+    let html = `
+        <div class="reaction-cards">
+    `;
+
+    [...components]
+        .sort((a, b) => a.order - b.order)
+        .forEach(component => {
+
+            html += `
+
+                <div class="reaction-card">
+
+                    <div class="reaction-card-header">
+
+                        <div class="reaction-card-title">
+
+                            ${component.locked
+                                ? `<span class="locked-name">${component.name}</span>`
+                                : `
+                                    <input
+                                        class="component-name"
+                                        type="text"
+                                        data-id="${component.id}"
+                                        data-field="name"
+                                        value="${component.name}">
+                                  `
+                            }
+
+                        </div>
+
+                        <div class="reaction-card-menu">
+
+                            ${renderMenu(component)}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="reaction-card-body">
+
+
+                        <div class="reaction-card-row">
+
+                            <span class="reaction-card-label">
+                                Stock
+                            </span>
+
+                            <div class="reaction-card-value">
+
+                                ${renderStock(component)}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="reaction-card-row">
+
+                            <span class="reaction-card-label">
+                                Final / Added
+                            </span>
+
+                            <div class="reaction-card-value">
+
+                                ${renderTarget(component)}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="reaction-card-row">
+
+                            <span class="reaction-card-label">
+                                Volume / reaction
+                            </span>
+
+                            <div class="reaction-card-value calculated-value">
+
+                                ${renderReactionVolume(component)}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="reaction-card-row master-mix-row">
+
+                            <span class="reaction-card-label">
+                                Master Mix
+                            </span>
+
+                            <div class="reaction-card-value calculated-value">
+
+                                ${renderMasterMix(component)}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="reaction-card-row">
+
+                            <span class="reaction-card-label">
+                                Include in MM
+                            </span>
+
+                            <div class="reaction-card-value">
+
+                                ${renderInclude(component)}
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+    html += `
+        </div>
+    `;
+
+
+    area.innerHTML = html;
+
+    setupDynamicUI();
 
 }
