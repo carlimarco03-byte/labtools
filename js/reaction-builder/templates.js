@@ -484,7 +484,7 @@ const REACTION_TEMPLATES = {
     {
         id:303,
 
-        name:"Forward Primer",
+        name:"RT Primer",
 
         type:"primer",
 
@@ -510,7 +510,7 @@ const REACTION_TEMPLATES = {
     {
         id:304,
 
-        name:"Reverse Primer",
+        name:"Forward Primer",
 
         type:"primer",
 
@@ -536,13 +536,39 @@ const REACTION_TEMPLATES = {
     {
         id:305,
 
+        name:"Reverse Primer",
+
+        type:"primer",
+
+        method:"concentration",
+
+        order:5,
+
+        stock:20,
+
+        stockUnit:"µM",
+
+        target:0.5,
+
+        targetUnit:"µM",
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:true
+    },
+
+    {
+        id:306,
+
         name:"RNA Template",
 
         type:"template",
 
         method:"fixedVolume",
 
-        order:5,
+        order:6,
 
         stock:null,
 
@@ -562,7 +588,6 @@ const REACTION_TEMPLATES = {
     }
 
 ],
-
     "Blank Mix": []
 
 };
