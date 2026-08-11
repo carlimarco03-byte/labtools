@@ -407,6 +407,8 @@ function setupDynamicUI(){
 
     setupTemplateSelector();
 
+    setupResetButton();
+
 }
 
 function updateComponentPreview(){
