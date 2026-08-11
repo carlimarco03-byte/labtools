@@ -981,3 +981,26 @@ ADD COMPONENT MODAL
     }
 
 }
+
+ /* ===================================
+    REACTION TEMPLATE SELECT
+ =================================== */
+
+ .reaction-settings #template {
+     width: 100%;
+     max-width: 280px;
+     min-width: 0;
+     box-sizing: border-box;
+     padding: 10px 12px;
+     font-size: 0.95rem;
+ }
+
+ @media (max-width: 768px) {
+
+     .reaction-settings #template {
+         width: 100%;
+         max-width: 100%;
+         min-width: 0;
+     }
+
+ }
