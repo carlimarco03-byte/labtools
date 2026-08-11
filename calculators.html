@@ -324,6 +324,55 @@
 
 </footer>
 
+    <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const params = new URLSearchParams(window.location.search);
+
+    const selectedCategory = params.get("category");
+
+    const sections = document.querySelectorAll("[data-category]");
+
+
+    // Nessuna categoria selezionata:
+    // mostra tutte le sezioni
+
+    if (!selectedCategory) {
+
+        sections.forEach(function (section) {
+
+            section.style.display = "";
+
+        });
+
+        return;
+    }
+
+
+    // Categoria selezionata:
+    // mostra solo la sezione corrispondente
+
+    sections.forEach(function (section) {
+
+        const category = section.dataset.category;
+
+        if (category === selectedCategory) {
+
+            section.style.display = "";
+
+        } else {
+
+            section.style.display = "none";
+
+        }
+
+    });
+
+});
+
+</script>
+    
 </body>
 
 </html>
