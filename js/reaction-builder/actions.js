@@ -91,9 +91,31 @@ render();
 
 function resetCalculator(){
 
+    const selector =
+        document.getElementById("template");
 
-    components =
-    structuredClone(PCR_TEMPLATE);
+
+    const templateName =
+        selector ? selector.value : "PCR";
+
+
+    const selectedTemplate =
+        REACTION_TEMPLATES[templateName];
+
+
+    if(selectedTemplate){
+
+        components =
+            structuredClone(selectedTemplate);
+
+    }
+
+    else{
+
+        components =
+            structuredClone(PCR_TEMPLATE);
+
+    }
 
 
     reactionSettings = {
@@ -110,36 +132,26 @@ function resetCalculator(){
 
 
     document.getElementById("reactionVolume").value =
-    reactionSettings.volume;
+        reactionSettings.volume;
 
 
     document.getElementById("reactionNumber").value =
-    reactionSettings.reactions;
+        reactionSettings.reactions;
 
 
     document.getElementById("extraReactions").value =
-    reactionSettings.extra;
+        reactionSettings.extra;
 
 
     document.getElementById("overage").value =
-    reactionSettings.overage;
+        reactionSettings.overage;
 
 
     calculateVolumes();
 
-
     render();
 
-
 }
-
-document
-.getElementById("resetButton")
-.addEventListener("click", function(){
-
-    resetCalculator();
-
-});
 
 function setupComponentMenu(){
 
