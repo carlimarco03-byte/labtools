@@ -532,5 +532,15 @@ text-align:center;
 
 }
 
+.category-card {
+    display: block;
+    color: var(--text);
+    text-decoration: none;
+    cursor: pointer;
+}
 
+.category-card:hover {
+    color: var(--text);
+    transform: translateY(-5px);
+}
 
