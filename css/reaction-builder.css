@@ -277,6 +277,39 @@ MASTER MIX COLUMN
 }
 
 
+/* ===================================
+   REACTION SETTINGS - MOBILE
+=================================== */
+
+@media (max-width: 768px){
+
+    .reaction-settings{
+        padding:20px 16px;
+        overflow:hidden;
+    }
+
+    .reaction-settings h2{
+        font-size:1.4rem;
+        margin-bottom:16px;
+    }
+
+    .settings-grid{
+        grid-template-columns:1fr;
+        gap:16px;
+    }
+
+    .settings-grid .form-group{
+        width:100%;
+    }
+
+    .settings-grid input{
+        width:100%;
+        max-width:100%;
+        box-sizing:border-box;
+    }
+
+}
+
 .settings-grid .form-group{
 
     margin-bottom:0;
