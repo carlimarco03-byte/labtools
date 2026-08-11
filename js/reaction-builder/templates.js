@@ -433,7 +433,135 @@ const REACTION_TEMPLATES = {
 
 ],
 
-    "RT-PCR": [],
+    "RT-PCR": [
+
+    {
+        id:301,
+
+        name:"Water",
+
+        type:"water",
+
+        method:"auto",
+
+        locked:true,
+
+        order:1,
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:true
+    },
+
+    {
+        id:302,
+
+        name:"2X RT-PCR Master Mix",
+
+        type:"mastermix",
+
+        method:"concentration",
+
+        order:2,
+
+        stock:2,
+
+        stockUnit:"X",
+
+        target:1,
+
+        targetUnit:"X",
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:true
+    },
+
+    {
+        id:303,
+
+        name:"Forward Primer",
+
+        type:"primer",
+
+        method:"concentration",
+
+        order:3,
+
+        stock:20,
+
+        stockUnit:"µM",
+
+        target:0.5,
+
+        targetUnit:"µM",
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:true
+    },
+
+    {
+        id:304,
+
+        name:"Reverse Primer",
+
+        type:"primer",
+
+        method:"concentration",
+
+        order:4,
+
+        stock:20,
+
+        stockUnit:"µM",
+
+        target:0.5,
+
+        targetUnit:"µM",
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:true
+    },
+
+    {
+        id:305,
+
+        name:"RNA Template",
+
+        type:"template",
+
+        method:"fixedVolume",
+
+        order:5,
+
+        stock:null,
+
+        stockUnit:null,
+
+        volume:2,
+
+        target:null,
+
+        targetUnit:null,
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:false
+    }
+
+],
 
     "Blank Mix": []
 
