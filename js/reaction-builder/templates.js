@@ -588,6 +588,26 @@ const REACTION_TEMPLATES = {
     }
 
 ],
-    "Blank Mix": []
+    "Blank Mix": [
 
-};
+    {
+        id:401,
+
+        name:"Water",
+
+        type:"water",
+
+        method:"auto",
+
+        locked:true,
+
+        order:1,
+
+        volumeReaction:0,
+
+        volumeMasterMix:0,
+
+        includeMM:true
+    }
+
+],
