@@ -156,6 +156,29 @@ function resetCalculator(){
 
 }
 
+function setupResetButton(){
+
+    const resetButton =
+        document.getElementById("resetButton");
+
+    if(!resetButton){
+        return;
+    }
+
+    if(resetButton.dataset.initialized === "true"){
+        return;
+    }
+
+    resetButton.dataset.initialized = "true";
+
+    resetButton.addEventListener("click", function(){
+
+        resetCalculator();
+
+    });
+
+}
+
 function setupComponentMenu(){
 
 
