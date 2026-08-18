@@ -481,3 +481,111 @@ margin:auto;
     }
 
 }
+
+/* ===================================
+   STATISTICAL TOOLS
+   =================================== */
+
+#dataInput {
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid var(--border);
+
+    border-radius:8px;
+
+    font-size:1rem;
+
+    font-family:inherit;
+
+    resize:vertical;
+
+    box-sizing:border-box;
+
+}
+
+#dataInput:focus {
+
+    outline:none;
+
+    border-color:var(--secondary);
+
+    box-shadow:
+        0 0 0 2px rgba(59,130,246,0.10);
+
+}
+
+
+/* ===================================
+   STATISTICS RESULT
+   =================================== */
+
+.statistics-result h3 {
+
+    margin-top:0;
+
+    margin-bottom:20px;
+
+}
+
+
+.statistics-grid {
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap:12px;
+
+}
+
+
+.statistics-grid > div {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 14px;
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:8px;
+
+}
+
+
+.statistics-grid span {
+
+    color:var(--muted);
+
+}
+
+
+.statistics-grid strong {
+
+    font-size:1.05rem;
+
+}
+
+
+/* ===================================
+   MOBILE
+   =================================== */
+
+@media(max-width:768px){
+
+    .statistics-grid {
+
+        grid-template-columns:1fr;
+
+    }
+
+}
