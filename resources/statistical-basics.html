@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Statistical Basics | Labistry</title>
+
+<meta name="description"
+      content="A practical introduction to statistics for laboratory and scientific research, including mean, median, standard deviation, variability and statistical significance.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+
+<link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+<div class="container header-content">
+
+<a href="../index.html" class="logo">
+Labistry
+</a>
+
+<nav>
+
+<a href="../calculators.html">
+Calculators
+</a>
+
+<a href="../resources.html">
+Resources
+</a>
+
+<a href="../about.html">
+About
+</a>
+
+</nav>
+
+</div>
+
+</header>
+
+
+
+<section class="hero">
+
+<div class="container">
+
+<h1>
+Statistical Basics
+</h1>
+
+<p class="hero-text">
+
+A practical introduction to common statistical
+concepts used when analysing laboratory and
+scientific data.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Why statistics matter in laboratory research
+</h2>
+
+<p>
+
+Laboratory experiments often produce multiple
+measurements for the same experimental condition.
+Statistics help researchers summarize these data,
+describe their variability and determine whether
+observed differences are likely to reflect real
+effects.
+
+</p>
+
+<br>
+
+<p>
+
+Good statistical analysis should begin with an
+understanding of the experimental design and the
+type of data being collected.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Mean, median and mode
+</h2>
+
+<p>
+
+The most common measures used to describe the
+central tendency of a dataset are the mean, median
+and mode.
+
+</p>
+
+<br>
+
+<div class="grid-3">
+
+
+<div class="card">
+
+<h3>
+Mean
+</h3>
+
+<p>
+
+The arithmetic average of all observations.
+
+</p>
+
+<div class="formula">
+
+Mean = Σx / n
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Median
+</h3>
+
+<p>
+
+The middle value when observations are arranged
+from smallest to largest.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Mode
+</h3>
+
+<p>
+
+The value that occurs most frequently in a dataset.
+
+</p>
+
+</div>
+
+
+</div>
+
+<br>
+
+<p>
+
+For example, consider the measurements:
+
+</p>
+
+<div class="formula">
+
+10, 12, 11, 13, 12
+
+</div>
+
+<p>
+
+The mean is 11.6, while the median is 12.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Variability and standard deviation
+</h2>
+
+<p>
+
+Two datasets can have the same mean but very
+different levels of variability.
+
+Standard deviation describes how widely individual
+observations are distributed around their mean.
+
+</p>
+
+<br>
+
+<div class="card">
+
+<h3>
+Example</h3>
+
+<p>
+
+Dataset A:
+
+</p>
+
+<div class="formula">
+
+10, 11, 10, 11, 10
+
+</div>
+
+<p>
+
+Dataset B:
+
+</p>
+
+<div class="formula">
+
+5, 15, 8, 14, 10
+
+</div>
+
+<p>
+
+Both datasets have a mean of approximately 10.4,
+but Dataset B shows substantially greater
+variability.
+
+</p>
+
+</div>
+
+<br>
+
+<p>
+
+A low standard deviation indicates that observations
+are relatively close to the mean, whereas a higher
+standard deviation indicates greater dispersion.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Range
+</h2>
+
+<p>
+
+The range provides a simple measure of variability
+by calculating the difference between the largest
+and smallest observations.
+
+</p>
+
+<div class="formula">
+
+Range = maximum − minimum
+
+</div>
+
+<br>
+
+<p>
+
+For example:
+
+</p>
+
+<div class="formula">
+
+5, 8, 10, 14, 15
+
+<br><br>
+
+Range = 15 − 5 = 10
+
+</div>
+
+<p>
+
+Although easy to calculate, the range depends only
+on two observations and therefore provides less
+information than measures such as standard deviation.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Why biological replicates matter
+</h2>
+
+<p>
+
+Biological replicates represent independent
+experimental units and are essential for estimating
+biological variability.
+
+</p>
+
+<br>
+
+<p>
+
+Technical replicates, on the other hand, are repeated
+measurements of the same experimental material and
+primarily help assess measurement or technical
+variability.
+
+</p>
+
+<br>
+
+<div class="card">
+
+<h3>
+Important distinction</h3>
+
+<p>
+
+Increasing the number of technical measurements does
+not necessarily provide the same statistical information
+as increasing the number of independent biological
+replicates.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Statistical significance
+</h2>
+
+<p>
+
+When comparing experimental groups, researchers often
+perform statistical tests to determine whether an
+observed difference is compatible with random variation
+under a specified statistical model.
+
+</p>
+
+<br>
+
+<p>
+
+A p-value is one component of this assessment. It
+describes how compatible the observed result, or a more
+extreme result, is with the null hypothesis under the
+assumptions of the statistical test.
+
+</p>
+
+<br>
+
+<p>
+
+A commonly used threshold is:
+
+</p>
+
+<div class="formula">
+
+p &lt; 0.05
+
+</div>
+
+<p>
+
+However, statistical significance should not be
+interpreted as proof that an experimental effect is
+biologically important.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Statistical significance vs biological relevance
+</h2>
+
+<p>
+
+A statistically significant difference can be very
+small and have little practical or biological relevance.
+
+Conversely, an important biological effect may fail to
+reach statistical significance if the experiment has
+high variability or insufficient statistical power.
+
+</p>
+
+<br>
+
+<p>
+
+For this reason, scientific interpretation should
+consider effect size, variability, confidence intervals,
+sample size and experimental context rather than relying
+only on a p-value.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Correlation vs causation
+</h2>
+
+<p>
+
+Correlation describes an association between two
+variables. It does not by itself demonstrate that one
+variable causes changes in the other.
+
+</p>
+
+<br>
+
+<div class="card">
+
+<h3>
+Example</h3>
+
+<p>
+
+Suppose plant growth and fertilizer concentration
+increase together in an experiment.
+
+A correlation between the two variables does not
+automatically prove that fertilizer concentration is
+the only factor responsible for the observed growth.
+
+</p>
+
+</div>
+
+<br>
+
+<p>
+
+Experimental design, controlled variables and appropriate
+statistical models are required when investigating
+causal relationships.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Choosing a statistical test
+</h2>
+
+<p>
+
+The appropriate statistical method depends on the
+experimental design, the type of variables, the number
+of groups, the distribution of the data and the
+scientific question.
+
+</p>
+
+<br>
+
+<div class="grid-3">
+
+
+<div class="card">
+
+<h3>
+Two groups</h3>
+
+<p>
+
+For example, comparing a control group with a treatment
+group.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Multiple groups</h3>
+
+<p>
+
+For example, comparing several treatments or
+experimental conditions.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Association</h3>
+
+<p>
+
+For example, investigating whether two measured
+variables are related.
+
+</p>
+
+</div>
+
+
+</div>
+
+<br>
+
+<p>
+
+Common statistical approaches include t-tests, ANOVA,
+correlation analysis, regression and non-parametric
+tests. The choice should be based on the experimental
+design and assumptions of the method rather than simply
+on which test produces the desired result.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Good statistical practice
+</h2>
+
+<div class="grid-3">
+
+
+<div class="card">
+
+<h3>
+Plan before analysing</h3>
+
+<p>
+
+Define the experimental question and statistical
+approach before inspecting the results whenever
+possible.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Report variability</h3>
+
+<p>
+
+Present appropriate measures of variability alongside
+summary statistics.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Consider the design</h3>
+
+<p>
+
+Statistical analysis should reflect the structure
+of the experiment and the independence of observations.
+
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<div class="card">
+
+<h2>
+Scientific Statistical Tools
+</h2>
+
+<p>
+
+Labistry will provide dedicated statistical tools
+to help researchers perform common calculations and
+explore their experimental data.
+
+</p>
+
+<br>
+
+<a class="btn"
+   href="../calculators.html">
+
+Browse Calculators
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<footer class="footer">
+
+<div class="container">
+
+<p>
+
+© 2026 Labistry — Free scientific calculators.
+
+</p>
+
+</div>
+
+</footer>
+
+
+</body>
+
+</html>
