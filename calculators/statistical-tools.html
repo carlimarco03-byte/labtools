@@ -1,1 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Statistical Tools | Labistry</title>
+
+<meta name="description"
+      content="Calculate descriptive statistics including mean, median, standard deviation, variance, range and more.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+
+<link rel="stylesheet" href="../css/style.css">
+
+<link rel="stylesheet" href="../css/calculators.css">
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+<div class="container header-content">
+
+
+<a href="../index.html" class="logo">
+Labistry
+</a>
+
+
+<nav>
+
+<a href="../calculators.html">
+Calculators
+</a>
+
+<a href="../resources.html">
+Resources
+</a>
+
+<a href="../about.html">
+About
+</a>
+
+</nav>
+
+
+</div>
+
+</header>
+
+
+
+<section>
+
+<div class="container">
+
+
+<div class="calculator-box">
+
+
+<h1>
+Statistical Tools
+</h1>
+
+
+<p>
+
+Calculate descriptive statistics for experimental
+and scientific datasets.
+
+</p>
+
+
+<div class="form-group">
+
+<label for="dataInput">
+
+Data
+
+</label>
+
+
+<textarea
+    id="dataInput"
+    rows="8"
+    placeholder="Example:
+
+10
+12
+11
+13
+12
+15"></textarea>
+
+
+<small>
+
+Enter values separated by commas, spaces,
+semicolons or new lines.
+
+</small>
+
+</div>
+
+
+
+<div class="button-group">
+
+<button
+    class="btn"
+    onclick="calculateStatistics()">
+
+Calculate
+
+</button>
+
+
+<button
+    class="btn btn-secondary"
+    onclick="resetStatistics()">
+
+Reset
+
+</button>
+
+</div>
+
+
+
+<div class="result-box" id="result">
+
+Result will appear here
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+
+<h2>
+About statistical calculations
+</h2>
+
+
+<p>
+
+Descriptive statistics provide a concise summary
+of a dataset. They can help researchers understand
+the central tendency and variability of experimental
+measurements.
+
+</p>
+
+
+<br>
+
+
+<div class="grid-3">
+
+
+<div class="card">
+
+<h3>
+Central tendency
+</h3>
+
+<p>
+
+Mean and median describe the typical or central
+value of a dataset.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Variability
+</h3>
+
+<p>
+
+Standard deviation and variance describe how widely
+observations are distributed around the mean.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Data range
+</h3>
+
+<p>
+
+Minimum, maximum and range provide a simple overview
+of the spread of the observed values.
+
+</p>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+
+<div class="card">
+
+
+<h2>
+Need more information?
+</h2>
+
+
+<p>
+
+Learn more about descriptive statistics,
+variability and statistical analysis in the
+Labistry Statistical Basics guide.
+
+</p>
+
+
+<br>
+
+
+<a
+    class="btn"
+    href="../resources/statistical-basics.html">
+
+Read Statistical Basics
+
+</a>
+
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+<footer class="footer">
+
+<div class="container">
+
+<p>
+
+© 2026 Labistry — Free scientific calculators.
+
+</p>
+
+</div>
+
+</footer>
+
+
+
+<script src="../js/calculators/statistics.js"></script>
+
+
+</body>
+
+</html>
