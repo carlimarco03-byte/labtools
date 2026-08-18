@@ -186,6 +186,10 @@ function calculateStatistics() {
     const populationSD =
         calculateStandardDeviation(data, false);
 
+   console.log("MEAN:", mean);
+console.log("POPULATION VARIANCE:", populationVariance);
+console.log("POPULATION SD:", populationSD);
+
     const sampleSD =
         calculateStandardDeviation(data, true);
 
