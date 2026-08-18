@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>qPCR Basics | Labistry</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+
+<link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+<div class="container header-content">
+
+<a href="../index.html" class="logo">
+Labistry
+</a>
+
+<nav>
+
+<a href="../calculators.html">
+Calculators
+</a>
+
+<a href="../resources.html">
+Resources
+</a>
+
+<a href="../about.html">
+About
+</a>
+
+</nav>
+
+</div>
+
+</header>
+
+
+
+<section class="hero">
+
+<div class="container">
+
+<h1>
+qPCR Basics
+</h1>
+
+<p class="hero-text">
+
+Understand the principles of quantitative PCR,
+the main reaction components and the differences
+between SYBR Green and probe-based assays.
+
+</p>
+
+<a class="btn" href="../calculators/reaction-builder.html">
+Open qPCR Reaction Builder
+</a>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+What is qPCR?
+</h2>
+
+<p>
+
+Quantitative PCR (qPCR), also known as real-time PCR,
+is a molecular biology technique used to monitor DNA
+amplification during the reaction.
+
+</p>
+
+<br>
+
+<p>
+
+Unlike conventional PCR, where amplification is
+typically evaluated at the end of the reaction,
+qPCR monitors fluorescence during successive
+amplification cycles.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Main qPCR components
+</h2>
+
+<div class="grid-2">
+
+
+<div class="card">
+
+<h3>
+DNA Template
+</h3>
+
+<p>
+
+The DNA containing the sequence of interest.
+For RT-qPCR experiments, the starting material is
+RNA that has first been converted into complementary DNA.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Forward & Reverse Primers
+</h3>
+
+<p>
+
+Primers define the target region and provide the
+starting points for DNA synthesis.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+DNA Polymerase
+</h3>
+
+<p>
+
+A thermostable DNA polymerase synthesizes new DNA
+during the amplification process.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+dNTPs</h3>
+
+<p>
+
+Deoxynucleotide triphosphates provide the building
+blocks required for DNA synthesis.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Reaction Buffer</h3>
+
+<p>
+
+The buffer provides the appropriate chemical
+environment for the polymerase and amplification
+reaction.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Fluorescence Detection</h3>
+
+<p>
+
+A fluorescent signal allows the accumulation of
+amplified DNA to be monitored during the reaction.
+
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+SYBR Green vs probe-based qPCR
+</h2>
+
+<div class="grid-2">
+
+
+<div class="card">
+
+<h3>
+🟢 SYBR Green</h3>
+
+<p>
+
+SYBR Green is a fluorescent dye that binds to
+double-stranded DNA.
+
+</p>
+
+<br>
+
+<p>
+
+As the amount of double-stranded DNA increases,
+the fluorescence signal increases.
+
+</p>
+
+<br>
+
+<p>
+
+SYBR Green assays are relatively simple and
+cost-effective, but fluorescence is not inherently
+specific to the intended amplicon.
+
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+🔵 Probe-based qPCR</h3>
+
+<p>
+
+Probe-based assays use a sequence-specific
+fluorescent probe in addition to the forward
+and reverse primers.
+
+</p>
+
+<br>
+
+<p>
+
+The probe provides an additional layer of sequence
+specificity during detection.
+
+</p>
+
+<br>
+
+<p>
+
+These assays can be more specific, but generally
+require additional assay design and reagents.
+
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Primer concentrations
+</h2>
+
+<p>
+
+Primer concentrations are usually specified as
+final concentrations in the reaction.
+
+The required volume can be calculated from the
+primer stock concentration using:
+
+</p>
+
+
+<div class="formula">
+
+C₁ × V₁ = C₂ × V₂
+
+</div>
+
+
+<p>
+
+For example, using a 20 µM primer stock in a
+20 µL reaction with a desired final concentration
+of 0.5 µM:
+
+</p>
+
+
+<div class="formula">
+
+V₁ = (0.5 µM × 20 µL) / 20 µM
+
+</div>
+
+
+<div class="result-box">
+
+<strong>Primer volume</strong>
+
+<br><br>
+
+0.5 µL per reaction
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Probe concentration</h2>
+
+<p>
+
+In probe-based qPCR, the fluorescent probe is an
+additional component of the reaction and its final
+concentration must be considered separately from
+the primer concentrations.
+
+</p>
+
+<br>
+
+<p>
+
+The appropriate concentration depends on the assay,
+probe chemistry and manufacturer's recommendations.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Master mix</h2>
+
+<p>
+
+Commercial qPCR master mixes commonly contain several
+reaction components, such as DNA polymerase, dNTPs,
+buffer and fluorescent detection chemistry.
+
+</p>
+
+<br>
+
+<p>
+
+When using a 2X master mix, a common setup is to use
+it at a final concentration of 1X.
+
+</p>
+
+
+<div class="formula">
+
+C₁ × V₁ = C₂ × V₂
+
+</div>
+
+
+<p>
+
+For example, in a 20 µL reaction using a 2X master mix
+at a final concentration of 1X:
+
+</p>
+
+
+<div class="result-box">
+
+<strong>2X Master Mix</strong>
+
+<br><br>
+
+10 µL per 20 µL reaction
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Important considerations</h2>
+
+<div class="grid-2">
+
+
+<div class="card">
+
+<h3>
+Amplicon specificity</h3>
+
+<p>
+
+Primer design and assay specificity are important
+for obtaining reliable amplification and fluorescence
+signals.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Controls</h3>
+
+<p>
+
+Appropriate controls, such as no-template controls,
+help identify contamination or non-specific signals.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Reaction efficiency</h3>
+
+<p>
+
+qPCR performance should be evaluated using appropriate
+assay validation procedures rather than relying only
+on the calculated reaction volumes.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Instrument settings</h3>
+
+<p>
+
+Fluorescence acquisition and analysis depend on the
+qPCR instrument and chemistry being used.
+
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Related tools</h2>
+
+<div class="grid-2">
+
+
+<div class="card">
+
+<h3>
+qPCR Reaction Builder</h3>
+
+<p>
+
+Build qPCR reactions using either SYBR Green
+or probe-based master mix templates.
+
+</p>
+
+<br>
+
+<a class="btn" href="../calculators/reaction-builder.html">
+Open Reaction Builder
+</a>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+PCR Basics</h3>
+
+<p>
+
+Learn more about conventional PCR components,
+reaction setup and master mix preparation.
+
+</p>
+
+<br>
+
+<a class="btn" href="pcr-basics.html">
+Read PCR Guide
+</a>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<footer class="footer">
+
+<div class="container">
+
+<p>
+
+© 2026 Labistry — Free scientific calculators.
+
+</p>
+
+</div>
+
+</footer>
+
+
+</body>
+
+</html>
