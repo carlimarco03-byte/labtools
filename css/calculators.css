@@ -360,3 +360,39 @@ margin:auto;
     }
 
 }
+
+/* ===================================
+   DNA SEQUENCE INPUT
+=================================== */
+
+.form-group textarea {
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid var(--border);
+
+    border-radius:8px;
+
+    font-size:1rem;
+
+    font-family:monospace;
+
+    resize:vertical;
+
+    min-height:160px;
+
+    box-sizing:border-box;
+
+}
+
+.form-group textarea:focus {
+
+    outline:none;
+
+    border-color:var(--secondary);
+
+    box-shadow:0 0 0 2px rgba(59,130,246,0.10);
+
+}
