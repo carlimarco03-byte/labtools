@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Percentage Solution Calculator | Labistry</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+
+<link rel="stylesheet" href="../css/style.css">
+
+<link rel="stylesheet" href="../css/calculators.css">
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+<div class="container header-content">
+
+<a href="../index.html" class="logo">
+Labistry
+</a>
+
+<nav>
+
+<a href="../calculators.html">
+Calculators
+</a>
+
+<a href="#">
+Resources
+</a>
+
+<a href="#">
+About
+</a>
+
+</nav>
+
+</div>
+
+</header>
+
+
+
+<section>
+
+<div class="container">
+
+<div class="calculator-box">
+
+
+<h1>
+Percentage Solution Calculator
+</h1>
+
+
+<p>
+
+Calculate the amount of solute required to prepare
+percentage solutions using w/v, v/v or w/w notation.
+
+</p>
+
+
+
+<div class="form-group">
+
+<label>
+Solution type
+</label>
+
+<select id="solutionType">
+
+<option value="wv">
+% w/v — weight / volume
+</option>
+
+<option value="vv">
+% v/v — volume / volume
+</option>
+
+<option value="ww">
+% w/w — weight / weight
+</option>
+
+</select>
+
+</div>
+
+
+
+<div class="form-group">
+
+<label>
+Percentage (%)
+</label>
+
+<input
+    id="percentage"
+    type="number"
+    min="0"
+    step="any"
+    placeholder="Example: 5">
+
+</div>
+
+
+
+<div class="form-group">
+
+<label id="amountLabel">
+Final volume (mL)
+</label>
+
+<input
+    id="finalAmount"
+    type="number"
+    min="0"
+    step="any"
+    placeholder="Example: 250">
+
+</div>
+
+
+
+<div class="formula" id="formula">
+
+% w/v = g solute / 100 mL solution
+
+</div>
+
+
+
+<div class="button-group">
+
+<button
+    class="btn"
+    onclick="calculatePercentage()">
+
+Calculate
+
+</button>
+
+<button
+    class="btn btn-secondary"
+    onclick="resetCalculator()">
+
+Reset
+
+</button>
+
+</div>
+
+
+
+<div class="result-box" id="result">
+
+Result will appear here
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+About percentage solutions
+</h2>
+
+<p>
+
+Percentage solutions express the amount of solute
+relative to a defined amount of final solution.
+
+For w/v solutions, the percentage represents grams
+of solute per 100 mL of solution.
+
+For v/v solutions, it represents millilitres of solute
+per 100 mL of solution.
+
+For w/w solutions, it represents grams of solute
+per 100 g of solution.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<footer class="footer">
+
+<div class="container">
+
+<p>
+© 2026 Labistry — Free scientific calculators.
+</p>
+
+</div>
+
+</footer>
+
+
+
+<script src="../js/calculators/percentage.js"></script>
+
+
+</body>
+
+</html>
