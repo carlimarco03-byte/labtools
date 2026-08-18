@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DNA Sequences | Labistry</title>
+
+<meta name="description"
+      content="Learn about DNA sequences, complementary sequences, reverse complements and basic DNA sequence analysis.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+
+<link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+<div class="container header-content">
+
+<a href="../index.html" class="logo">
+Labistry
+</a>
+
+<nav>
+
+<a href="../calculators.html">
+Calculators
+</a>
+
+<a href="../resources.html">
+Resources
+</a>
+
+<a href="../about.html">
+About
+</a>
+
+</nav>
+
+</div>
+
+</header>
+
+
+
+<section class="hero">
+
+<div class="container">
+
+<h1>
+DNA Sequences
+</h1>
+
+<p class="hero-text">
+
+A practical introduction to DNA sequences,
+complementary strands, reverse complements
+and basic sequence analysis.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+What is a DNA sequence?
+</h2>
+
+<p>
+
+DNA sequences are ordered combinations of four
+nucleotide bases: adenine (A), thymine (T),
+cytosine (C) and guanine (G).
+
+</p>
+
+<br>
+
+<div class="grid-2">
+
+<div class="card">
+
+<h3>
+Adenine (A)
+</h3>
+
+<p>
+Pairs with thymine (T).
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>
+Thymine (T)
+</h3>
+
+<p>
+Pairs with adenine (A).
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>
+Cytosine (C)
+</h3>
+
+<p>
+Pairs with guanine (G).
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>
+Guanine (G)
+</h3>
+
+<p>
+Pairs with cytosine (C).
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+DNA strand orientation
+</h2>
+
+<p>
+
+DNA strands have a direction determined by the
+5' and 3' ends of the nucleotide backbone.
+
+The two strands of DNA are antiparallel.
+
+</p>
+
+<br>
+
+<div class="formula">
+
+5' — A T G C — 3'
+
+<br><br>
+
+3' — T A C G — 5'
+
+</div>
+
+<p>
+
+The sequence of one strand therefore determines
+the complementary sequence of the other strand.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Complementary sequences
+</h2>
+
+<p>
+
+To obtain the complementary sequence, replace
+each nucleotide with its corresponding base:
+
+</p>
+
+<div class="card">
+
+<p>
+
+<strong>A → T</strong><br>
+<strong>T → A</strong><br>
+<strong>C → G</strong><br>
+<strong>G → C</strong>
+
+</p>
+
+</div>
+
+<br>
+
+<p>
+
+For example:
+
+</p>
+
+<div class="formula">
+
+5' — A T G C C A — 3'
+
+<br><br>
+
+3' — T A C G G T — 5'
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Reverse complement
+</h2>
+
+<p>
+
+The reverse complement is obtained by first
+generating the complementary sequence and then
+reversing its orientation so that the result is
+also written from 5' to 3'.
+
+</p>
+
+<br>
+
+<div class="formula">
+
+Original:
+
+5' — A T G C C A — 3'
+
+<br><br>
+
+Complement:
+
+3' — T A C G G T — 5'
+
+<br><br>
+
+Reverse complement:
+
+5' — T G G C A T — 3'
+
+</div>
+
+<br>
+
+<p>
+
+Reverse-complement sequences are commonly used
+when working with DNA primers, sequence databases,
+PCR assays and molecular cloning workflows.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+GC content
+</h2>
+
+<p>
+
+GC content represents the percentage of nucleotides
+in a DNA sequence that are either guanine (G) or
+cytosine (C).
+
+</p>
+
+<div class="formula">
+
+GC% =
+(G + C) / total nucleotides × 100
+
+</div>
+
+<br>
+
+<p>
+
+For example, consider:
+
+</p>
+
+<div class="formula">
+
+5' — A T G C C A — 3'
+
+</div>
+
+<p>
+
+There are 3 G/C nucleotides out of 6 total
+nucleotides.
+
+</p>
+
+<div class="formula">
+
+GC% = 3 / 6 × 100 = 50%
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Why sequence orientation matters
+</h2>
+
+<p>
+
+Many molecular biology applications require DNA
+sequences to be written in a specific orientation,
+normally from 5' to 3'.
+
+</p>
+
+<br>
+
+<p>
+
+This is particularly important when designing
+PCR primers, comparing sequences or searching
+sequence databases.
+
+</p>
+
+<br>
+
+<p>
+
+A sequence and its reverse complement contain the
+same genetic information, but they represent
+opposite strands and orientations.
+
+</p>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<h2>
+Common sequence checks
+</h2>
+
+<div class="grid-3">
+
+<div class="card">
+
+<h3>
+Sequence length
+</h3>
+
+<p>
+
+Count the number of nucleotides in the sequence.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+GC content
+</h3>
+
+<p>
+
+Determine the percentage of G and C nucleotides.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Reverse complement
+</h3>
+
+<p>
+
+Generate the sequence corresponding to the
+opposite DNA strand in 5' to 3' orientation.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<section>
+
+<div class="container">
+
+<div class="card">
+
+<h2>
+DNA sequence tools
+</h2>
+
+<p>
+
+Labistry will provide dedicated tools for common
+DNA sequence calculations, including reverse
+complement generation and GC content analysis.
+
+</p>
+
+<br>
+
+<a class="btn"
+   href="../calculators.html">
+
+Browse Calculators
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<footer class="footer">
+
+<div class="container">
+
+<p>
+
+© 2026 Labistry — Free scientific calculators.
+
+</p>
+
+</div>
+
+</footer>
+
+
+</body>
+
+</html>
