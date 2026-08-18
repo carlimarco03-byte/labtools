@@ -82,7 +82,7 @@ function calculateMedian(data) {
 
 }
 
-console.log("STATISTICS VARIANCE FUNCTION LOADED");
+
 /* ===================================
    VARIANCE
    =================================== */
@@ -102,9 +102,7 @@ function calculateVariance(data, sample = false) {
         value => Math.pow(value - mean, 2)
     );
 
-   console.log("DATA:", data);
-console.log("MEAN IN VARIANCE:", mean);
-console.log("SQUARED DIFFERENCES:", squaredDifferences);
+
    
     const sum = squaredDifferences.reduce(
         (total, value) => total + value,
@@ -147,7 +145,7 @@ function calculateStatistics() {
 
     const data = parseData();
 
-   console.log("Data:", data);
+ 
 
     const result = document.getElementById("result");
 
