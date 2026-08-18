@@ -109,7 +109,7 @@ const PCR_TEMPLATE = [
     id:4,
     name:"DNA",
     type:"template",
-    method:"fixedVolume",
+    method:"concentration",
     order:7,
     stock:20,
     stockUnit:"ng/µL",
