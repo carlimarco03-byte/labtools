@@ -143,6 +143,8 @@ function calculateStatistics() {
 
     const data = parseData();
 
+   console.log("Data:", data);
+
     const result = document.getElementById("result");
 
     if (data.length === 0) {
