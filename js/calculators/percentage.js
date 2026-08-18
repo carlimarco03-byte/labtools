@@ -105,7 +105,17 @@ function calculatePercentage() {
 
             " g<br><br>" +
 
-            "Prepare a final volume of " +
+            "<strong>How to prepare:</strong><br>" +
+
+            "Weigh " +
+
+            solute.toFixed(2) +
+
+            " g of solute and dissolve it in a suitable " +
+
+            "amount of solvent. Then adjust the solution " +
+
+            "to a final volume of " +
 
             finalAmount.toFixed(2) +
 
@@ -124,7 +134,17 @@ function calculatePercentage() {
 
             " mL<br><br>" +
 
-            "Prepare a final volume of " +
+            "<strong>How to prepare:</strong><br>" +
+
+            "Measure " +
+
+            solute.toFixed(2) +
+
+            " mL of liquid solute and add it to a suitable " +
+
+            "amount of solvent. Then adjust the solution " +
+
+            "to a final volume of " +
 
             finalAmount.toFixed(2) +
 
@@ -143,7 +163,15 @@ function calculatePercentage() {
 
             " g<br><br>" +
 
-            "Prepare a final solution mass of " +
+            "<strong>How to prepare:</strong><br>" +
+
+            "Weigh " +
+
+            solute.toFixed(2) +
+
+            " g of solute and add solvent until the " +
+
+            "total mass of the solution reaches " +
 
             finalAmount.toFixed(2) +
 
