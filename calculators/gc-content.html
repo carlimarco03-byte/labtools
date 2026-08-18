@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GC Content Calculator | Labistry</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/calculators.css">
+
+</head>
+
+
+<body>
+
+<header class="site-header">
+
+<div class="container header-content">
+
+<a href="../index.html" class="logo">
+Labistry
+</a>
+
+<nav>
+
+<a href="../calculators.html">
+Calculators
+</a>
+
+<a href="#">
+Resources
+</a>
+
+<a href="#">
+About
+</a>
+
+</nav>
+
+</div>
+
+</header>
+
+
+<section>
+
+<div class="container">
+
+<div class="calculator-box">
+
+<h1>
+GC Content Calculator
+</h1>
+
+<p>
+Calculate the GC content of a DNA sequence.
+</p>
+
+
+<div class="form-group">
+
+<label>
+DNA sequence
+</label>
+
+<textarea
+    id="sequence"
+    rows="8"
+    placeholder="Enter DNA sequence..."
+></textarea>
+
+</div>
+
+
+<div class="formula">
+
+GC content = (G + C) / total bases × 100
+
+</div>
+
+
+<div class="button-group">
+
+<button
+    class="btn"
+    onclick="calculateGC()">
+
+Calculate
+
+</button>
+
+<button
+    class="btn btn-secondary"
+    onclick="resetCalculator()">
+
+Reset
+
+</button>
+
+</div>
+
+
+<div class="result-box" id="result">
+
+Enter a DNA sequence to calculate GC content.
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<section>
+
+<div class="container">
+
+<h2>
+How it works
+</h2>
+
+<p>
+
+GC content is the percentage of guanine (G) and
+cytosine (C) bases in a DNA sequence.
+
+The GC content is calculated by dividing the total
+number of G and C bases by the total number of
+valid DNA bases and multiplying by 100.
+
+</p>
+
+</div>
+
+</section>
+
+
+<footer class="footer">
+
+<div class="container">
+
+<p>
+© 2026 Labistry — Free scientific calculators.
+</p>
+
+</div>
+
+</footer>
+
+
+<script src="../js/calculators/gc-content.js"></script>
+
+</body>
+
+</html>
