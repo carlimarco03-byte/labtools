@@ -114,10 +114,10 @@ const PCR_TEMPLATE = [
     stock:20,
     stockUnit:"ng/µL",
 
-    volume:2,
+   
 
-    target:null,
-    targetUnit:null,
+    target:2,
+    targetUnit:"ng/µL",
 
     volumeReaction:0,
     volumeMasterMix:0,
