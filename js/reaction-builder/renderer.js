@@ -88,11 +88,26 @@ return `
 
 }
 
-    if(component.type==="template"){
+    if(component.type === "template") {
 
-        return `${component.volume ?? 2} µL`;
+    return `
+        <div class="value-unit">
 
-    }
+            <input
+                class="table-input"
+                type="number"
+                min="0"
+                step="0.1"
+                data-id="${component.id}"
+                data-field="volume"
+                value="${component.volume ?? 2}">
+
+            <span>µL</span>
+
+        </div>
+    `;
+
+}
 
     return `
 
