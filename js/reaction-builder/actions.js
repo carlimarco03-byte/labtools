@@ -209,15 +209,104 @@ function setupComponentMenu(){
             menu.dataset.componentId = id;
 
 
+            /*
+             * Prima rendiamo visibile il menu
+             * per poterne calcolare le dimensioni.
+             */
+
+            menu.classList.add("active");
+
+
+            const menuWidth =
+            menu.offsetWidth;
+
+            const menuHeight =
+            menu.offsetHeight;
+
+
+            const margin = 8;
+
+
+            /*
+             * Coordinate iniziali
+             */
+
+            let left =
+            event.pageX;
+
+            let top =
+            event.pageY;
+
+
+            /*
+             * Limiti orizzontali
+             */
+
+            const viewportWidth =
+            window.innerWidth;
+
+
+            const scrollX =
+            window.pageXOffset;
+
+
+            const minLeft =
+            scrollX + margin;
+
+            const maxLeft =
+            scrollX +
+            viewportWidth -
+            menuWidth -
+            margin;
+
+
+            /*
+             * Mantieni il menu
+             * completamente dentro lo schermo.
+             */
+
+            left =
+            Math.max(
+                minLeft,
+                Math.min(left, maxLeft)
+            );
+
+
+            /*
+             * Limiti verticali
+             */
+
+            const viewportHeight =
+            window.innerHeight;
+
+
+            const scrollY =
+            window.pageYOffset;
+
+
+            const minTop =
+            scrollY + margin;
+
+            const maxTop =
+            scrollY +
+            viewportHeight -
+            menuHeight -
+            margin;
+
+
+            top =
+            Math.max(
+                minTop,
+                Math.min(top, maxTop)
+            );
+
+
             menu.style.left =
-            event.pageX + "px";
+            left + "px";
 
 
             menu.style.top =
-            event.pageY + "px";
-
-
-            menu.classList.add("active");
+            top + "px";
 
 
         });
@@ -259,11 +348,9 @@ function setupComponentMenu(){
 
             if(action === "delete"){
 
-    deleteComponent(id);
+                deleteComponent(id);
 
-}
-
-
+            }
 
 
             menu.classList.remove("active");
