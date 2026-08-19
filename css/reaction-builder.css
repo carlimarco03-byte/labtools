@@ -1007,7 +1007,7 @@ ADD COMPONENT MODAL
 
 /* ===================================
    MOBILE MASTER MIX SUMMARY
-   =================================== */
+=================================== */
 
 .master-mix-summary {
 
@@ -1020,6 +1020,10 @@ ADD COMPONENT MODAL
     border-radius:var(--radius);
 
     box-shadow:var(--shadow);
+
+    width:100%;
+
+    box-sizing:border-box;
 
 }
 
@@ -1052,7 +1056,11 @@ ADD COMPONENT MODAL
 
     width:100%;
 
+    max-width:100%;
+
     overflow-x:auto;
+
+    -webkit-overflow-scrolling:touch;
 
 }
 
@@ -1061,9 +1069,25 @@ ADD COMPONENT MODAL
 
     width:100%;
 
+    min-width:0;
+
     border-collapse:collapse;
 
     font-size:.9rem;
+
+    table-layout:fixed;
+
+}
+
+
+.master-mix-table th,
+.master-mix-table td {
+
+    padding:10px 8px;
+
+    border-bottom:1px solid var(--border);
+
+    box-sizing:border-box;
 
 }
 
@@ -1071,8 +1095,6 @@ ADD COMPONENT MODAL
 .master-mix-table th {
 
     text-align:left;
-
-    padding:10px 8px;
 
     border-bottom:2px solid var(--border);
 
@@ -1083,18 +1105,28 @@ ADD COMPONENT MODAL
 
 .master-mix-table td {
 
-    padding:10px 8px;
+    white-space:nowrap;
 
-    border-bottom:1px solid var(--border);
+}
+
+
+.master-mix-table th:nth-child(1),
+.master-mix-table td:nth-child(1) {
+
+    width:45%;
+
+    text-align:left;
 
 }
 
 
 .master-mix-table th:nth-child(2),
-.master-mix-table th:nth-child(3),
-
 .master-mix-table td:nth-child(2),
+
+.master-mix-table th:nth-child(3),
 .master-mix-table td:nth-child(3) {
+
+    width:27.5%;
 
     text-align:right;
 
@@ -1104,5 +1136,83 @@ ADD COMPONENT MODAL
 .master-mix-volume {
 
     font-weight:600;
+
+}
+
+
+/* ===================================
+   MASTER MIX SUMMARY - MOBILE
+=================================== */
+
+@media (max-width:768px){
+
+    .master-mix-summary {
+
+        padding:16px;
+
+        margin-top:20px;
+
+    }
+
+
+    .master-mix-summary-header h2 {
+
+        font-size:1.15rem;
+
+    }
+
+
+    .master-mix-summary-header p {
+
+        font-size:.85rem;
+
+        margin-bottom:14px;
+
+    }
+
+
+    .master-mix-table {
+
+        font-size:.82rem;
+
+    }
+
+
+    .master-mix-table th,
+    .master-mix-table td {
+
+        padding:8px 6px;
+
+    }
+
+}
+
+
+/* ===================================
+   MASTER MIX SUMMARY - MOBILE LANDSCAPE
+=================================== */
+
+@media (min-width:481px) and (max-width:991px) and (orientation:landscape){
+
+    .master-mix-summary {
+
+        padding:16px 20px;
+
+    }
+
+
+    .master-mix-table {
+
+        font-size:.85rem;
+
+    }
+
+
+    .master-mix-table th,
+    .master-mix-table td {
+
+        padding:8px 10px;
+
+    }
 
 }
