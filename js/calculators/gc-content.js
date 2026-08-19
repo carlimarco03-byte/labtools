@@ -74,6 +74,10 @@ function calculateGC() {
         (sequence.match(/C/g) || []).length;
 
 
+    /* ================================
+       GC CONTENT
+    ================================= */
+
     const gc =
         countG + countC;
 
@@ -82,6 +86,20 @@ function calculateGC() {
         (gc / length) * 100;
 
 
+    /* ================================
+       MELTING TEMPERATURE
+       Wallace rule
+    ================================= */
+
+    const tm =
+        (2 * (countA + countT)) +
+        (4 * (countG + countC));
+
+
+    /* ================================
+       RESULTS
+    ================================= */
+
     result.innerHTML =
 
         "<strong>GC Content:</strong><br>" +
@@ -89,6 +107,16 @@ function calculateGC() {
         gcContent.toFixed(2) +
 
         "%<br><br>" +
+
+        "<strong>Estimated Tm:</strong><br>" +
+
+        tm.toFixed(1) +
+
+        " °C<br>" +
+
+        "<small>Calculated using the Wallace rule.</small>" +
+
+        "<br><br>" +
 
         "<strong>Sequence statistics:</strong><br>" +
 
