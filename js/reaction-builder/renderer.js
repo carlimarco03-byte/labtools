@@ -311,8 +311,11 @@ function renderCards() {
 
                         <div class="reaction-card-title">
 
-                            ${component.locked
-                                ? `<span class="locked-name">${component.name}</span>`
+                            ${
+                                component.locked
+                                ? `<span class="locked-name">
+                                    ${component.name}
+                                  </span>`
                                 : `
                                     <input
                                         class="component-name"
@@ -382,21 +385,6 @@ function renderCards() {
                         </div>
 
 
-                        <div class="reaction-card-row master-mix-row">
-
-                            <span class="reaction-card-label">
-                                Master Mix
-                            </span>
-
-                            <div class="reaction-card-value calculated-value">
-
-                                ${renderMasterMix(component)}
-
-                            </div>
-
-                        </div>
-
-
                         <div class="reaction-card-row">
 
                             <span class="reaction-card-label">
@@ -423,11 +411,125 @@ function renderCards() {
 
     html += `
         </div>
+
+        <div class="master-mix-summary">
+
+            ${renderMasterMixSummary()}
+
+        </div>
     `;
 
 
     area.innerHTML = html;
 
     setupDynamicUI();
+
+}
+
+function renderMasterMixSummary() {
+
+    const sortedComponents = [...components]
+        .sort((a, b) => a.order - b.order);
+
+
+    let html = `
+
+        <div class="master-mix-summary-header">
+
+            <h2>
+                Master Mix Summary
+            </h2>
+
+            <p>
+                Volumes required for the master mix.
+            </p>
+
+        </div>
+
+
+        <div class="master-mix-table-wrapper">
+
+            <table class="master-mix-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Component
+                        </th>
+
+                        <th>
+                            Vol./rxn
+                        </th>
+
+                        <th>
+                            Master Mix
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+    `;
+
+
+    sortedComponents.forEach(component => {
+
+        /*
+         * DNA/template is not included
+         * in the master mix.
+         */
+
+        if (
+            component.type === "template" ||
+            component.includeMM === false
+        ) {
+
+            return;
+
+        }
+
+
+        html += `
+
+            <tr>
+
+                <td>
+                    ${component.name}
+                </td>
+
+                <td>
+                    ${renderReactionVolume(component)}
+                </td>
+
+                <td class="master-mix-volume">
+
+                    ${renderMasterMix(component)}
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    return html;
 
 }
