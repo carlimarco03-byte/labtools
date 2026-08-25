@@ -260,6 +260,8 @@ saveCalculation({
 
 });
 
+}
+
 function resetConverter(){
 
     document.getElementById("value").value = "";
