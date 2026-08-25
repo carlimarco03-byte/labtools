@@ -379,21 +379,7 @@ function renderCards() {
                         </div>
 
 
-                        <div class="reaction-card-row">
-
-                            <span class="reaction-card-label">
-                                Include in MM
-                            </span>
-
-                            <div class="reaction-card-value">
-
-                                ${renderInclude(component)}
-
-                            </div>
-
-                        </div>
-
-
+                       
                     </div>
 
                 </div>
