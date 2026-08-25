@@ -275,6 +275,12 @@ html += `
 
 </table>
 
+<div class="master-mix-summary">
+
+    ${renderMasterMixSummary()}
+
+</div>
+
 `;
 
 
