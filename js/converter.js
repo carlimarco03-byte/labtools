@@ -250,19 +250,7 @@ if(output !== lastConversion){
 
 }
     
-saveCalculation({
 
-    type:"Concentration Converter",
-
-    description:
-    output.replace(/<[^>]*>/g, " "),
-
-    date:
-    new Date().toLocaleString()
-
-});
-
-}
 
 function resetConverter(){
 
