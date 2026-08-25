@@ -30,14 +30,41 @@ function getComplement(sequence) {
 function calculateReverseComplement() {
 
     const input =
-        document.getElementById("sequence").value;
+    document.getElementById("sequence").value;
 
-    const result =
-        document.getElementById("result");
+const result =
+    document.getElementById("result");
 
 
-    const sequence =
-        cleanSequence(input);
+/* Check for multiple FASTA sequences */
+
+const fastaHeaders =
+    input.match(/^>.*$/gm);
+
+
+if(fastaHeaders && fastaHeaders.length > 1){
+
+    result.innerHTML = `
+
+        <div class="result-box">
+
+            <strong>Multiple FASTA sequences detected.</strong>
+
+            <br><br>
+
+            Please enter one DNA sequence at a time.
+
+        </div>
+
+    `;
+
+    return;
+
+}
+
+
+const sequence =
+    cleanSequence(input);
 
 
     if (!sequence) {
