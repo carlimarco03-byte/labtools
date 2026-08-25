@@ -1285,3 +1285,37 @@ ADD COMPONENT MODAL
     color:var(--text);
 
 }
+
+/* =================================
+   MASTER MIX ACTIONS
+================================= */
+
+.master-mix-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:10px;
+
+    margin-top:18px;
+
+}
+
+
+@media(max-width:480px){
+
+    .master-mix-actions{
+
+        flex-direction:column;
+
+    }
+
+
+    .master-mix-actions .btn{
+
+        width:100%;
+
+    }
+
+}
