@@ -1216,3 +1216,72 @@ ADD COMPONENT MODAL
     }
 
 }
+
+/* ===================================
+   EDITABLE vs CALCULATED VALUES
+   =================================== */
+
+/* Editable inputs */
+
+.reaction-table .table-input,
+.reaction-card .table-input {
+
+    background:#FFFFFF;
+
+    border:1px solid var(--border);
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background-color .2s ease;
+
+}
+
+
+/* Editable input focus */
+
+.reaction-table .table-input:focus,
+.reaction-card .table-input:focus {
+
+    outline:none;
+
+    border-color:var(--primary);
+
+    box-shadow:0 0 0 3px rgba(59,130,246,.10);
+
+}
+
+
+/* Calculated values */
+
+.calculated-value {
+
+    background:#F9FAFB;
+
+    color:var(--muted);
+
+    font-weight:500;
+
+}
+
+
+/* Calculated values inside cards */
+
+.reaction-card .calculated-value {
+
+    padding:8px 10px;
+
+    border-radius:6px;
+
+}
+
+
+/* Master Mix summary */
+
+.master-mix-summary .master-mix-volume {
+
+    font-weight:600;
+
+    color:var(--text);
+
+}
