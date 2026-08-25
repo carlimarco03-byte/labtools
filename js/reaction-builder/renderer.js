@@ -505,6 +505,30 @@ function renderMasterMixSummary() {
 
             </table>
 
+<div class="master-mix-actions">
+
+    <button
+        type="button"
+        class="btn"
+        id="copyMasterMixButton"
+        onclick="copyMasterMix()">
+
+        Copy Master Mix
+
+    </button>
+
+
+    <button
+        type="button"
+        class="btn btn-secondary"
+        onclick="exportProtocol()">
+
+        Export Protocol
+
+    </button>
+
+</div>
+
         </div>
 
     `;
