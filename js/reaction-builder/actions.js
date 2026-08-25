@@ -885,34 +885,38 @@ function showCopyFeedback(){
 }
 
 /* =================================
-   EXPORT PROTOCOL
+   EXPORT PROTOCOL — PDF
 ================================= */
 
 function exportProtocol(){
+
+    if(
+        typeof window.jspdf === "undefined" ||
+        typeof window.jspdf.jsPDF === "undefined"
+    ){
+
+        showReactionWarning(
+            "PDF export is currently unavailable."
+        );
+
+        return;
+
+    }
+
+
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF();
+
+
+    /* ================================
+       DATA
+    ================================= */
 
     const sortedComponents =
         [...components]
         .sort((a,b) => a.order - b.order);
 
-
-    let text = "";
-
-
-    /* ================================
-       HEADER
-    ================================= */
-
-    text += "LABISTRY\n";
-    text += "PCR PROTOCOL\n";
-    text += "==============================\n\n";
-
-
-    /* ================================
-       REACTION SETTINGS
-    ================================= */
-
-    text += "REACTION SETTINGS\n";
-    text += "------------------------------\n";
 
     const templateSelector =
         document.getElementById("template");
@@ -924,109 +928,533 @@ function exportProtocol(){
         : "PCR";
 
 
-    text +=
-        "Template: " +
-        templateName +
-        "\n";
+    const today =
+        new Date();
 
 
-    text +=
-        "Reaction volume: " +
-        formatVolume(reactionSettings.volume) +
-        "\n";
+    const date =
+        today.toLocaleDateString(
+            "en-GB"
+        );
 
 
-    text +=
-        "Reactions: " +
-        reactionSettings.reactions +
-        "\n";
+    /* ================================
+       COLORS
+    ================================= */
+
+    const dark =
+        [30, 41, 59];
+
+    const muted =
+        [100, 116, 139];
+
+    const light =
+        [241, 245, 249];
+
+    const border =
+        [226, 232, 240];
 
 
-    text +=
-        "Extra reactions: " +
-        reactionSettings.extra +
-        "\n";
+    /* ================================
+       PAGE SETTINGS
+    ================================= */
+
+    const pageWidth =
+        doc.internal.pageSize.getWidth();
+
+    const pageHeight =
+        doc.internal.pageSize.getHeight();
 
 
-    text +=
-        "Overage: " +
-        reactionSettings.overage +
-        "%\n\n";
+    const margin = 18;
+
+
+    /* ================================
+       HEADER
+    ================================= */
+
+    doc.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    doc.setFontSize(20);
+
+    doc.setTextColor(
+        ...dark
+    );
+
+    doc.text(
+        "LABISTRY",
+        margin,
+        22
+    );
+
+
+    doc.setFontSize(12);
+
+    doc.setFont(
+        "helvetica",
+        "normal"
+    );
+
+    doc.setTextColor(
+        ...muted
+    );
+
+    doc.text(
+        "PCR PROTOCOL",
+        margin,
+        30
+    );
+
+
+    doc.setFontSize(9);
+
+    doc.text(
+        date,
+        pageWidth - margin,
+        22,
+        {
+            align:"right"
+        }
+    );
+
+
+    /* separator */
+
+    doc.setDrawColor(
+        ...border
+    );
+
+    doc.line(
+        margin,
+        36,
+        pageWidth - margin,
+        36
+    );
+
+
+    /* ================================
+       REACTION SETTINGS
+    ================================= */
+
+    let y = 48;
+
+
+    doc.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    doc.setFontSize(11);
+
+    doc.setTextColor(
+        ...dark
+    );
+
+    doc.text(
+        "REACTION SETTINGS",
+        margin,
+        y
+    );
+
+
+    y += 8;
+
+
+    const settingsData = [
+
+        [
+            "Template",
+            templateName
+        ],
+
+        [
+            "Reaction volume",
+            formatVolume(
+                reactionSettings.volume
+            )
+        ],
+
+        [
+            "Reactions",
+            String(
+                reactionSettings.reactions
+            )
+        ],
+
+        [
+            "Extra reactions",
+            String(
+                reactionSettings.extra
+            )
+        ],
+
+        [
+            "Overage",
+            reactionSettings.overage + "%"
+        ]
+
+    ];
+
+
+    doc.autoTable({
+
+        startY: y,
+
+        margin:{
+            left:margin,
+            right:margin
+        },
+
+        body:settingsData,
+
+        theme:"plain",
+
+        styles:{
+
+            font:"helvetica",
+
+            fontSize:9,
+
+            cellPadding:3,
+
+            textColor:dark
+
+        },
+
+        columnStyles:{
+
+            0:{
+                fontStyle:"bold",
+                cellWidth:50
+            },
+
+            1:{
+                cellWidth:100
+            }
+
+        }
+
+    });
+
+
+    y =
+        doc.lastAutoTable.finalY + 14;
 
 
     /* ================================
        MASTER MIX
     ================================= */
 
-    text += "MASTER MIX\n";
-    text += "==============================\n\n";
+    doc.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    doc.setFontSize(11);
+
+    doc.setTextColor(
+        ...dark
+    );
+
+    doc.text(
+        "MASTER MIX",
+        margin,
+        y
+    );
 
 
-    sortedComponents.forEach(component => {
+    y += 5;
 
 
-        if(
-            component.type === "template" ||
-            component.includeMM === false
-        ){
+    const masterMixComponents =
+        sortedComponents.filter(
+            component =>
+                component.type !== "template" &&
+                component.includeMM !== false
+        );
 
-            return;
+
+    const masterMixRows =
+        masterMixComponents.map(
+            component => [
+
+                component.name,
+
+                component.stock !== null &&
+                component.stock !== undefined
+                    ? `${component.stock} ${component.stockUnit ?? ""}`
+                    : "—",
+
+                formatVolume(
+                    component.volumeReaction
+                ),
+
+                formatVolume(
+                    component.volumeMasterMix
+                )
+
+            ]
+        );
+
+
+    doc.autoTable({
+
+        startY:y,
+
+        margin:{
+            left:margin,
+            right:margin
+        },
+
+        head:[
+
+            [
+                "Component",
+                "Stock",
+                "Vol./rxn",
+                "Master Mix"
+            ]
+
+        ],
+
+        body:masterMixRows,
+
+        theme:"grid",
+
+        styles:{
+
+            font:"helvetica",
+
+            fontSize:9,
+
+            cellPadding:5,
+
+            textColor:dark,
+
+            lineColor:border,
+
+            lineWidth:0.3
+
+        },
+
+        headStyles:{
+
+            fillColor:light,
+
+            textColor:dark,
+
+            fontStyle:"bold",
+
+            lineColor:border,
+
+            lineWidth:0.3
+
+        },
+
+        columnStyles:{
+
+            0:{
+                cellWidth:65
+            },
+
+            1:{
+                cellWidth:35,
+                halign:"center"
+            },
+
+            2:{
+                cellWidth:35,
+                halign:"right"
+            },
+
+            3:{
+                cellWidth:40,
+                halign:"right",
+                fontStyle:"bold"
+            }
 
         }
-
-
-        text +=
-            component.name +
-            "\n";
-
-
-        text +=
-            "  Volume/reaction: " +
-            formatVolume(component.volumeReaction) +
-            "\n";
-
-
-        text +=
-            "  Master Mix: " +
-            formatVolume(component.volumeMasterMix) +
-            "\n\n";
 
     });
 
 
+    y =
+        doc.lastAutoTable.finalY + 10;
+
+
     /* ================================
-       COMPONENTS ADDED SEPARATELY
+       TOTAL MASTER MIX
     ================================= */
 
-    text += "ADD SEPARATELY\n";
-    text += "==============================\n\n";
+    let totalMasterMix =
+        0;
 
 
-    sortedComponents.forEach(component => {
+    masterMixComponents.forEach(
+        component => {
 
+            const value =
+                Number(
+                    component.volumeMasterMix
+                );
 
-        if(
-            component.type === "template" ||
-            component.type === "water" ||
-            component.includeMM !== false
-        ){
+            if(!isNaN(value)){
 
-            return;
+                totalMasterMix += value;
+
+            }
 
         }
+    );
 
 
-        text +=
-            component.name +
-            ": " +
-            formatVolume(component.volumeReaction) +
-            " per reaction\n";
+    doc.setFont(
+        "helvetica",
+        "bold"
+    );
 
-    });
+    doc.setFontSize(10);
+
+    doc.setTextColor(
+        ...dark
+    );
+
+
+    doc.text(
+        "Total Master Mix:",
+        pageWidth - 80,
+        y
+    );
+
+
+    doc.text(
+        formatVolume(totalMasterMix),
+        pageWidth - margin,
+        y,
+        {
+            align:"right"
+        }
+    );
+
+
+    y += 14;
 
 
     /* ================================
-       DNA / TEMPLATE
+       ADD SEPARATELY
+    ================================= */
+
+    const separateComponents =
+        sortedComponents.filter(
+            component =>
+                component.type !== "template" &&
+                component.type !== "water" &&
+                component.includeMM === false
+        );
+
+
+    if(separateComponents.length > 0){
+
+        doc.setFont(
+            "helvetica",
+            "bold"
+        );
+
+        doc.setFontSize(11);
+
+        doc.setTextColor(
+            ...dark
+        );
+
+        doc.text(
+            "ADD SEPARATELY",
+            margin,
+            y
+        );
+
+
+        y += 5;
+
+
+        const separateRows =
+            separateComponents.map(
+                component => [
+
+                    component.name,
+
+                    formatVolume(
+                        component.volumeReaction
+                    ),
+
+                    "per reaction"
+
+                ]
+            );
+
+
+        doc.autoTable({
+
+            startY:y,
+
+            margin:{
+                left:margin,
+                right:margin
+            },
+
+            head:[
+
+                [
+                    "Component",
+                    "Volume",
+                    "Use"
+                ]
+
+            ],
+
+            body:separateRows,
+
+            theme:"grid",
+
+            styles:{
+
+                font:"helvetica",
+
+                fontSize:9,
+
+                cellPadding:5,
+
+                textColor:dark,
+
+                lineColor:border,
+
+                lineWidth:0.3
+
+            },
+
+            headStyles:{
+
+                fillColor:light,
+
+                textColor:dark,
+
+                fontStyle:"bold"
+
+            }
+
+        });
+
+
+        y =
+            doc.lastAutoTable.finalY + 12;
+
+    }
+
+
+    /* ================================
+       TEMPLATE / DNA
     ================================= */
 
     const template =
@@ -1038,57 +1466,112 @@ function exportProtocol(){
 
     if(template){
 
-        text += "\n";
+        if(y > pageHeight - 45){
 
-        text += "TEMPLATE / DNA\n";
-        text += "==============================\n\n";
+            doc.addPage();
 
-        text +=
+            y = 20;
+
+        }
+
+
+        doc.setFont(
+            "helvetica",
+            "bold"
+        );
+
+        doc.setFontSize(11);
+
+        doc.setTextColor(
+            ...dark
+        );
+
+        doc.text(
+            "TEMPLATE / DNA",
+            margin,
+            y
+        );
+
+
+        y += 7;
+
+
+        doc.setFont(
+            "helvetica",
+            "normal"
+        );
+
+        doc.setFontSize(9);
+
+
+        doc.text(
             template.name +
             ": " +
-            formatVolume(template.volumeReaction) +
-            " per reaction\n";
+            formatVolume(
+                template.volumeReaction
+            ) +
+            " per reaction",
+            margin,
+            y
+        );
 
     }
 
 
     /* ================================
-       CREATE FILE
+       FOOTER
     ================================= */
 
-    const blob =
-        new Blob(
-            [text],
-            {
-                type: "text/plain;charset=utf-8"
-            }
+    const totalPages =
+        doc.internal.getNumberOfPages();
+
+
+    for(
+        let i = 1;
+        i <= totalPages;
+        i++
+    ){
+
+        doc.setPage(i);
+
+
+        doc.setFont(
+            "helvetica",
+            "normal"
+        );
+
+        doc.setFontSize(8);
+
+        doc.setTextColor(
+            ...muted
         );
 
 
-    const url =
-        URL.createObjectURL(blob);
+        doc.text(
+            "Generated by Labistry",
+            margin,
+            pageHeight - 10
+        );
 
 
-    const link =
-        document.createElement("a");
+        doc.text(
+            `Page ${i} of ${totalPages}`,
+            pageWidth - margin,
+            pageHeight - 10,
+            {
+                align:"right"
+            }
+        );
+
+    }
 
 
-    link.href = url;
+    /* ================================
+       SAVE
+    ================================= */
 
-
-    link.download =
-        "Labistry_PCR_Protocol.txt";
-
-
-    document.body.appendChild(link);
-
-
-    link.click();
-
-
-    document.body.removeChild(link);
-
-
-    URL.revokeObjectURL(url);
+    doc.save(
+        "Labistry_PCR_Protocol.pdf"
+    );
 
 }
