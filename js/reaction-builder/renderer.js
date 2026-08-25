@@ -196,7 +196,6 @@ let html = `
 <th>Final/added</th>
 <th>Volume/rxn</th>
 <th>Mastermix</th>
-<th>MM</th>
 <th>Menu</th>
 
 </tr>
@@ -254,11 +253,6 @@ ${renderMasterMix(component)}
 </td>
 
 
-<td class="mm-cell">
-
-${renderInclude(component)}
-
-</td>
 
 
 <td class="menu-cell">
