@@ -117,6 +117,7 @@ return `
             class="table-input"
             type="number"
             min="0"
+            step="0.1"
             data-id="${component.id}"
             data-field="target"
             value="${component.target ?? ""}">
