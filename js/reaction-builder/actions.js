@@ -764,3 +764,122 @@ function setupTemplateSelector(){
     });
 
 }
+
+/* =================================
+   COPY MASTER MIX
+================================= */
+
+function copyMasterMix(){
+
+    const sortedComponents =
+        [...components]
+        .sort((a,b) => a.order - b.order);
+
+
+    let text = "";
+
+
+    text += "PCR MASTER MIX\n";
+    text += "==============================\n\n";
+
+
+    text +=
+        "Reaction volume: " +
+        formatVolume(reactionSettings.volume) +
+        "\n";
+
+    text +=
+        "Reactions: " +
+        reactionSettings.reactions +
+        "\n";
+
+    text +=
+        "Extra reactions: " +
+        reactionSettings.extra +
+        "\n";
+
+    text +=
+        "Overage: " +
+        reactionSettings.overage +
+        "%\n\n";
+
+
+    text += "MASTER MIX\n";
+    text += "------------------------------\n";
+
+
+    sortedComponents.forEach(component => {
+
+
+        if(
+            component.type === "template" ||
+            component.includeMM === false
+        ){
+
+            return;
+
+        }
+
+
+        text +=
+            component.name +
+            ": " +
+            formatVolume(component.volumeMasterMix) +
+            "\n";
+
+    });
+
+
+    text += "\n";
+
+
+    navigator.clipboard.writeText(text)
+
+        .then(() => {
+
+            showCopyFeedback();
+
+        })
+
+        .catch(() => {
+
+            showReactionWarning(
+                "Unable to copy the Master Mix."
+            );
+
+        });
+
+}
+
+function showCopyFeedback(){
+
+    const button =
+        document.getElementById("copyMasterMixButton");
+
+
+    if(!button){
+        return;
+    }
+
+
+    const originalText =
+        button.textContent;
+
+
+    button.textContent =
+        "✓ Copied!";
+
+
+    button.disabled = true;
+
+
+    setTimeout(() => {
+
+        button.textContent =
+            originalText;
+
+        button.disabled = false;
+
+    }, 1500);
+
+}
