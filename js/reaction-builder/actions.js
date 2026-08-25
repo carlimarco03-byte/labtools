@@ -883,3 +883,212 @@ function showCopyFeedback(){
     }, 1500);
 
 }
+
+/* =================================
+   EXPORT PROTOCOL
+================================= */
+
+function exportProtocol(){
+
+    const sortedComponents =
+        [...components]
+        .sort((a,b) => a.order - b.order);
+
+
+    let text = "";
+
+
+    /* ================================
+       HEADER
+    ================================= */
+
+    text += "LABISTRY\n";
+    text += "PCR PROTOCOL\n";
+    text += "==============================\n\n";
+
+
+    /* ================================
+       REACTION SETTINGS
+    ================================= */
+
+    text += "REACTION SETTINGS\n";
+    text += "------------------------------\n";
+
+    const templateSelector =
+        document.getElementById("template");
+
+
+    const templateName =
+        templateSelector
+        ? templateSelector.value
+        : "PCR";
+
+
+    text +=
+        "Template: " +
+        templateName +
+        "\n";
+
+
+    text +=
+        "Reaction volume: " +
+        formatVolume(reactionSettings.volume) +
+        "\n";
+
+
+    text +=
+        "Reactions: " +
+        reactionSettings.reactions +
+        "\n";
+
+
+    text +=
+        "Extra reactions: " +
+        reactionSettings.extra +
+        "\n";
+
+
+    text +=
+        "Overage: " +
+        reactionSettings.overage +
+        "%\n\n";
+
+
+    /* ================================
+       MASTER MIX
+    ================================= */
+
+    text += "MASTER MIX\n";
+    text += "==============================\n\n";
+
+
+    sortedComponents.forEach(component => {
+
+
+        if(
+            component.type === "template" ||
+            component.includeMM === false
+        ){
+
+            return;
+
+        }
+
+
+        text +=
+            component.name +
+            "\n";
+
+
+        text +=
+            "  Volume/reaction: " +
+            formatVolume(component.volumeReaction) +
+            "\n";
+
+
+        text +=
+            "  Master Mix: " +
+            formatVolume(component.volumeMasterMix) +
+            "\n\n";
+
+    });
+
+
+    /* ================================
+       COMPONENTS ADDED SEPARATELY
+    ================================= */
+
+    text += "ADD SEPARATELY\n";
+    text += "==============================\n\n";
+
+
+    sortedComponents.forEach(component => {
+
+
+        if(
+            component.type === "template" ||
+            component.type === "water" ||
+            component.includeMM !== false
+        ){
+
+            return;
+
+        }
+
+
+        text +=
+            component.name +
+            ": " +
+            formatVolume(component.volumeReaction) +
+            " per reaction\n";
+
+    });
+
+
+    /* ================================
+       DNA / TEMPLATE
+    ================================= */
+
+    const template =
+        sortedComponents.find(
+            component =>
+                component.type === "template"
+        );
+
+
+    if(template){
+
+        text += "\n";
+
+        text += "TEMPLATE / DNA\n";
+        text += "==============================\n\n";
+
+        text +=
+            template.name +
+            ": " +
+            formatVolume(template.volumeReaction) +
+            " per reaction\n";
+
+    }
+
+
+    /* ================================
+       CREATE FILE
+    ================================= */
+
+    const blob =
+        new Blob(
+            [text],
+            {
+                type: "text/plain;charset=utf-8"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+
+    link.download =
+        "Labistry_PCR_Protocol.txt";
+
+
+    document.body.appendChild(link);
+
+
+    link.click();
+
+
+    document.body.removeChild(link);
+
+
+    URL.revokeObjectURL(url);
+
+}
