@@ -130,6 +130,55 @@ function calculateMedian(data) {
 
 
 /* ===================================
+   QUARTILE
+   =================================== */
+
+function calculateQuartile(data, percentile) {
+
+    if (data.length === 0) {
+        return NaN;
+    }
+
+
+    const sorted =
+        [...data].sort(
+            (a, b) => a - b
+        );
+
+
+    const position =
+        (sorted.length - 1) * percentile;
+
+
+    const lower =
+        Math.floor(position);
+
+
+    const upper =
+        Math.ceil(position);
+
+
+    if (lower === upper) {
+
+        return sorted[lower];
+
+    }
+
+
+    const weight =
+        position - lower;
+
+
+    return (
+        sorted[lower] +
+        weight *
+        (sorted[upper] - sorted[lower])
+    );
+
+}
+
+
+/* ===================================
    VARIANCE
    =================================== */
 
@@ -199,6 +248,176 @@ function calculateStandardDeviation(
 
 
 /* ===================================
+   STANDARD ERROR OF THE MEAN
+   =================================== */
+
+function calculateSEM(data) {
+
+    if (data.length < 2) {
+        return NaN;
+    }
+
+
+    const sampleSD =
+        calculateStandardDeviation(
+            data,
+            true
+        );
+
+
+    return sampleSD /
+        Math.sqrt(data.length);
+
+}
+
+
+/* ===================================
+   COEFFICIENT OF VARIATION
+   =================================== */
+
+function calculateCV(data) {
+
+    if (data.length < 2) {
+        return NaN;
+    }
+
+
+    const mean =
+        calculateMean(data);
+
+
+    if (mean === 0) {
+        return NaN;
+    }
+
+
+    const sampleSD =
+        calculateStandardDeviation(
+            data,
+            true
+        );
+
+
+    return (
+        sampleSD /
+        Math.abs(mean)
+    ) * 100;
+
+}
+
+
+/* ===================================
+   T CRITICAL VALUE
+   =================================== */
+
+function getTValue95(df) {
+
+    /*
+       Approximate two-tailed t critical
+       values for a 95% confidence interval.
+    */
+
+    const tTable = {
+
+        1: 12.706,
+        2: 4.303,
+        3: 3.182,
+        4: 2.776,
+        5: 2.571,
+        6: 2.447,
+        7: 2.365,
+        8: 2.306,
+        9: 2.262,
+        10: 2.228,
+        11: 2.201,
+        12: 2.179,
+        13: 2.160,
+        14: 2.145,
+        15: 2.131,
+        16: 2.120,
+        17: 2.110,
+        18: 2.101,
+        19: 2.093,
+        20: 2.086,
+        21: 2.080,
+        22: 2.074,
+        23: 2.069,
+        24: 2.064,
+        25: 2.060,
+        26: 2.056,
+        27: 2.052,
+        28: 2.048,
+        29: 2.045,
+        30: 2.042
+    };
+
+
+    if (tTable[df]) {
+
+        return tTable[df];
+
+    }
+
+
+    /*
+       For larger degrees of freedom,
+       t approaches the normal critical
+       value of 1.96.
+    */
+
+    return 1.96;
+
+}
+
+
+/* ===================================
+   95% CONFIDENCE INTERVAL
+   =================================== */
+
+function calculateConfidenceInterval95(data) {
+
+    if (data.length < 2) {
+
+        return {
+            lower: NaN,
+            upper: NaN
+        };
+
+    }
+
+
+    const mean =
+        calculateMean(data);
+
+
+    const sem =
+        calculateSEM(data);
+
+
+    const df =
+        data.length - 1;
+
+
+    const t =
+        getTValue95(df);
+
+
+    const margin =
+        t * sem;
+
+
+    return {
+
+        lower: mean - margin,
+
+        upper: mean + margin
+
+    };
+
+}
+
+
+/* ===================================
    CALCULATE STATISTICS
    =================================== */
 
@@ -224,7 +443,10 @@ function calculateStatistics() {
        EMPTY INPUT
        ================================= */
 
-    if (data.length === 0 && invalid.length === 0) {
+    if (
+        data.length === 0 &&
+        invalid.length === 0
+    ) {
 
         result.innerHTML = `
 
@@ -297,7 +519,7 @@ function calculateStatistics() {
 
                 <strong>
                     Please enter at least two values
-                    to calculate variability.
+                    to calculate statistics.
                 </strong>
 
             </div>
@@ -323,6 +545,36 @@ function calculateStatistics() {
 
     const median =
         calculateMedian(data);
+
+
+    const minimum =
+        Math.min(...data);
+
+
+    const maximum =
+        Math.max(...data);
+
+
+    const range =
+        maximum - minimum;
+
+
+    const q1 =
+        calculateQuartile(
+            data,
+            0.25
+        );
+
+
+    const q3 =
+        calculateQuartile(
+            data,
+            0.75
+        );
+
+
+    const iqr =
+        q3 - q1;
 
 
     const populationVariance =
@@ -353,16 +605,16 @@ function calculateStatistics() {
         );
 
 
-    const minimum =
-        Math.min(...data);
+    const sem =
+        calculateSEM(data);
 
 
-    const maximum =
-        Math.max(...data);
+    const cv =
+        calculateCV(data);
 
 
-    const range =
-        maximum - minimum;
+    const confidenceInterval =
+        calculateConfidenceInterval95(data);
 
 
     /* =================================
@@ -389,7 +641,6 @@ function calculateStatistics() {
 
 
                 <div class="statistics-grid">
-
 
                     <div>
 
@@ -429,23 +680,21 @@ function calculateStatistics() {
 
                     </div>
 
-
                 </div>
 
             </div>
 
 
-            <!-- RANGE -->
+            <!-- POSITION & RANGE -->
 
             <div class="statistics-section">
 
                 <h4>
-                    Range
+                    Position & Range
                 </h4>
 
 
                 <div class="statistics-grid">
-
 
                     <div>
 
@@ -455,6 +704,32 @@ function calculateStatistics() {
 
                         <strong>
                             ${formatStatistic(minimum)}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Q1
+                        </span>
+
+                        <strong>
+                            ${formatStatistic(q1)}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Q3
+                        </span>
+
+                        <strong>
+                            ${formatStatistic(q3)}
                         </strong>
 
                     </div>
@@ -486,6 +761,18 @@ function calculateStatistics() {
                     </div>
 
 
+                    <div>
+
+                        <span>
+                            IQR
+                        </span>
+
+                        <strong>
+                            ${formatStatistic(iqr)}
+                        </strong>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -501,7 +788,6 @@ function calculateStatistics() {
 
 
                 <div class="statistics-grid">
-
 
                     <div>
 
@@ -554,6 +840,76 @@ function calculateStatistics() {
 
                     </div>
 
+
+                    <div>
+
+                        <span>
+                            SEM
+                        </span>
+
+                        <strong>
+                            ${formatStatistic(sem)}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            CV%
+                        </span>
+
+                        <strong>
+                            ${formatStatistic(cv)}%
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CONFIDENCE INTERVAL -->
+
+            <div class="statistics-section">
+
+                <h4>
+                    95% Confidence Interval
+                </h4>
+
+
+                <div class="statistics-grid">
+
+                    <div>
+
+                        <span>
+                            Lower limit
+                        </span>
+
+                        <strong>
+                            ${formatStatistic(
+                                confidenceInterval.lower
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Upper limit
+                        </span>
+
+                        <strong>
+                            ${formatStatistic(
+                                confidenceInterval.upper
+                            )}
+                        </strong>
+
+                    </div>
 
                 </div>
 
