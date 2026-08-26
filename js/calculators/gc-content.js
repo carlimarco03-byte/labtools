@@ -230,25 +230,81 @@ function calculateGC() {
 
         result.innerHTML = `
 
-            <strong>GC Content:</strong><br>
+    <div class="gc-single-result">
 
-            ${r.gcContent.toFixed(2)}%
+        <h3>
+            ${r.name}
+        </h3>
 
-            <br><br>
+        <div class="gc-main-value">
 
-            <strong>Sequence statistics:</strong><br>
+            <span>
+                GC Content
+            </span>
 
-            Length: ${r.length} bp<br>
+            <strong>
+                ${r.gcContent.toFixed(2)}%
+            </strong>
 
-            A: ${r.A}<br>
+        </div>
 
-            T: ${r.T}<br>
+        <div class="gc-statistics">
 
-            G: ${r.G}<br>
+            <div class="gc-stat">
 
-            C: ${r.C}
+                <span>Length</span>
 
-        `;
+                <strong>
+                    ${r.length} bp
+                </strong>
+
+            </div>
+
+            <div class="gc-stat">
+
+                <span>A</span>
+
+                <strong>
+                    ${r.A}
+                </strong>
+
+            </div>
+
+            <div class="gc-stat">
+
+                <span>T</span>
+
+                <strong>
+                    ${r.T}
+                </strong>
+
+            </div>
+
+            <div class="gc-stat">
+
+                <span>G</span>
+
+                <strong>
+                    ${r.G}
+                </strong>
+
+            </div>
+
+            <div class="gc-stat">
+
+                <span>C</span>
+
+                <strong>
+                    ${r.C}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+`;
 
         return;
 
