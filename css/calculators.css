@@ -780,3 +780,13 @@ margin:auto;
     }
 
 }
+
+.statistics-section {
+    margin-top: 25px;
+}
+
+.statistics-section h4 {
+    margin-bottom: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+}
