@@ -1,13 +1,3 @@
-function cleanSequence(sequence) {
-
-    return sequence
-        .toUpperCase()
-        .replace(/^>.*$/gm, "")
-        .replace(/[\s\d]/g, "");
-
-}
-
-
 function getComplement(sequence) {
 
     const complementMap = {
@@ -26,48 +16,90 @@ function getComplement(sequence) {
 
 }
 
+function parseFASTA(input) {
+
+    const lines = input
+        .trim()
+        .split(/\r?\n/);
+
+    const sequences = [];
+
+    let currentName = null;
+    let currentSequence = "";
+
+    lines.forEach(line => {
+
+        line = line.trim();
+
+        if (!line) {
+            return;
+        }
+
+        if (line.startsWith(">")) {
+
+            if (currentName !== null) {
+
+                sequences.push({
+                    name: currentName,
+                    sequence: currentSequence
+                });
+
+            }
+
+            currentName =
+                line.substring(1).trim() ||
+                `Sequence ${sequences.length + 1}`;
+
+            currentSequence = "";
+
+        } else {
+
+            currentSequence += line;
+
+        }
+
+    });
+
+
+    if (currentName !== null) {
+
+        sequences.push({
+            name: currentName,
+            sequence: currentSequence
+        });
+
+    }
+
+
+    /*
+     * If there is no FASTA header,
+     * treat the entire input as one sequence.
+     */
+
+    if (sequences.length === 0) {
+
+        return [{
+            name: "Sequence",
+            sequence: input
+        }];
+
+    }
+
+
+    return sequences;
+
+}
 
 function calculateReverseComplement() {
 
     const input =
-    document.getElementById("sequence").value;
+        document.getElementById("sequence").value;
 
-const result =
-    document.getElementById("result");
-
-
-/* Check for multiple FASTA sequences */
-
-const fastaHeaders =
-    input.match(/^>.*$/gm);
+    const result =
+        document.getElementById("result");
 
 
-if(fastaHeaders && fastaHeaders.length > 1){
-
-    result.innerHTML = `
-
-        <div class="result-box">
-
-            <strong>Multiple FASTA sequences detected.</strong>
-
-            <br><br>
-
-            Please enter one DNA sequence at a time.
-
-        </div>
-
-    `;
-
-    return;
-
-}
-
-
-const sequence =
-    cleanSequence(input);
-
-
-    if (!sequence) {
+    if (!input.trim()) {
 
         result.innerHTML = `
 
@@ -84,127 +116,214 @@ const sequence =
     }
 
 
-    const invalidBases =
-        sequence.match(/[^ATGC]/g);
+    const sequences =
+        parseFASTA(input);
 
 
-    if (invalidBases) {
+    let output = "";
 
-        const invalid =
-            [...new Set(invalidBases)].join(", ");
 
-        result.innerHTML = `
+    sequences.forEach((entry, index) => {
+
+
+        const sequence =
+            entry.sequence
+                .toUpperCase()
+                .replace(/[\s\d]/g, "");
+
+
+        /*
+         * Validate sequence
+         */
+
+        const invalidBases =
+            sequence.match(/[^ATGC]/g);
+
+
+        if (invalidBases) {
+
+            const invalid =
+                [...new Set(invalidBases)].join(", ");
+
+
+            output += `
+
+                <div class="result-box">
+
+                    <strong>
+                        ${entry.name}
+                    </strong>
+
+                    <br><br>
+
+                    <strong>
+                        Invalid DNA sequence.
+                    </strong>
+
+                    <br><br>
+
+                    Invalid character(s):
+                    ${invalid}
+
+                    <br><br>
+
+                    Only A, T, G and C are accepted.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        if (!sequence) {
+
+            output += `
+
+                <div class="result-box">
+
+                    <strong>
+                        ${entry.name}
+                    </strong>
+
+                    <br><br>
+
+                    Empty sequence.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        /*
+         * Calculate complement
+         */
+
+        const complement =
+            getComplement(sequence);
+
+
+        /*
+         * Calculate reverse
+         */
+
+        const reverse =
+            sequence
+                .split("")
+                .reverse()
+                .join("");
+
+
+        /*
+         * Calculate reverse complement
+         */
+
+        const reverseComplement =
+            complement
+                .split("")
+                .reverse()
+                .join("");
+
+
+        /*
+         * Result
+         */
+
+        output += `
 
             <div class="result-box">
 
-                <strong>Invalid DNA sequence.</strong>
+                <strong>
+                    ${entry.name}
+                </strong>
 
                 <br><br>
 
-                Invalid character(s):
-                ${invalid}
+                <strong>
+                    Sequence length:
+                </strong>
+
+                ${sequence.length} bp
 
                 <br><br>
 
-                Only A, T, G and C are accepted.
+
+                <strong>
+                    Complementary sequence:
+                </strong>
+
+                <div class="sequence-result">
+
+                    <code>${complement}</code>
+
+                    <button
+                        class="copy-btn"
+                        onclick="copySequence('${complement}', this)">
+
+                        Copy
+
+                    </button>
+
+                </div>
+
+
+                <br>
+
+
+                <strong>
+                    Reverse sequence:
+                </strong>
+
+                <div class="sequence-result">
+
+                    <code>${reverse}</code>
+
+                    <button
+                        class="copy-btn"
+                        onclick="copySequence('${reverse}', this)">
+
+                        Copy
+
+                    </button>
+
+                </div>
+
+
+                <br>
+
+
+                <strong>
+                    Reverse complementary sequence:
+                </strong>
+
+                <div class="sequence-result">
+
+                    <code>${reverseComplement}</code>
+
+                    <button
+                        class="copy-btn"
+                        onclick="copySequence('${reverseComplement}', this)">
+
+                        Copy
+
+                    </button>
+
+                </div>
 
             </div>
 
         `;
 
-        return;
-
-    }
+    });
 
 
-    const complement =
-        getComplement(sequence);
-
-
-    const reverse =
-        sequence
-            .split("")
-            .reverse()
-            .join("");
-
-
-    const reverseComplement =
-        complement
-            .split("")
-            .reverse()
-            .join("");
-
-
-    result.innerHTML = `
-
-        <div class="result-box">
-
-            <strong>Sequence length:</strong>
-
-            ${sequence.length} bp
-
-            <br><br>
-
-
-            <strong>Complementary sequence:</strong>
-
-            <div class="sequence-result">
-
-                <code>${complement}</code>
-
-                <button
-                    class="copy-btn"
-                    onclick="copySequence('${complement}', this)">
-
-                    Copy
-
-                </button>
-
-            </div>
-
-
-            <br>
-
-
-            <strong>Reverse sequence:</strong>
-
-            <div class="sequence-result">
-
-                <code>${reverse}</code>
-
-                <button
-                    class="copy-btn"
-                    onclick="copySequence('${reverse}', this)">
-
-                    Copy
-
-                </button>
-
-            </div>
-
-
-            <br>
-
-
-            <strong>Reverse complementary sequence:</strong>
-
-            <div class="sequence-result">
-
-                <code>${reverseComplement}</code>
-
-                <button
-                    class="copy-btn"
-                    onclick="copySequence('${reverseComplement}', this)">
-
-                    Copy
-
-                </button>
-
-            </div>
-
-        </div>
-
-    `;
+    result.innerHTML = output;
 
 }
 
