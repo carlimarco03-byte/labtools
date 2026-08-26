@@ -1,54 +1,89 @@
-function cleanSequence(sequence) {
+function parseFASTA(input) {
 
-    return sequence
-        .toUpperCase()
-        .replace(/^>.*$/gm, "")
-        .replace(/[\s\d]/g, "");
+    const lines =
+        input
+            .trim()
+            .split(/\r?\n/);
+
+    const sequences = [];
+
+    let currentName = null;
+    let currentSequence = "";
+
+    lines.forEach(line => {
+
+        line = line.trim();
+
+        if (!line) {
+            return;
+        }
+
+        if (line.startsWith(">")) {
+
+            if (currentName !== null) {
+
+                sequences.push({
+                    name: currentName,
+                    sequence: currentSequence
+                });
+
+            }
+
+            currentName =
+                line.substring(1).trim() ||
+                `Sequence ${sequences.length + 1}`;
+
+            currentSequence = "";
+
+        } else {
+
+            currentSequence += line;
+
+        }
+
+    });
+
+
+    if (currentName !== null) {
+
+        sequences.push({
+            name: currentName,
+            sequence: currentSequence
+        });
+
+    }
+
+
+    /*
+     * No FASTA header:
+     * treat input as a single sequence.
+     */
+
+    if (sequences.length === 0) {
+
+        return [{
+            name: "Sequence",
+            sequence: input
+        }];
+
+    }
+
+
+    return sequences;
 
 }
 
 
 function calculateGC() {
 
-  const input =
-    document.getElementById("sequence").value;
+    const input =
+        document.getElementById("sequence").value;
 
-const result =
-    document.getElementById("result");
-
-
-/* Check for multiple FASTA sequences */
-
-const fastaHeaders =
-    input.match(/^>.*$/gm);
+    const result =
+        document.getElementById("result");
 
 
-if(fastaHeaders && fastaHeaders.length > 1){
-
-    result.innerHTML = `
-
-        <div class="result-box">
-
-            <strong>Multiple FASTA sequences detected.</strong>
-
-            <br><br>
-
-            Please enter one DNA sequence at a time.
-
-        </div>
-
-    `;
-
-    return;
-
-}
-
-
-const sequence =
-    cleanSequence(input);
-
-
-    if (!sequence) {
+    if (!input.trim()) {
 
         result.innerHTML =
             "Please enter a DNA sequence.";
@@ -58,122 +93,277 @@ const sequence =
     }
 
 
-    const invalidBases =
-        sequence.match(/[^ATGC]/g);
+    const sequences =
+        parseFASTA(input);
 
 
-    if (invalidBases) {
+    let results = [];
 
-        const invalid =
-            [...new Set(invalidBases)].join(", ");
 
-        result.innerHTML =
+    sequences.forEach(entry => {
 
-            "<strong>Invalid DNA sequence.</strong><br><br>" +
 
-            "Invalid character(s): " +
+        const sequence =
+            entry.sequence
+                .toUpperCase()
+                .replace(/[\s\d]/g, "");
 
-            invalid +
 
-            "<br><br>" +
+        /*
+         * Validate DNA sequence
+         */
 
-            "Only A, T, G and C are accepted.";
+        const invalidBases =
+            sequence.match(/[^ATGC]/g);
+
+
+        if (invalidBases) {
+
+            const invalid =
+                [...new Set(invalidBases)].join(", ");
+
+
+            results.push({
+
+                name: entry.name,
+
+                error:
+                    `Invalid character(s): ${invalid}`
+
+            });
+
+            return;
+
+        }
+
+
+        if (!sequence) {
+
+            results.push({
+
+                name: entry.name,
+
+                error: "Empty sequence."
+
+            });
+
+            return;
+
+        }
+
+
+        const length =
+            sequence.length;
+
+
+        const countA =
+            (sequence.match(/A/g) || []).length;
+
+        const countT =
+            (sequence.match(/T/g) || []).length;
+
+        const countG =
+            (sequence.match(/G/g) || []).length;
+
+        const countC =
+            (sequence.match(/C/g) || []).length;
+
+
+        const gc =
+            countG + countC;
+
+
+        const gcContent =
+            (gc / length) * 100;
+
+
+        results.push({
+
+            name: entry.name,
+
+            length: length,
+
+            A: countA,
+
+            T: countT,
+
+            G: countG,
+
+            C: countC,
+
+            gcContent: gcContent
+
+        });
+
+    });
+
+
+    /*
+     * Single sequence
+     */
+
+    if (results.length === 1) {
+
+        const r = results[0];
+
+
+        if (r.error) {
+
+            result.innerHTML = `
+
+                <strong>Invalid DNA sequence.</strong>
+
+                <br><br>
+
+                ${r.error}
+
+                <br><br>
+
+                Only A, T, G and C are accepted.
+
+            `;
+
+            return;
+
+        }
+
+
+        result.innerHTML = `
+
+            <strong>GC Content:</strong><br>
+
+            ${r.gcContent.toFixed(2)}%
+
+            <br><br>
+
+            <strong>Sequence statistics:</strong><br>
+
+            Length: ${r.length} bp<br>
+
+            A: ${r.A}<br>
+
+            T: ${r.T}<br>
+
+            G: ${r.G}<br>
+
+            C: ${r.C}
+
+        `;
 
         return;
 
     }
 
 
-    const length =
-        sequence.length;
+    /*
+     * Multiple FASTA sequences
+     */
+
+    let table = `
+
+        <strong>Multiple Sequence Analysis</strong>
+
+        <br><br>
+
+        <div class="master-mix-table-wrapper">
+
+            <table class="master-mix-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Sequence</th>
+
+                        <th>Length</th>
+
+                        <th>A</th>
+
+                        <th>T</th>
+
+                        <th>G</th>
+
+                        <th>C</th>
+
+                        <th>GC Content</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
 
 
-    const countA =
-        (sequence.match(/A/g) || []).length;
+    results.forEach(r => {
 
-    const countT =
-        (sequence.match(/T/g) || []).length;
+        if (r.error) {
 
-    const countG =
-        (sequence.match(/G/g) || []).length;
+            table += `
 
-    const countC =
-        (sequence.match(/C/g) || []).length;
+                <tr>
 
+                    <td>${r.name}</td>
 
-    /* ================================
-       GC CONTENT
-    ================================= */
+                    <td colspan="6">
 
-    const gc =
-        countG + countC;
+                        ${r.error}
 
+                    </td>
 
-    const gcContent =
-        (gc / length) * 100;
+                </tr>
 
+            `;
 
-    /* ================================
-       MELTING TEMPERATURE
-       Wallace rule
-    ================================= */
+            return;
 
-    const tm =
-        (2 * (countA + countT)) +
-        (4 * (countG + countC));
+        }
 
 
-    /* ================================
-       RESULTS
-    ================================= */
+        table += `
 
-    result.innerHTML =
+            <tr>
 
-        "<strong>GC Content:</strong><br>" +
+                <td>${r.name}</td>
 
-        gcContent.toFixed(2) +
+                <td>${r.length} bp</td>
 
-        "%<br><br>" +
+                <td>${r.A}</td>
 
-        "<strong>Estimated Tm:</strong><br>" +
+                <td>${r.T}</td>
 
-        tm.toFixed(1) +
+                <td>${r.G}</td>
 
-        " °C<br>" +
+                <td>${r.C}</td>
 
-        "<small>Calculated using the Wallace rule.</small>" +
+                <td>
 
-        "<br><br>" +
+                    <strong>
+                        ${r.gcContent.toFixed(2)}%
+                    </strong>
 
-        "<strong>Sequence statistics:</strong><br>" +
+                </td>
 
-        "Length: " +
+            </tr>
 
-        length +
+        `;
 
-        " bp<br>" +
+    });
 
-        "A: " +
 
-        countA +
+    table += `
 
-        "<br>" +
+                </tbody>
 
-        "T: " +
+            </table>
 
-        countT +
+        </div>
 
-        "<br>" +
+    `;
 
-        "G: " +
 
-        countG +
-
-        "<br>" +
-
-        "C: " +
-
-        countC;
+    result.innerHTML = table;
 
 }
 
