@@ -256,35 +256,39 @@ function calculateGC() {
 
 
     /*
-     * Multiple FASTA sequences
-     */
+ * Multiple FASTA sequences
+ */
 
-    let table = `
+let table = `
 
-        <strong>Multiple Sequence Analysis</strong>
+    <div class="gc-multiple-results">
 
-        <br><br>
+        <div class="gc-results-header">
 
-        <div class="master-mix-table-wrapper">
+            <h3>
+                Multiple Sequence Analysis
+            </h3>
 
-            <table class="master-mix-table">
+            <p>
+                GC content and nucleotide composition for each sequence.
+            </p>
+
+        </div>
+
+        <div class="gc-table-wrapper">
+
+            <table class="gc-table">
 
                 <thead>
 
                     <tr>
 
                         <th>Sequence</th>
-
                         <th>Length</th>
-
                         <th>A</th>
-
                         <th>T</th>
-
                         <th>G</th>
-
                         <th>C</th>
-
                         <th>GC Content</th>
 
                     </tr>
@@ -293,55 +297,24 @@ function calculateGC() {
 
                 <tbody>
 
-    `;
+`;
 
 
-    results.forEach(r => {
+results.forEach(r => {
 
-        if (r.error) {
-
-            table += `
-
-                <tr>
-
-                    <td>${r.name}</td>
-
-                    <td colspan="6">
-
-                        ${r.error}
-
-                    </td>
-
-                </tr>
-
-            `;
-
-            return;
-
-        }
-
+    if (r.error) {
 
         table += `
 
             <tr>
 
-                <td>${r.name}</td>
+                <td class="gc-sequence-name">
+                    ${r.name}
+                </td>
 
-                <td>${r.length} bp</td>
+                <td colspan="6" class="gc-error">
 
-                <td>${r.A}</td>
-
-                <td>${r.T}</td>
-
-                <td>${r.G}</td>
-
-                <td>${r.C}</td>
-
-                <td>
-
-                    <strong>
-                        ${r.gcContent.toFixed(2)}%
-                    </strong>
+                    ${r.error}
 
                 </td>
 
@@ -349,10 +322,65 @@ function calculateGC() {
 
         `;
 
-    });
+        return;
+
+    }
 
 
     table += `
+
+        <tr>
+
+            <td class="gc-sequence-name">
+
+                ${r.name}
+
+            </td>
+
+            <td>
+
+                ${r.length} bp
+
+            </td>
+
+            <td>
+
+                ${r.A}
+
+            </td>
+
+            <td>
+
+                ${r.T}
+
+            </td>
+
+            <td>
+
+                ${r.G}
+
+            </td>
+
+            <td>
+
+                ${r.C}
+
+            </td>
+
+            <td class="gc-percentage">
+
+                ${r.gcContent.toFixed(2)}%
+
+            </td>
+
+        </tr>
+
+    `;
+
+});
+
+
+table += `
 
                 </tbody>
 
@@ -360,10 +388,12 @@ function calculateGC() {
 
         </div>
 
-    `;
+    </div>
+
+`;
 
 
-    result.innerHTML = table;
+result.innerHTML = table;
 
 }
 
