@@ -136,6 +136,156 @@ function calculateStandardDeviation(
 
 }
 
+/* ===================================
+   STANDARD ERROR OF THE MEAN
+   =================================== */
+
+function calculateSEM(data) {
+
+    if (data.length < 2) {
+        return NaN;
+    }
+
+    const sampleSD =
+        calculateStandardDeviation(data, true);
+
+    return sampleSD / Math.sqrt(data.length);
+
+}
+
+
+/* ===================================
+   COEFFICIENT OF VARIATION
+   =================================== */
+
+function calculateCV(data) {
+
+    if (data.length < 2) {
+        return NaN;
+    }
+
+    const mean =
+        calculateMean(data);
+
+    const sampleSD =
+        calculateStandardDeviation(data, true);
+
+    if (mean === 0) {
+        return NaN;
+    }
+
+    return (sampleSD / Math.abs(mean)) * 100;
+
+}
+
+
+/* ===================================
+   QUARTILES
+   =================================== */
+
+function calculateQuartiles(data) {
+
+    if (data.length === 0) {
+        return {
+            q1: NaN,
+            q3: NaN
+        };
+    }
+
+    const sorted =
+        [...data].sort((a, b) => a - b);
+
+    const middle =
+        Math.floor(sorted.length / 2);
+
+    const lower =
+        sorted.slice(0, middle);
+
+    const upper =
+        sorted.length % 2 === 0
+            ? sorted.slice(middle)
+            : sorted.slice(middle + 1);
+
+
+    const q1 =
+        calculateMedian(lower);
+
+    const q3 =
+        calculateMedian(upper);
+
+
+    return {
+        q1: q1,
+        q3: q3
+    };
+
+}
+
+
+/* ===================================
+   INTERQUARTILE RANGE
+   =================================== */
+
+function calculateIQR(data) {
+
+    const quartiles =
+        calculateQuartiles(data);
+
+    if (
+        !Number.isFinite(quartiles.q1) ||
+        !Number.isFinite(quartiles.q3)
+    ) {
+        return NaN;
+    }
+
+    return quartiles.q3 - quartiles.q1;
+
+}
+
+
+/* ===================================
+   95% CONFIDENCE INTERVAL
+   =================================== */
+
+function calculateConfidenceInterval(data) {
+
+    if (data.length < 2) {
+
+        return {
+            lower: NaN,
+            upper: NaN
+        };
+
+    }
+
+    const mean =
+        calculateMean(data);
+
+    const sem =
+        calculateSEM(data);
+
+
+    /*
+     * Approximation using z = 1.96.
+     *
+     * Suitable for a simple descriptive
+     * calculator. We can later implement
+     * the exact Student's t distribution.
+     */
+
+    const margin =
+        1.96 * sem;
+
+
+    return {
+
+        lower: mean - margin,
+
+        upper: mean + margin
+
+    };
+
+}
 
 /* ===================================
    CALCULATE STATISTICS
@@ -188,9 +338,6 @@ function calculateStatistics() {
     const populationSD =
         calculateStandardDeviation(data, false);
 
-   console.log("MEAN:", mean);
-console.log("POPULATION VARIANCE:", populationVariance);
-console.log("POPULATION SD:", populationSD);
 
     const sampleSD =
         calculateStandardDeviation(data, true);
@@ -204,7 +351,22 @@ console.log("POPULATION SD:", populationSD);
     const range =
         maximum - minimum;
 
+const sem =
+    calculateSEM(data);
 
+const cv =
+    calculateCV(data);
+
+const quartiles =
+    calculateQuartiles(data);
+
+const iqr =
+    calculateIQR(data);
+
+const confidenceInterval =
+    calculateConfidenceInterval(data);
+   
+   
     result.innerHTML = `
 
         <div class="statistics-result">
@@ -265,6 +427,40 @@ console.log("POPULATION SD:", populationSD);
                     <strong>${formatStatistic(sampleVariance)}</strong>
                 </div>
 
+                <div>
+    <span>SEM</span>
+    <strong>${formatStatistic(sem)}</strong>
+</div>
+
+<div>
+    <span>CV</span>
+    <strong>${formatStatistic(cv)}%</strong>
+</div>
+
+<div>
+    <span>Q1</span>
+    <strong>${formatStatistic(quartiles.q1)}</strong>
+</div>
+
+<div>
+    <span>Q3</span>
+    <strong>${formatStatistic(quartiles.q3)}</strong>
+</div>
+
+<div>
+    <span>IQR</span>
+    <strong>${formatStatistic(iqr)}</strong>
+</div>
+
+<div>
+    <span>95% CI</span>
+    <strong>
+        ${formatStatistic(confidenceInterval.lower)}
+        –
+        ${formatStatistic(confidenceInterval.upper)}
+    </strong>
+</div>                
+               
             </div>
 
         </div>
