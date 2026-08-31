@@ -1105,6 +1105,402 @@ function calculateKurtosis(data) {
 }
 
 /* ===================================
+   LOG GAMMA
+   =================================== */
+
+function logGamma(z) {
+
+    const coefficients = [
+        676.5203681218851,
+        -1259.1392167224028,
+        771.32342877765313,
+        -176.61502916214059,
+        12.507343278686905,
+        -0.13857109526572012,
+        9.9843695780195716e-6,
+        1.5056327351493116e-7
+    ];
+
+    if (z < 0.5) {
+
+        return Math.log(Math.PI) -
+            Math.log(Math.sin(Math.PI * z)) -
+            logGamma(1 - z);
+
+    }
+
+    z -= 1;
+
+    let x = 0.99999999999980993;
+
+    for (let i = 0; i < coefficients.length; i++) {
+
+        x +=
+            coefficients[i] /
+            (z + i + 1);
+
+    }
+
+    const t =
+        z +
+        coefficients.length -
+        0.5;
+
+    return (
+        0.5 * Math.log(2 * Math.PI) +
+        (z + 0.5) * Math.log(t) -
+        t +
+        Math.log(x)
+    );
+
+}
+
+
+/* ===================================
+   SHAPIRO-WILK
+   =================================== */
+
+function calculateShapiroWilk(data) {
+
+    const n = data.length;
+
+    if (n < 3) {
+
+        return {
+            W: NaN,
+            pValue: NaN
+        };
+
+    }
+
+
+    const sorted =
+        [...data].sort(
+            (a, b) => a - b
+        );
+
+
+    const mean =
+        calculateMean(sorted);
+
+
+    const denominator =
+        sorted.reduce(
+            (sum, value) =>
+                sum +
+                Math.pow(value - mean, 2),
+            0
+        );
+
+
+    if (denominator === 0) {
+
+        return {
+            W: 1,
+            pValue: 1
+        };
+
+    }
+
+
+    /*
+     * Approximation of Shapiro-Wilk W.
+     *
+     * The calculation uses expected normal
+     * order statistics to construct the weights.
+     */
+
+    const m = [];
+
+    for (let i = 1; i <= n; i++) {
+
+        const p =
+            (i - 0.375) /
+            (n + 0.25);
+
+        /*
+         * Blom approximation of expected
+         * normal order statistics.
+         */
+
+        const z =
+            inverseNormalCDF(p);
+
+        m.push(z);
+
+    }
+
+
+    const mSquared =
+        m.reduce(
+            (sum, value) =>
+                sum + value * value,
+            0
+        );
+
+
+    const weights =
+        m.map(
+            value =>
+                value /
+                Math.sqrt(mSquared)
+        );
+
+
+    let numerator = 0;
+
+    for (let i = 0; i < n; i++) {
+
+        numerator +=
+            weights[i] *
+            sorted[i];
+
+    }
+
+
+    const W =
+        Math.pow(numerator, 2) /
+        denominator;
+
+
+    /*
+     * Approximate p-value.
+     */
+
+    const pValue =
+        shapiroPValue(W, n);
+
+
+    return {
+        W: W,
+        pValue: pValue
+    };
+
+}
+
+/* ===================================
+   INVERSE NORMAL CDF
+   =================================== */
+
+function inverseNormalCDF(p) {
+
+    const a = [
+        -39.6968302866538,
+        220.946098424521,
+        -275.928510446969,
+        138.357751867269,
+        -30.6647980661472,
+        2.50662827745924
+    ];
+
+    const b = [
+        -54.4760987982241,
+        161.585836858041,
+        -155.698979859887,
+        66.8013118877197,
+        -13.2806815528857
+    ];
+
+    const c = [
+        -0.00778489400243029,
+        -0.322396458041136,
+        -2.40075827716184,
+        -2.54973253934373,
+        4.37466414146497,
+        2.93816398269878
+    ];
+
+    const d = [
+        0.00778469570904146,
+        0.32246712907004,
+        2.445134137143,
+        3.75440866190742
+    ];
+
+
+    const pLow = 0.02425;
+    const pHigh = 1 - pLow;
+
+
+    if (p < pLow) {
+
+        const q =
+            Math.sqrt(
+                -2 * Math.log(p)
+            );
+
+        return (
+            ((((
+                c[0] * q +
+                c[1]
+            ) * q +
+                c[2]
+            ) * q +
+                c[3]
+            ) * q +
+                c[4]
+            ) * q +
+                c[5]
+        ) /
+        ((((d[0] * q +
+            d[1]
+        ) * q +
+            d[2]
+        ) * q +
+            d[3]
+        ) * q + 1);
+
+    }
+
+
+    if (p <= pHigh) {
+
+        const q =
+            p - 0.5;
+
+        const r =
+            q * q;
+
+        return (
+            ((((
+                a[0] * r +
+                a[1]
+            ) * r +
+                a[2]
+            ) * r +
+                a[3]
+            ) * r +
+                a[4]
+            ) * r +
+                a[5]
+        ) * q /
+        ((((
+            b[0] * r +
+            b[1]
+        ) * r +
+            b[2]
+        ) * r +
+            b[3]
+        ) * r +
+            b[4]
+        ) * r + 1);
+
+    }
+
+
+    const q =
+        Math.sqrt(
+            -2 * Math.log(1 - p)
+        );
+
+
+    return -(
+        ((((
+            c[0] * q +
+            c[1]
+        ) * q +
+            c[2]
+        ) * q +
+            c[3]
+        ) * q +
+            c[4]
+        ) * q +
+            c[5]
+        ) /
+        ((((d[0] * q +
+            d[1]
+        ) * q +
+            d[2]
+        ) * q +
+            d[3]
+        ) * q + 1);
+
+}
+
+/* ===================================
+   SHAPIRO-WILK P-VALUE
+   =================================== */
+
+function shapiroPValue(W, n) {
+
+    if (
+        !Number.isFinite(W) ||
+        n < 3
+    ) {
+
+        return NaN;
+
+    }
+
+
+    if (W >= 1) {
+
+        return 1;
+
+    }
+
+
+    if (W <= 0) {
+
+        return 0;
+
+    }
+
+
+    /*
+     * Approximation based on the distribution
+     * of the Shapiro-Wilk statistic.
+     */
+
+    const y =
+        Math.log(1 - W);
+
+
+    const lnN =
+        Math.log(n);
+
+
+    const mu =
+        -1.5861 -
+        0.31082 * lnN -
+        0.083751 * lnN * lnN;
+
+
+    const sigma =
+        Math.exp(
+            -0.4803 -
+            0.082676 * lnN +
+            0.0030302 * lnN * lnN
+        );
+
+
+    const z =
+        (y - mu) /
+        sigma;
+
+
+    /*
+     * Two-tailed interpretation:
+     * small W -> small p-value.
+     */
+
+    let p =
+        1 -
+        normalCDF(z);
+
+
+    p =
+        Math.max(
+            0,
+            Math.min(1, p)
+        );
+
+
+    return p;
+
+}
+
+/* ===================================
    NORMALITY TEST
    =================================== */
 
@@ -1218,32 +1614,116 @@ function calculateNormality() {
     }
 
 
-    /*
-     * Shapiro–Wilk will be added here.
-     */
+  const shapiro =
+    calculateShapiroWilk(data);
 
-    result.innerHTML = `
 
-        <div class="statistics-result">
+const W =
+    shapiro.W;
 
-            <h3>
-                Normality Test
-            </h3>
 
-            <p>
-                Dataset contains
-                <strong>${data.length}</strong>
-                observations.
-            </p>
+const pValue =
+    shapiro.pValue;
 
-            <p>
-                Shapiro–Wilk test will be calculated
-                here.
-            </p>
+
+let interpretation;
+
+
+if (pValue < 0.05) {
+
+    interpretation =
+        "The data show significant evidence of deviation from normality (p < 0.05).";
+
+} else {
+
+    interpretation =
+        "The data do not show significant evidence of deviation from normality (p ≥ 0.05).";
+
+}
+
+
+result.innerHTML = `
+
+    <div class="statistics-result">
+
+        <h3>
+            Normality Test
+        </h3>
+
+
+        <div class="statistics-section">
+
+            <h4>
+                Shapiro–Wilk Test
+            </h4>
+
+
+            <div class="statistics-grid">
+
+                <div>
+
+                    <span>
+                        Observations (n)
+                    </span>
+
+                    <strong>
+                        ${data.length}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        W statistic
+                    </span>
+
+                    <strong>
+                        ${formatStatistic(W)}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        p-value
+                    </span>
+
+                    <strong>
+                        ${formatStatistic(pValue)}
+                    </strong>
+
+                </div>
+
+            </div>
 
         </div>
 
-    `;
+
+        <div class="statistics-section">
+
+            <h4>
+                Interpretation
+            </h4>
+
+            <p>
+                ${interpretation}
+            </p>
+
+            <small>
+                A p-value below 0.05 indicates significant
+                evidence against the assumption of normality.
+            </small>
+
+        </div>
+
+
+    </div>
+
+`;
 
 }
 
