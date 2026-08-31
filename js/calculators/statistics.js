@@ -924,6 +924,187 @@ function calculateDescriptiveStatistics() {
 }
 
 /* ===================================
+   STANDARD NORMAL CDF
+   =================================== */
+
+function normalCDF(x) {
+
+    const sign =
+        x < 0 ? -1 : 1;
+
+    x = Math.abs(x) / Math.sqrt(2);
+
+
+    const t =
+        1 / (
+            1 +
+            0.3275911 * x
+        );
+
+
+    const a1 = 0.254829592;
+    const a2 = -0.284496736;
+    const a3 = 1.421413741;
+    const a4 = -1.453152027;
+    const a5 = 1.061405429;
+
+
+    const erf =
+        1 -
+        (
+            (
+                (
+                    (
+                        (
+                            a5 * t +
+                            a4
+                        ) * t +
+                        a3
+                    ) * t +
+                    a2
+                ) * t +
+                a1
+            ) * t
+        ) *
+        Math.exp(-x * x);
+
+
+    return (
+        1 +
+        sign * erf
+    ) / 2;
+
+}
+
+/* ===================================
+   SKEWNESS
+   =================================== */
+
+function calculateSkewness(data) {
+
+    const n =
+        data.length;
+
+    const mean =
+        calculateMean(data);
+
+
+    const sd =
+        calculateStandardDeviation(
+            data,
+            true
+        );
+
+
+    if (
+        n < 3 ||
+        !Number.isFinite(sd) ||
+        sd === 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const sum =
+        data.reduce(
+            (total, value) => {
+
+                return total +
+                    Math.pow(
+                        (value - mean) / sd,
+                        3
+                    );
+
+            },
+            0
+        );
+
+
+    return (
+        n /
+        ((n - 1) * (n - 2))
+    ) * sum;
+
+}
+
+/* ===================================
+   KURTOSIS
+   =================================== */
+
+function calculateKurtosis(data) {
+
+    const n =
+        data.length;
+
+    const mean =
+        calculateMean(data);
+
+
+    const sd =
+        calculateStandardDeviation(
+            data,
+            true
+        );
+
+
+    if (
+        n < 4 ||
+        !Number.isFinite(sd) ||
+        sd === 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const sum =
+        data.reduce(
+            (total, value) => {
+
+                return total +
+                    Math.pow(
+                        (value - mean) / sd,
+                        4
+                    );
+
+            },
+            0
+        );
+
+
+    const term1 =
+        (
+            n * (n + 1)
+        ) /
+        (
+            (n - 1) *
+            (n - 2) *
+            (n - 3)
+        );
+
+
+    const term2 =
+        (
+            3 *
+            (n - 1) *
+            (n - 1)
+        ) /
+        (
+            (n - 2) *
+            (n - 3)
+        );
+
+
+    return (
+        term1 * sum
+    ) - term2;
+
+}
+
+/* ===================================
    NORMALITY TEST
    =================================== */
 
