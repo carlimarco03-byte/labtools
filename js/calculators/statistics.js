@@ -2910,10 +2910,17 @@ function resetStatistics() {
     const input =
         document.getElementById("dataInput");
 
+    const groupA =
+        document.getElementById("groupAInput");
+
+    const groupB =
+        document.getElementById("groupBInput");
 
     const result =
         document.getElementById("result");
 
+
+    /* Clear main data input */
 
     if (input) {
 
@@ -2921,6 +2928,26 @@ function resetStatistics() {
 
     }
 
+
+    /* Clear Group A */
+
+    if (groupA) {
+
+        groupA.value = "";
+
+    }
+
+
+    /* Clear Group B */
+
+    if (groupB) {
+
+        groupB.value = "";
+
+    }
+
+
+    /* Reset results */
 
     if (result) {
 
