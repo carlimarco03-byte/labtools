@@ -316,6 +316,13 @@ const semB =
 const difference =
     meanA - meanB;
 
+   
+const welch =
+    calculateWelchTTest(
+        A,
+        B
+    );
+
 
 /* =================================
    RESULTS
@@ -480,6 +487,338 @@ result.innerHTML = `
     </div>
 
 `;
+
+}
+
+/* ===================================
+   WELCH'S T-TEST
+   =================================== */
+
+function calculateWelchTTest(groupA, groupB) {
+
+    const nA = groupA.length;
+    const nB = groupB.length;
+
+
+    const meanA =
+        calculateMean(groupA);
+
+    const meanB =
+        calculateMean(groupB);
+
+
+    const varianceA =
+        calculateVariance(groupA, true);
+
+    const varianceB =
+        calculateVariance(groupB, true);
+
+
+    /*
+     * Standard error of the difference
+     */
+
+    const standardError =
+        Math.sqrt(
+            (varianceA / nA) +
+            (varianceB / nB)
+        );
+
+
+    /*
+     * t statistic
+     */
+
+    const t =
+        (meanA - meanB) /
+        standardError;
+
+
+    /*
+     * Welch–Satterthwaite degrees of freedom
+     */
+
+    const numerator =
+        Math.pow(
+            (varianceA / nA) +
+            (varianceB / nB),
+            2
+        );
+
+
+    const denominator =
+        (
+            Math.pow(varianceA / nA, 2) /
+            (nA - 1)
+        ) +
+        (
+            Math.pow(varianceB / nB, 2) /
+            (nB - 1)
+        );
+
+
+    const df =
+        numerator / denominator;
+
+
+    /*
+     * Two-tailed p-value
+     */
+
+    const pValue =
+        calculateTTestPValue(
+            Math.abs(t),
+            df
+        );
+
+
+    return {
+
+        t: t,
+
+        df: df,
+
+        pValue: pValue,
+
+        standardError: standardError
+
+    };
+
+}
+
+/* ===================================
+   T-TEST P-VALUE
+   =================================== */
+
+function calculateTTestPValue(t, df) {
+
+    if (
+        !Number.isFinite(t) ||
+        !Number.isFinite(df) ||
+        df <= 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    /*
+     * Convert t statistic to the
+     * corresponding two-tailed p-value.
+     */
+
+    const x =
+        df /
+        (df + t * t);
+
+
+    const probability =
+        incompleteBeta(
+            x,
+            df / 2,
+            0.5
+        );
+
+
+    return probability;
+
+}
+
+/* ===================================
+   INCOMPLETE BETA FUNCTION
+   =================================== */
+
+function incompleteBeta(x, a, b) {
+
+    if (x <= 0) {
+        return 0;
+    }
+
+    if (x >= 1) {
+        return 1;
+    }
+
+
+    const bt =
+        Math.exp(
+            logGamma(a + b) -
+            logGamma(a) -
+            logGamma(b) +
+            a * Math.log(x) +
+            b * Math.log(1 - x)
+        );
+
+
+    if (x < (a + 1) / (a + b + 2)) {
+
+        return (
+            bt *
+            betaContinuedFraction(
+                x,
+                a,
+                b
+            ) /
+            a
+        );
+
+    }
+
+
+    return (
+        1 -
+        bt *
+        betaContinuedFraction(
+            1 - x,
+            b,
+            a
+        ) /
+        b
+    );
+
+}
+
+/* ===================================
+   BETA CONTINUED FRACTION
+   =================================== */
+
+function betaContinuedFraction(x, a, b) {
+
+    const MAX_ITERATIONS = 100;
+    const EPSILON = 1e-12;
+    const FPMIN = 1e-30;
+
+
+    let qab = a + b;
+    let qap = a + 1;
+    let qam = a - 1;
+
+
+    let c = 1;
+
+    let d =
+        1 -
+        qab * x / qap;
+
+
+    if (Math.abs(d) < FPMIN) {
+        d = FPMIN;
+    }
+
+
+    d = 1 / d;
+
+    let h = d;
+
+
+    for (
+        let m = 1;
+        m <= MAX_ITERATIONS;
+        m++
+    ) {
+
+        const m2 =
+            2 * m;
+
+
+        /*
+         * Even step
+         */
+
+        let aa =
+            m *
+            (b - m) *
+            x /
+            (
+                (qam + m2) *
+                (a + m2)
+            );
+
+
+        d =
+            1 +
+            aa * d;
+
+
+        if (Math.abs(d) < FPMIN) {
+            d = FPMIN;
+        }
+
+
+        c =
+            1 +
+            aa / c;
+
+
+        if (Math.abs(c) < FPMIN) {
+            c = FPMIN;
+        }
+
+
+        d = 1 / d;
+
+        h *= d * c;
+
+
+        /*
+         * Odd step
+         */
+
+        aa =
+            -(
+                (a + m) *
+                (qab + m) *
+                x
+            ) /
+            (
+                (a + m2) *
+                (qap + m2)
+            );
+
+
+        d =
+            1 +
+            aa * d;
+
+
+        if (Math.abs(d) < FPMIN) {
+            d = FPMIN;
+        }
+
+
+        c =
+            1 +
+            aa / c;
+
+
+        if (Math.abs(c) < FPMIN) {
+            c = FPMIN;
+        }
+
+
+        d = 1 / d;
+
+
+        const delta =
+            d * c;
+
+
+        h *= delta;
+
+
+        if (
+            Math.abs(delta - 1) <
+            EPSILON
+        ) {
+
+            break;
+
+        }
+
+    }
+
+
+    return h;
 
 }
 
