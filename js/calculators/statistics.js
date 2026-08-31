@@ -69,6 +69,276 @@ function parseData() {
 
 }
 
+/* ===================================
+   PARSE GROUP DATA
+   =================================== */
+
+function parseGroupData(inputId) {
+
+    const input =
+        document.getElementById(inputId).value.trim();
+
+
+    if (!input) {
+
+        return {
+            data: [],
+            invalid: []
+        };
+
+    }
+
+
+    const values =
+        input.split(/[\s,;]+/);
+
+
+    const data = [];
+    const invalid = [];
+
+
+    values.forEach(value => {
+
+        if (value === "") {
+            return;
+        }
+
+
+        const number =
+            Number(value);
+
+
+        if (Number.isFinite(number)) {
+
+            data.push(number);
+
+        } else {
+
+            invalid.push(value);
+
+        }
+
+    });
+
+
+    return {
+        data: data,
+        invalid: invalid
+    };
+
+}
+
+/* ===================================
+   TWO-GROUP COMPARISON
+   =================================== */
+
+function calculateTwoGroupComparison() {
+
+    const groupA =
+        parseGroupData("groupAInput");
+
+
+    const groupB =
+        parseGroupData("groupBInput");
+
+
+    const result =
+        document.getElementById("result");
+
+
+    /* =================================
+       INVALID GROUP A
+       ================================= */
+
+    if (groupA.invalid.length > 0) {
+
+        const invalid =
+            [...new Set(groupA.invalid)];
+
+
+        result.innerHTML = `
+
+            <div class="statistics-error">
+
+                <strong>
+                    Invalid data detected in Group A.
+                </strong>
+
+                <br><br>
+
+                Invalid value(s):
+
+                <br><br>
+
+                <strong>
+                    ${invalid.join(", ")}
+                </strong>
+
+                <br><br>
+
+                Please enter numerical values only.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /* =================================
+       INVALID GROUP B
+       ================================= */
+
+    if (groupB.invalid.length > 0) {
+
+        const invalid =
+            [...new Set(groupB.invalid)];
+
+
+        result.innerHTML = `
+
+            <div class="statistics-error">
+
+                <strong>
+                    Invalid data detected in Group B.
+                </strong>
+
+                <br><br>
+
+                Invalid value(s):
+
+                <br><br>
+
+                <strong>
+                    ${invalid.join(", ")}
+                </strong>
+
+                <br><br>
+
+                Please enter numerical values only.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /* =================================
+       EMPTY GROUPS
+       ================================= */
+
+    if (
+        groupA.data.length === 0 ||
+        groupB.data.length === 0
+    ) {
+
+        result.innerHTML = `
+
+            <div class="statistics-error">
+
+                <strong>
+                    Please enter data for both groups.
+                </strong>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /* =================================
+       MINIMUM SAMPLE SIZE
+       ================================= */
+
+    if (
+        groupA.data.length < 2 ||
+        groupB.data.length < 2
+    ) {
+
+        result.innerHTML = `
+
+            <div class="statistics-error">
+
+                <strong>
+                    Each group must contain at least
+                    two observations.
+                </strong>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /*
+     * Temporary test output.
+     *
+     * We will replace this with the actual
+     * statistical analysis in the next step.
+     */
+
+    result.innerHTML = `
+
+        <div class="statistics-result">
+
+            <h3>
+                Two-Group Comparison
+            </h3>
+
+            <div class="statistics-section">
+
+                <h4>
+                    Data Summary
+                </h4>
+
+                <div class="statistics-grid">
+
+                    <div>
+
+                        <span>
+                            Group A (n)
+                        </span>
+
+                        <strong>
+                            ${groupA.data.length}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Group B (n)
+                        </span>
+
+                        <strong>
+                            ${groupB.data.length}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
 
 /* ===================================
    MEAN
@@ -2014,6 +2284,10 @@ result.innerHTML = `
    ANALYSIS SELECTOR
    =================================== */
 
+/* ===================================
+   ANALYSIS SELECTOR
+   =================================== */
+
 function calculateStatistics() {
 
     const analysisType =
@@ -2032,6 +2306,13 @@ function calculateStatistics() {
         case "normality":
 
             calculateNormality();
+
+            break;
+
+
+        case "two-group":
+
+            calculateTwoGroupComparison();
 
             break;
 
