@@ -88,23 +88,81 @@ for experimental and scientific datasets.
 
 <div class="form-group">
 
-<label for="analysisType">
+    <label for="analysisType">
+        Analysis type
+    </label>
 
-Analysis type
+    <select id="analysisType">
 
-</label>
+        <option value="descriptive">
+            Descriptive Statistics
+        </option>
 
-<select id="analysisType">
+        <option value="normality">
+            Normality Test
+        </option>
 
-    <option value="descriptive">
-        Descriptive Statistics
-    </option>
+        <option value="two-group">
+            Two-Group Comparison
+        </option>
 
-    <option value="normality">
-        Normality Test
-    </option>
+    </select>
 
-</select>
+</div>
+
+<div
+    id="twoGroupInputs"
+    style="display: none;"
+>
+
+    <div class="form-group">
+
+        <label for="groupAInput">
+            Group A
+        </label>
+
+        <textarea
+            id="groupAInput"
+            rows="6"
+            placeholder="Example:
+
+10
+12
+11
+13
+12"></textarea>
+
+        <small>
+            Enter values separated by commas, spaces,
+            semicolons or new lines.
+        </small>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label for="groupBInput">
+            Group B
+        </label>
+
+        <textarea
+            id="groupBInput"
+            rows="6"
+            placeholder="Example:
+
+15
+17
+16
+18
+17"></textarea>
+
+        <small>
+            Enter values separated by commas, spaces,
+            semicolons or new lines.
+        </small>
+
+    </div>
 
 </div>
 
