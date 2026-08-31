@@ -483,6 +483,69 @@ result.innerHTML = `
 
         </div>
 
+                <!-- WELCH'S T-TEST -->
+
+        <div class="statistics-section">
+
+            <h4>
+                Welch's t-test
+            </h4>
+
+
+            <div class="statistics-grid">
+
+                <div>
+
+                    <span>
+                        t statistic
+                    </span>
+
+                    <strong>
+                        ${formatStatistic(welch.t)}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Degrees of freedom
+                    </span>
+
+                    <strong>
+                        ${formatStatistic(welch.df)}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        p-value
+                    </span>
+
+                    <strong>
+                        ${formatStatistic(welch.pValue)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <small>
+
+                Two-tailed Welch's t-test.
+                A p-value below 0.05 indicates
+                a statistically significant difference
+                between the group means.
+
+            </small>
+
+        </div>
+
 
     </div>
 
