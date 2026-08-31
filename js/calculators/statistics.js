@@ -1737,20 +1737,35 @@ function calculateStatistics() {
         document.getElementById("analysisType").value;
 
 
-    if (analysisType === "descriptive") {
+    switch (analysisType) {
 
-        calculateDescriptiveStatistics();
+        case "descriptive":
 
-        return;
+            calculateDescriptiveStatistics();
 
-    }
+            break;
 
 
-    if (analysisType === "normality") {
+        case "normality":
 
-        calculateNormality();
+            calculateNormality();
 
-        return;
+            break;
+
+
+        default:
+
+            document.getElementById("result").innerHTML = `
+
+                <div class="statistics-error">
+
+                    <strong>
+                        Please select a valid analysis.
+                    </strong>
+
+                </div>
+
+            `;
 
     }
 
