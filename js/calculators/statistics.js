@@ -421,11 +421,9 @@ function calculateConfidenceInterval95(data) {
    CALCULATE STATISTICS
    =================================== */
 
-function calculateStatistics() {
-
-   const analysisType =
-    document.getElementById("analysisType").value;
-
+function calculateDescriptiveStatistics() {
+   
+  
     const parsed =
         parseData();
 
@@ -925,6 +923,34 @@ function calculateStatistics() {
 
 }
 
+/* ===================================
+   ANALYSIS SELECTOR
+   =================================== */
+
+function calculateStatistics() {
+
+    const analysisType =
+        document.getElementById("analysisType").value;
+
+
+    if (analysisType === "descriptive") {
+
+        calculateDescriptiveStatistics();
+
+        return;
+
+    }
+
+
+    if (analysisType === "normality") {
+
+        calculateNormality();
+
+        return;
+
+    }
+
+}
 
 /* ===================================
    FORMAT RESULTS
