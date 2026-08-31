@@ -1284,6 +1284,11 @@ function calculateShapiroWilk(data) {
 
 function inverseNormalCDF(p) {
 
+    if (p <= 0 || p >= 1) {
+        return NaN;
+    }
+
+
     const a = [
         -39.6968302866538,
         220.946098424521,
@@ -1293,6 +1298,7 @@ function inverseNormalCDF(p) {
         2.50662827745924
     ];
 
+
     const b = [
         -54.4760987982241,
         161.585836858041,
@@ -1300,6 +1306,7 @@ function inverseNormalCDF(p) {
         66.8013118877197,
         -13.2806815528857
     ];
+
 
     const c = [
         -0.00778489400243029,
@@ -1309,6 +1316,7 @@ function inverseNormalCDF(p) {
         4.37466414146497,
         2.93816398269878
     ];
+
 
     const d = [
         0.00778469570904146,
@@ -1322,6 +1330,10 @@ function inverseNormalCDF(p) {
     const pHigh = 1 - pLow;
 
 
+    /* =================================
+       LOWER REGION
+       ================================= */
+
     if (p < pLow) {
 
         const q =
@@ -1329,64 +1341,62 @@ function inverseNormalCDF(p) {
                 -2 * Math.log(p)
             );
 
-        return (
-            ((((
-                c[0] * q +
-                c[1]
-            ) * q +
-                c[2]
-            ) * q +
-                c[3]
-            ) * q +
-                c[4]
-            ) * q +
-                c[5]
-        ) /
-        ((((d[0] * q +
-            d[1]
-        ) * q +
-            d[2]
-        ) * q +
-            d[3]
-        ) * q + 1);
+
+        const numerator =
+            ((((c[0] * q + c[1]) * q + c[2])
+                * q + c[3])
+                * q + c[4])
+                * q + c[5];
+
+
+        const denominator =
+            (((d[0] * q + d[1]) * q + d[2])
+                * q + d[3])
+                * q + 1;
+
+
+        return numerator / denominator;
 
     }
 
+
+    /* =================================
+       CENTRAL REGION
+       ================================= */
 
     if (p <= pHigh) {
 
         const q =
             p - 0.5;
 
+
         const r =
             q * q;
 
-        return (
-            ((((
-                a[0] * r +
-                a[1]
-            ) * r +
-                a[2]
-            ) * r +
-                a[3]
-            ) * r +
-                a[4]
-            ) * r +
-                a[5]
-        ) * q /
-        ((((
-            b[0] * r +
-            b[1]
-        ) * r +
-            b[2]
-        ) * r +
-            b[3]
-        ) * r +
-            b[4]
-        ) * r + 1);
+
+        const numerator =
+            (((((a[0] * r + a[1]) * r + a[2])
+                * r + a[3])
+                * r + a[4])
+                * r + a[5])
+                * q;
+
+
+        const denominator =
+            ((((b[0] * r + b[1]) * r + b[2])
+                * r + b[3])
+                * r + b[4])
+                * r + 1;
+
+
+        return numerator / denominator;
 
     }
 
+
+    /* =================================
+       UPPER REGION
+       ================================= */
 
     const q =
         Math.sqrt(
@@ -1394,26 +1404,20 @@ function inverseNormalCDF(p) {
         );
 
 
-    return -(
-        ((((
-            c[0] * q +
-            c[1]
-        ) * q +
-            c[2]
-        ) * q +
-            c[3]
-        ) * q +
-            c[4]
-        ) * q +
-            c[5]
-        ) /
-        ((((d[0] * q +
-            d[1]
-        ) * q +
-            d[2]
-        ) * q +
-            d[3]
-        ) * q + 1);
+    const numerator =
+        ((((c[0] * q + c[1]) * q + c[2])
+            * q + c[3])
+            * q + c[4])
+            * q + c[5];
+
+
+    const denominator =
+        (((d[0] * q + d[1]) * q + d[2])
+            * q + d[3])
+            * q + 1;
+
+
+    return -numerator / denominator;
 
 }
 
