@@ -305,6 +305,250 @@ function calculateCV(data) {
 
 }
 
+/* ===================================
+   LOG BETA FUNCTION
+   =================================== */
+
+function logBeta(a, b) {
+
+    return (
+        logGamma(a) +
+        logGamma(b) -
+        logGamma(a + b)
+    );
+
+}
+
+/* ===================================
+   REGULARIZED INCOMPLETE BETA
+   =================================== */
+
+function regularizedIncompleteBeta(x, a, b) {
+
+    if (x <= 0) {
+        return 0;
+    }
+
+    if (x >= 1) {
+        return 1;
+    }
+
+
+    const maxIterations = 200;
+    const epsilon = 1e-12;
+
+
+    function betaFraction(x, a, b) {
+
+        const qab = a + b;
+        const qap = a + 1;
+        const qam = a - 1;
+
+
+        let c = 1;
+
+        let d =
+            1 -
+            (qab * x) /
+            qap;
+
+
+        if (Math.abs(d) < 1e-30) {
+            d = 1e-30;
+        }
+
+
+        d = 1 / d;
+
+        let h = d;
+
+
+        for (
+            let m = 1;
+            m <= maxIterations;
+            m++
+        ) {
+
+            const m2 = 2 * m;
+
+
+            let aa =
+                m *
+                (b - m) *
+                x /
+                (
+                    (qam + m2) *
+                    (a + m2)
+                );
+
+
+            d =
+                1 +
+                aa * d;
+
+
+            if (Math.abs(d) < 1e-30) {
+                d = 1e-30;
+            }
+
+
+            c =
+                1 +
+                aa / c;
+
+
+            if (Math.abs(c) < 1e-30) {
+                c = 1e-30;
+            }
+
+
+            d = 1 / d;
+
+            h *= d * c;
+
+
+            aa =
+                -(
+                    (a + m) *
+                    (qab + m) *
+                    x
+                ) /
+                (
+                    (a + m2) *
+                    (qap + m2)
+                );
+
+
+            d =
+                1 +
+                aa * d;
+
+
+            if (Math.abs(d) < 1e-30) {
+                d = 1e-30;
+            }
+
+
+            c =
+                1 +
+                aa / c;
+
+
+            if (Math.abs(c) < 1e-30) {
+                c = 1e-30;
+            }
+
+
+            d = 1 / d;
+
+
+            const delta =
+                d * c;
+
+
+            h *= delta;
+
+
+            if (
+                Math.abs(delta - 1) <
+                epsilon
+            ) {
+
+                break;
+
+            }
+
+        }
+
+
+        return h;
+
+    }
+
+
+    const bt =
+        Math.exp(
+            a * Math.log(x) +
+            b * Math.log(1 - x) -
+            logBeta(a, b)
+        );
+
+
+    if (
+        x <
+        (a + 1) /
+        (a + b + 2)
+    ) {
+
+        return (
+            bt *
+            betaFraction(x, a, b)
+        ) / a;
+
+    }
+
+
+    return (
+        1 -
+        (
+            bt *
+            betaFraction(
+                1 - x,
+                b,
+                a
+            )
+        ) / b
+    );
+
+}
+
+/* ===================================
+   STUDENT T CDF
+   =================================== */
+
+function studentTCDF(t, df) {
+
+    if (
+        !Number.isFinite(t) ||
+        !Number.isFinite(df) ||
+        df <= 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    if (t === 0) {
+        return 0.5;
+    }
+
+
+    const x =
+        df /
+        (df + t * t);
+
+
+    const ibeta =
+        regularizedIncompleteBeta(
+            x,
+            df / 2,
+            0.5
+        );
+
+
+    if (t > 0) {
+
+        return 1 -
+            0.5 * ibeta;
+
+    }
+
+
+    return 0.5 * ibeta;
+
+}
+
 
 /* ===================================
    T CRITICAL VALUE
