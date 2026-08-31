@@ -423,6 +423,9 @@ function calculateConfidenceInterval95(data) {
 
 function calculateStatistics() {
 
+   const analysisType =
+    document.getElementById("analysisType").value;
+
     const parsed =
         parseData();
 
