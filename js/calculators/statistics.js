@@ -281,53 +281,166 @@ function calculateTwoGroupComparison() {
     }
 
 
-    /*
-     * Temporary test output.
-     *
-     * We will replace this with the actual
-     * statistical analysis in the next step.
-     */
+    /* =================================
+   GROUP STATISTICS
+   ================================= */
 
-    result.innerHTML = `
+const A =
+    groupA.data;
 
-        <div class="statistics-result">
-
-            <h3>
-                Two-Group Comparison
-            </h3>
-
-            <div class="statistics-section">
-
-                <h4>
-                    Data Summary
-                </h4>
-
-                <div class="statistics-grid">
-
-                    <div>
-
-                        <span>
-                            Group A (n)
-                        </span>
-
-                        <strong>
-                            ${groupA.data.length}
-                        </strong>
-
-                    </div>
+const B =
+    groupB.data;
 
 
-                    <div>
+const meanA =
+    calculateMean(A);
 
-                        <span>
-                            Group B (n)
-                        </span>
+const meanB =
+    calculateMean(B);
 
-                        <strong>
-                            ${groupB.data.length}
-                        </strong>
 
-                    </div>
+const sdA =
+    calculateStandardDeviation(A, true);
+
+const sdB =
+    calculateStandardDeviation(B, true);
+
+
+const semA =
+    calculateSEM(A);
+
+const semB =
+    calculateSEM(B);
+
+
+const difference =
+    meanA - meanB;
+
+
+/* =================================
+   RESULTS
+   ================================= */
+
+result.innerHTML = `
+
+    <div class="statistics-result">
+
+        <h3>
+            Two-Group Comparison
+        </h3>
+
+
+        <!-- GROUP SUMMARY -->
+
+        <div class="statistics-section">
+
+            <h4>
+                Group Summary
+            </h4>
+
+
+            <div class="statistics-grid">
+
+                <div>
+
+                    <span>
+                        Group A (n)
+                    </span>
+
+                    <strong>
+                        ${A.length}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Group A Mean
+                    </span>
+
+                    <strong>
+                        ${formatStatistic(meanA)}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Group A SD
+                    </span>
+
+                    <strong>
+                        ${formatStatistic(sdA)}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Group A SEM
+                    </span>
+
+                    <strong>
+                        ${formatStatistic(semA)}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Group B (n)
+                    </span>
+
+                    <strong>
+                        ${B.length}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Group B Mean
+                    </span>
+
+                    <strong>
+                        ${formatStatistic(meanB)}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Group B SD
+                    </span>
+
+                    <strong>
+                        ${formatStatistic(sdB)}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Group B SEM
+                    </span>
+
+                    <strong>
+                        ${formatStatistic(semB)}
+                    </strong>
 
                 </div>
 
@@ -335,7 +448,38 @@ function calculateTwoGroupComparison() {
 
         </div>
 
-    `;
+
+        <!-- MEAN DIFFERENCE -->
+
+        <div class="statistics-section">
+
+            <h4>
+                Difference Between Means
+            </h4>
+
+
+            <div class="statistics-grid">
+
+                <div>
+
+                    <span>
+                        Mean difference (A − B)
+                    </span>
+
+                    <strong>
+                        ${formatStatistic(difference)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+`;
 
 }
 
