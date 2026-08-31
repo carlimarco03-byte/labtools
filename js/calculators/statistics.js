@@ -924,6 +924,149 @@ function calculateDescriptiveStatistics() {
 }
 
 /* ===================================
+   NORMALITY TEST
+   =================================== */
+
+function calculateNormality() {
+
+    const parsed =
+        parseData();
+
+    const data =
+        parsed.data;
+
+    const invalid =
+        parsed.invalid;
+
+    const result =
+        document.getElementById("result");
+
+
+    /* =================================
+       EMPTY INPUT
+       ================================= */
+
+    if (
+        data.length === 0 &&
+        invalid.length === 0
+    ) {
+
+        result.innerHTML = `
+
+            <div class="statistics-error">
+
+                <strong>
+                    Please enter valid numerical data.
+                </strong>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /* =================================
+       INVALID VALUES
+       ================================= */
+
+    if (invalid.length > 0) {
+
+        const uniqueInvalid =
+            [...new Set(invalid)];
+
+
+        result.innerHTML = `
+
+            <div class="statistics-error">
+
+                <strong>
+                    Invalid data detected.
+                </strong>
+
+                <br><br>
+
+                The following value(s) are not valid
+                numerical values:
+
+                <br><br>
+
+                <strong>
+                    ${uniqueInvalid.join(", ")}
+                </strong>
+
+                <br><br>
+
+                Please enter numerical values only.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /* =================================
+       SAMPLE SIZE
+       ================================= */
+
+    if (data.length < 3) {
+
+        result.innerHTML = `
+
+            <div class="statistics-error">
+
+                <strong>
+                    Not enough data for the normality test.
+                </strong>
+
+                <br><br>
+
+                Please enter at least 3 observations.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /*
+     * Shapiro–Wilk will be added here.
+     */
+
+    result.innerHTML = `
+
+        <div class="statistics-result">
+
+            <h3>
+                Normality Test
+            </h3>
+
+            <p>
+                Dataset contains
+                <strong>${data.length}</strong>
+                observations.
+            </p>
+
+            <p>
+                Shapiro–Wilk test will be calculated
+                here.
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+/* ===================================
    ANALYSIS SELECTOR
    =================================== */
 
