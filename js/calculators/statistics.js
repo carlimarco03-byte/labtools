@@ -2117,12 +2117,44 @@ document.addEventListener(
         const input =
             document.getElementById("dataInput");
 
+        const analysisType =
+            document.getElementById("analysisType");
 
-        if (!input) {
+        const twoGroupInputs =
+            document.getElementById("twoGroupInputs");
 
+
+        if (!input || !analysisType || !twoGroupInputs) {
             return;
+        }
+
+
+        function updateAnalysisInterface() {
+
+            if (analysisType.value === "two-group") {
+
+                twoGroupInputs.style.display = "block";
+
+                input.parentElement.style.display = "none";
+
+            } else {
+
+                twoGroupInputs.style.display = "none";
+
+                input.parentElement.style.display = "block";
+
+            }
 
         }
+
+
+        analysisType.addEventListener(
+            "change",
+            updateAnalysisInterface
+        );
+
+
+        updateAnalysisInterface();
 
 
         input.addEventListener(
