@@ -92,6 +92,18 @@ function calculateTwoGroupComparison() {
             groupB
         );
 
+ 
+/* =================================
+   MANN–WHITNEY U TEST
+   ================================= */
+
+const mannWhitney =
+    calculateMannWhitneyU(
+        groupA,
+        groupB
+    );
+
+
 
     /* =================================
        RESULTS
