@@ -222,3 +222,493 @@ function inverseNormalCDF(p) {
     );
 
 }
+
+/* ===================================
+   LOG GAMMA
+   =================================== */
+
+function logGamma(z) {
+
+    const coefficients = [
+        676.5203681218851,
+        -1259.1392167224028,
+        771.32342877765313,
+        -176.61502916214059,
+        12.507343278686905,
+        -0.13857109526572012,
+        9.9843695780195716e-6,
+        1.5056327351493116e-7
+    ];
+
+
+    if (z < 0.5) {
+
+        return (
+            Math.log(Math.PI) -
+            Math.log(
+                Math.sin(Math.PI * z)
+            ) -
+            logGamma(1 - z)
+        );
+
+    }
+
+
+    z -= 1;
+
+
+    let x =
+        0.99999999999980993;
+
+
+    for (
+        let i = 0;
+        i < coefficients.length;
+        i++
+    ) {
+
+        x +=
+            coefficients[i] /
+            (z + i + 1);
+
+    }
+
+
+    const t =
+        z +
+        coefficients.length -
+        0.5;
+
+
+    return (
+        0.5 *
+        Math.log(2 * Math.PI) +
+
+        (z + 0.5) *
+        Math.log(t) -
+
+        t +
+
+        Math.log(x)
+    );
+
+}
+
+
+/* ===================================
+   LOG BETA FUNCTION
+   =================================== */
+
+function logBeta(a, b) {
+
+    return (
+        logGamma(a) +
+        logGamma(b) -
+        logGamma(a + b)
+    );
+
+}
+
+
+/* ===================================
+   REGULARIZED INCOMPLETE BETA
+   =================================== */
+
+function regularizedIncompleteBeta(
+    x,
+    a,
+    b
+) {
+
+    if (x <= 0) {
+        return 0;
+    }
+
+
+    if (x >= 1) {
+        return 1;
+    }
+
+
+    const maxIterations =
+        200;
+
+
+    const epsilon =
+        1e-12;
+
+
+    function betaFraction(
+        x,
+        a,
+        b
+    ) {
+
+        const qab =
+            a + b;
+
+
+        const qap =
+            a + 1;
+
+
+        const qam =
+            a - 1;
+
+
+        let c =
+            1;
+
+
+        let d =
+            1 -
+            (
+                qab *
+                x
+            ) /
+            qap;
+
+
+        if (
+            Math.abs(d) <
+            1e-30
+        ) {
+
+            d = 1e-30;
+
+        }
+
+
+        d =
+            1 / d;
+
+
+        let h =
+            d;
+
+
+        for (
+            let m = 1;
+            m <= maxIterations;
+            m++
+        ) {
+
+            const m2 =
+                2 * m;
+
+
+            let aa =
+                m *
+                (b - m) *
+                x /
+                (
+                    (qam + m2) *
+                    (a + m2)
+                );
+
+
+            d =
+                1 +
+                aa * d;
+
+
+            if (
+                Math.abs(d) <
+                1e-30
+            ) {
+
+                d = 1e-30;
+
+            }
+
+
+            c =
+                1 +
+                aa / c;
+
+
+            if (
+                Math.abs(c) <
+                1e-30
+            ) {
+
+                c = 1e-30;
+
+            }
+
+
+            d =
+                1 / d;
+
+
+            h *=
+                d * c;
+
+
+            aa =
+                -(
+                    (a + m) *
+                    (qab + m) *
+                    x
+                ) /
+                (
+                    (a + m2) *
+                    (qap + m2)
+                );
+
+
+            d =
+                1 +
+                aa * d;
+
+
+            if (
+                Math.abs(d) <
+                1e-30
+            ) {
+
+                d = 1e-30;
+
+            }
+
+
+            c =
+                1 +
+                aa / c;
+
+
+            if (
+                Math.abs(c) <
+                1e-30
+            ) {
+
+                c = 1e-30;
+
+            }
+
+
+            d =
+                1 / d;
+
+
+            const delta =
+                d * c;
+
+
+            h *=
+                delta;
+
+
+            if (
+                Math.abs(delta - 1) <
+                epsilon
+            ) {
+
+                break;
+
+            }
+
+        }
+
+
+        return h;
+
+    }
+
+
+    const bt =
+        Math.exp(
+            a * Math.log(x) +
+            b * Math.log(1 - x) -
+            logBeta(a, b)
+        );
+
+
+    if (
+        x <
+        (a + 1) /
+        (a + b + 2)
+    ) {
+
+        return (
+            bt *
+            betaFraction(
+                x,
+                a,
+                b
+            )
+        ) / a;
+
+    }
+
+
+    return (
+        1 -
+        (
+            bt *
+            betaFraction(
+                1 - x,
+                b,
+                a
+            )
+        ) / b
+    );
+
+}
+
+
+/* ===================================
+   STUDENT T CDF
+   =================================== */
+
+function studentTCDF(
+    t,
+    df
+) {
+
+    if (
+        !Number.isFinite(t) ||
+        !Number.isFinite(df) ||
+        df <= 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    if (t === 0) {
+
+        return 0.5;
+
+    }
+
+
+    const x =
+        df /
+        (
+            df +
+            t * t
+        );
+
+
+    const ibeta =
+        regularizedIncompleteBeta(
+            x,
+            df / 2,
+            0.5
+        );
+
+
+    if (t > 0) {
+
+        return (
+            1 -
+            0.5 * ibeta
+        );
+
+    }
+
+
+    return (
+        0.5 * ibeta
+    );
+
+}
+
+
+/* ===================================
+   T CRITICAL VALUE — 95% CI
+   =================================== */
+
+function getTValue95(df) {
+
+    if (
+        !Number.isFinite(df) ||
+        df <= 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const target =
+        0.975;
+
+
+    /*
+     * For extremely large degrees
+     * of freedom, Student's t approaches
+     * the standard normal distribution.
+     */
+
+    if (df > 100000) {
+
+        return 1.959963984540054;
+
+    }
+
+
+    let lower =
+        0;
+
+
+    let upper =
+        10;
+
+
+    while (
+        studentTCDF(
+            upper,
+            df
+        ) < target
+    ) {
+
+        upper *= 2;
+
+    }
+
+
+    for (
+        let i = 0;
+        i < 100;
+        i++
+    ) {
+
+        const middle =
+            (lower + upper) /
+            2;
+
+
+        const probability =
+            studentTCDF(
+                middle,
+                df
+            );
+
+
+        if (
+            probability <
+            target
+        ) {
+
+            lower =
+                middle;
+
+        } else {
+
+            upper =
+                middle;
+
+        }
+
+    }
+
+
+    return (
+        lower +
+        upper
+    ) / 2;
+
+}
