@@ -943,3 +943,272 @@ function getTValue95(df) {
 
 }
 
+
+/* ===================================
+   NORMAL APPROXIMATION FOR
+   MANN–WHITNEY U TEST
+   =================================== */
+
+function calculateMannWhitneyPValue(
+    z
+) {
+
+    if (!Number.isFinite(z)) {
+
+        return NaN;
+
+    }
+
+
+    const probability =
+        normalCDF(
+            Math.abs(z)
+        );
+
+
+    return 2 *
+        (
+            1 -
+            probability
+        );
+
+}
+
+
+/* ===================================
+   MANN–WHITNEY U STATISTIC
+   =================================== */
+
+function calculateMannWhitneyU(
+    groupA,
+    groupB
+) {
+
+    if (
+        !Array.isArray(groupA) ||
+        !Array.isArray(groupB) ||
+        groupA.length === 0 ||
+        groupB.length === 0
+    ) {
+
+        return {
+
+            U1: NaN,
+            U2: NaN,
+            U: NaN,
+            z: NaN,
+            pValue: NaN
+
+        };
+
+    }
+
+
+    const combined = [];
+
+
+    groupA.forEach(
+        value => {
+
+            combined.push({
+
+                value: value,
+                group: "A"
+
+            });
+
+        }
+    );
+
+
+    groupB.forEach(
+        value => {
+
+            combined.push({
+
+                value: value,
+                group: "B"
+
+            });
+
+        }
+    );
+
+
+    combined.sort(
+        (a, b) =>
+            a.value - b.value
+    );
+
+
+    /* =================================
+       RANKS WITH TIE HANDLING
+       ================================= */
+
+    let rank = 1;
+
+
+    let rankSumA = 0;
+
+
+    let i = 0;
+
+
+    while (
+        i < combined.length
+    ) {
+
+        let j =
+            i + 1;
+
+
+        while (
+            j < combined.length &&
+            combined[j].value ===
+            combined[i].value
+        ) {
+
+            j++;
+
+        }
+
+
+        const averageRank =
+            (
+                rank +
+                (rank + j - i - 1)
+            ) / 2;
+
+
+        for (
+            let k = i;
+            k < j;
+            k++
+        ) {
+
+            if (
+                combined[k].group ===
+                "A"
+            ) {
+
+                rankSumA +=
+                    averageRank;
+
+            }
+
+        }
+
+
+        rank +=
+            j - i;
+
+
+        i =
+            j;
+
+    }
+
+
+    /* =================================
+       U STATISTICS
+       ================================= */
+
+    const nA =
+        groupA.length;
+
+
+    const nB =
+        groupB.length;
+
+
+    const U1 =
+        rankSumA -
+        (
+            nA *
+            (nA + 1)
+        ) / 2;
+
+
+    const U2 =
+        nA *
+        nB -
+        U1;
+
+
+    const U =
+        Math.min(
+            U1,
+            U2
+        );
+
+
+    /* =================================
+       NORMAL APPROXIMATION
+       ================================= */
+
+    const meanU =
+        (
+            nA *
+            nB
+        ) / 2;
+
+
+    const standardDeviationU =
+        Math.sqrt(
+            (
+                nA *
+                nB *
+                (
+                    nA +
+                    nB +
+                    1
+                )
+            ) / 12
+        );
+
+
+    let z = NaN;
+
+
+    if (
+        standardDeviationU >
+        0
+    ) {
+
+        z =
+            (
+                U -
+                meanU
+            ) /
+            standardDeviationU;
+
+    }
+
+
+    const pValue =
+        calculateMannWhitneyPValue(
+            z
+        );
+
+
+    return {
+
+        U1:
+            U1,
+
+        U2:
+            U2,
+
+        U:
+            U,
+
+        z:
+            z,
+
+        pValue:
+            pValue
+
+    };
+
+}
+
