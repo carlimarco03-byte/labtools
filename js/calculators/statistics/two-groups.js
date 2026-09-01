@@ -501,33 +501,9 @@ function calculateTTestPValue(
     df
 ) {
 
-    if (
-        !Number.isFinite(t) ||
-        !Number.isFinite(df) ||
-        df <= 0
-    ) {
-
-        return NaN;
-
-    }
-
-
-    const x =
-        df /
-        (
-            df +
-            t * t
-        );
-
-
-    const probability =
-        regularizedIncompleteBeta(
-            x,
-            df / 2,
-            0.5
-        );
-
-
-    return probability;
+    return studentTTwoTailedPValue(
+        t,
+        df
+    );
 
 }
