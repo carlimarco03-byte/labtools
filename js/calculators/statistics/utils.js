@@ -1,7 +1,7 @@
-/* ===================================
-   LABISTRY STATISTICAL TOOLS
-   UTILITIES
-   =================================== */
+ /* ===================================
+    LABISTRY STATISTICAL TOOLS
+    UTILITIES
+    =================================== */
 
 
 /* ===================================
@@ -39,12 +39,12 @@ function parseData(inputId = "dataInput") {
 
 
     /*
-       Accept:
-       - commas
-       - spaces
-       - line breaks
-       - semicolons
-    */
+     * Accept:
+     * - commas
+     * - spaces
+     * - line breaks
+     * - semicolons
+     */
 
     const values =
         input.split(/[\s,;]+/);
@@ -87,6 +87,17 @@ function parseData(inputId = "dataInput") {
 
 
 /* ===================================
+   PARSE GROUP DATA
+   =================================== */
+
+function parseGroupData(inputId) {
+
+    return parseData(inputId);
+
+}
+
+
+/* ===================================
    FORMAT STATISTICS
    =================================== */
 
@@ -116,11 +127,15 @@ function validateParsedData(
 ) {
 
     const result =
-        document.getElementById("result");
+        document.getElementById(
+            "result"
+        );
 
 
     if (!result) {
+
         return false;
+
     }
 
 
@@ -154,12 +169,16 @@ function validateParsedData(
        INVALID VALUES
        ================================= */
 
-    if (parsed.invalid.length > 0) {
+    if (
+        parsed.invalid.length > 0
+    ) {
 
         const uniqueInvalid =
-            [...new Set(
-                parsed.invalid
-            )];
+            [
+                ...new Set(
+                    parsed.invalid
+                )
+            ];
 
 
         result.innerHTML = `
@@ -199,7 +218,8 @@ function validateParsedData(
        ================================= */
 
     if (
-        parsed.data.length < minimum
+        parsed.data.length <
+        minimum
     ) {
 
         result.innerHTML = `
@@ -207,7 +227,8 @@ function validateParsedData(
             <div class="statistics-error">
 
                 <strong>
-                    Please enter at least ${minimum}
+                    Please enter at least
+                    ${minimum}
                     values to perform this analysis.
                 </strong>
 
@@ -221,5 +242,199 @@ function validateParsedData(
 
 
     return true;
+
+}
+
+
+/* ===================================
+   VALIDATE TWO GROUPS
+   =================================== */
+
+function validateTwoGroups() {
+
+    const groupA =
+        parseGroupData(
+            "groupAInput"
+        );
+
+
+    const groupB =
+        parseGroupData(
+            "groupBInput"
+        );
+
+
+    const result =
+        document.getElementById(
+            "result"
+        );
+
+
+    if (!result) {
+
+        return null;
+
+    }
+
+
+    /* =================================
+       EMPTY GROUPS
+       ================================= */
+
+    if (
+        groupA.data.length === 0 ||
+        groupB.data.length === 0
+    ) {
+
+        result.innerHTML = `
+
+            <div class="statistics-error">
+
+                <strong>
+                    Please enter numerical data
+                    for both groups.
+                </strong>
+
+            </div>
+
+        `;
+
+        return null;
+
+    }
+
+
+    /* =================================
+       INVALID VALUES
+       ================================= */
+
+    if (
+        groupA.invalid.length > 0 ||
+        groupB.invalid.length > 0
+    ) {
+
+        const invalidA =
+            [
+                ...new Set(
+                    groupA.invalid
+                )
+            ];
+
+
+        const invalidB =
+            [
+                ...new Set(
+                    groupB.invalid
+                )
+            ];
+
+
+        let message = "";
+
+
+        if (
+            invalidA.length > 0
+        ) {
+
+            message += `
+
+                <strong>
+                    Group A:
+                </strong>
+
+                ${invalidA.join(", ")}
+
+                <br>
+
+            `;
+
+        }
+
+
+        if (
+            invalidB.length > 0
+        ) {
+
+            message += `
+
+                <strong>
+                    Group B:
+                </strong>
+
+                ${invalidB.join(", ")}
+
+                <br>
+
+            `;
+
+        }
+
+
+        result.innerHTML = `
+
+            <div class="statistics-error">
+
+                <strong>
+                    Invalid data detected.
+                </strong>
+
+                <br><br>
+
+                The following values are not valid
+                numerical values:
+
+                <br><br>
+
+                ${message}
+
+                <br>
+
+                Please enter numerical values only.
+
+            </div>
+
+        `;
+
+        return null;
+
+    }
+
+
+    /* =================================
+       MINIMUM SAMPLE SIZE
+       ================================= */
+
+    if (
+        groupA.data.length < 2 ||
+        groupB.data.length < 2
+    ) {
+
+        result.innerHTML = `
+
+            <div class="statistics-error">
+
+                <strong>
+                    Each group must contain at least
+                    two observations.
+                </strong>
+
+            </div>
+
+        `;
+
+        return null;
+
+    }
+
+
+    return {
+
+        groupA:
+            groupA.data,
+
+        groupB:
+            groupB.data
+
+    };
 
 }
