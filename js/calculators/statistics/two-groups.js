@@ -5,532 +5,6 @@
 
 
 /* ===================================
-   PARSE GROUP DATA
-   =================================== */
-
-function parseGroupData(inputId) {
-
-    const inputElement =
-        document.getElementById(
-            inputId
-        );
-
-
-    if (!inputElement) {
-
-        return {
-
-            data: [],
-
-            invalid: []
-
-        };
-
-    }
-
-
-    const input =
-        inputElement.value.trim();
-
-
-    if (!input) {
-
-        return {
-
-            data: [],
-
-            invalid: []
-
-        };
-
-    }
-
-
-    /*
-     * Accept:
-     * - commas
-     * - spaces
-     * - line breaks
-     * - semicolons
-     */
-
-    const values =
-        input.split(
-            /[\s,;]+/
-        );
-
-
-    const data = [];
-
-    const invalid = [];
-
-
-    values.forEach(
-        value => {
-
-            if (value === "") {
-
-                return;
-
-            }
-
-
-            const number =
-                Number(value);
-
-
-            if (
-                Number.isFinite(number)
-            ) {
-
-                data.push(number);
-
-            } else {
-
-                invalid.push(value);
-
-            }
-
-        }
-    );
-
-
-    return {
-
-        data: data,
-
-        invalid: invalid
-
-    };
-
-}
-
-
-/* ===================================
-   VALIDATE TWO GROUPS
-   =================================== */
-
-function validateTwoGroups() {
-
-    const groupA =
-        parseGroupData(
-            "groupAInput"
-        );
-
-
-    const groupB =
-        parseGroupData(
-            "groupBInput"
-        );
-
-
-    const result =
-        document.getElementById(
-            "result"
-        );
-
-
-    if (!result) {
-
-        return null;
-
-    }
-
-
-    /* =================================
-       INVALID VALUES
-       ================================= */
-
-    if (
-        groupA.invalid.length > 0 ||
-        groupB.invalid.length > 0
-    ) {
-
-        const invalidA =
-            [
-                ...new Set(
-                    groupA.invalid
-                )
-            ];
-
-
-        const invalidB =
-            [
-                ...new Set(
-                    groupB.invalid
-                )
-            ];
-
-
-        let message = "";
-
-
-        if (
-            invalidA.length > 0
-        ) {
-
-            message += `
-                <strong>
-                    Group A:
-                </strong>
-
-                ${invalidA.join(", ")}
-
-                <br>
-            `;
-
-        }
-
-
-        if (
-            invalidB.length > 0
-        ) {
-
-            message += `
-                <strong>
-                    Group B:
-                </strong>
-
-                ${invalidB.join(", ")}
-
-                <br>
-            `;
-
-        }
-
-
-        result.innerHTML = `
-
-            <div class="statistics-error">
-
-                <strong>
-                    Invalid data detected.
-                </strong>
-
-                <br><br>
-
-                The following values are not valid
-                numerical values:
-
-                <br><br>
-
-                ${message}
-
-                <br>
-
-                Please enter numerical values only.
-
-            </div>
-
-        `;
-
-        return null;
-
-    }
-
-
-    /* =================================
-       EMPTY GROUPS
-       ================================= */
-
-    if (
-        groupA.data.length === 0 ||
-        groupB.data.length === 0
-    ) {
-
-        result.innerHTML = `
-
-            <div class="statistics-error">
-
-                <strong>
-                    Please enter numerical data
-                    for both groups.
-                </strong>
-
-            </div>
-
-        `;
-
-        return null;
-
-    }
-
-
-    /* =================================
-       MINIMUM SAMPLE SIZE
-       ================================= */
-
-    if (
-        groupA.data.length < 2 ||
-        groupB.data.length < 2
-    ) {
-
-        result.innerHTML = `
-
-            <div class="statistics-error">
-
-                <strong>
-                    Each group must contain at least
-                    two observations.
-                </strong>
-
-            </div>
-
-        `;
-
-        return null;
-
-    }
-
-
-    return {
-
-        groupA: groupA.data,
-
-        groupB: groupB.data
-
-    };
-
-}
-
-
-/* ===================================
-   WELCH'S T-TEST
-   =================================== */
-
-function calculateWelchTTest(
-    groupA,
-    groupB
-) {
-
-    const nA =
-        groupA.length;
-
-
-    const nB =
-        groupB.length;
-
-
-    const meanA =
-        calculateMean(
-            groupA
-        );
-
-
-    const meanB =
-        calculateMean(
-            groupB
-        );
-
-
-    const varianceA =
-        calculateVariance(
-            groupA,
-            true
-        );
-
-
-    const varianceB =
-        calculateVariance(
-            groupB,
-            true
-        );
-
-
-    /* =================================
-       STANDARD ERROR
-       ================================= */
-
-    const standardError =
-        Math.sqrt(
-            (
-                varianceA /
-                nA
-            ) +
-            (
-                varianceB /
-                nB
-            )
-        );
-
-
-    /*
-     * If both groups have zero variance,
-     * the standard error is zero.
-     */
-
-    if (
-        standardError === 0
-    ) {
-
-        if (
-            meanA === meanB
-        ) {
-
-            return {
-
-                t: 0,
-
-                df: NaN,
-
-                pValue: 1,
-
-                standardError: 0
-
-            };
-
-        }
-
-
-        return {
-
-            t: meanA > meanB
-                ? Infinity
-                : -Infinity,
-
-            df: NaN,
-
-            pValue: 0,
-
-            standardError: 0
-
-        };
-
-    }
-
-
-    /* =================================
-       T STATISTIC
-       ================================= */
-
-    const t =
-        (
-            meanA -
-            meanB
-        ) /
-        standardError;
-
-
-    /* =================================
-       WELCH–SATTERTHWAITE DF
-       ================================= */
-
-    const numerator =
-        Math.pow(
-            (
-                varianceA /
-                nA
-            ) +
-            (
-                varianceB /
-                nB
-            ),
-            2
-        );
-
-
-    const denominator =
-        (
-            Math.pow(
-                varianceA /
-                nA,
-                2
-            ) /
-            (
-                nA - 1
-            )
-        ) +
-        (
-            Math.pow(
-                varianceB /
-                nB,
-                2
-            ) /
-            (
-                nB - 1
-            )
-        );
-
-
-    const df =
-        numerator /
-        denominator;
-
-
-    /* =================================
-       TWO-TAILED P-VALUE
-       ================================= */
-
-    const pValue =
-        calculateTTestPValue(
-            Math.abs(t),
-            df
-        );
-
-
-    return {
-
-        t: t,
-
-        df: df,
-
-        pValue: pValue,
-
-        standardError: standardError
-
-    };
-
-}
-
-
-/* ===================================
-   T-TEST P-VALUE
-   =================================== */
-
-function calculateTTestPValue(
-    t,
-    df
-) {
-
-    if (
-        !Number.isFinite(t) ||
-        !Number.isFinite(df) ||
-        df <= 0
-    ) {
-
-        return NaN;
-
-    }
-
-
-    /*
-     * Two-tailed probability:
-     *
-     * P = I[x](df/2, 1/2)
-     *
-     * where
-     *
-     * x = df / (df + t²)
-     */
-
-    const x =
-        df /
-        (
-            df +
-            t * t
-        );
-
-
-    return regularizedIncompleteBeta(
-        x,
-        df / 2,
-        0.5
-    );
-
-}
-
-
-/* ===================================
    TWO-GROUP COMPARISON
    =================================== */
 
@@ -547,11 +21,11 @@ function calculateTwoGroupComparison() {
     }
 
 
-    const A =
+    const groupA =
         groups.groupA;
 
 
-    const B =
+    const groupB =
         groups.groupB;
 
 
@@ -562,37 +36,45 @@ function calculateTwoGroupComparison() {
 
 
     /* =================================
-       DESCRIPTIVE STATISTICS
+       GROUP STATISTICS
        ================================= */
 
     const meanA =
-        calculateMean(A);
+        calculateMean(
+            groupA
+        );
 
 
     const meanB =
-        calculateMean(B);
+        calculateMean(
+            groupB
+        );
 
 
     const sdA =
         calculateStandardDeviation(
-            A,
+            groupA,
             true
         );
 
 
     const sdB =
         calculateStandardDeviation(
-            B,
+            groupB,
             true
         );
 
 
     const semA =
-        calculateSEM(A);
+        calculateSEM(
+            groupA
+        );
 
 
     const semB =
-        calculateSEM(B);
+        calculateSEM(
+            groupB
+        );
 
 
     const difference =
@@ -606,8 +88,8 @@ function calculateTwoGroupComparison() {
 
     const welch =
         calculateWelchTTest(
-            A,
-            B
+            groupA,
+            groupB
         );
 
 
@@ -642,7 +124,7 @@ function calculateTwoGroupComparison() {
                         </span>
 
                         <strong>
-                            ${A.length}
+                            ${groupA.length}
                         </strong>
 
                     </div>
@@ -655,7 +137,9 @@ function calculateTwoGroupComparison() {
                         </span>
 
                         <strong>
-                            ${formatStatistic(meanA)}
+                            ${formatStatistic(
+                                meanA
+                            )}
                         </strong>
 
                     </div>
@@ -668,7 +152,9 @@ function calculateTwoGroupComparison() {
                         </span>
 
                         <strong>
-                            ${formatStatistic(sdA)}
+                            ${formatStatistic(
+                                sdA
+                            )}
                         </strong>
 
                     </div>
@@ -681,7 +167,9 @@ function calculateTwoGroupComparison() {
                         </span>
 
                         <strong>
-                            ${formatStatistic(semA)}
+                            ${formatStatistic(
+                                semA
+                            )}
                         </strong>
 
                     </div>
@@ -694,7 +182,7 @@ function calculateTwoGroupComparison() {
                         </span>
 
                         <strong>
-                            ${B.length}
+                            ${groupB.length}
                         </strong>
 
                     </div>
@@ -707,7 +195,9 @@ function calculateTwoGroupComparison() {
                         </span>
 
                         <strong>
-                            ${formatStatistic(meanB)}
+                            ${formatStatistic(
+                                meanB
+                            )}
                         </strong>
 
                     </div>
@@ -720,7 +210,9 @@ function calculateTwoGroupComparison() {
                         </span>
 
                         <strong>
-                            ${formatStatistic(sdB)}
+                            ${formatStatistic(
+                                sdB
+                            )}
                         </strong>
 
                     </div>
@@ -733,7 +225,9 @@ function calculateTwoGroupComparison() {
                         </span>
 
                         <strong>
-                            ${formatStatistic(semB)}
+                            ${formatStatistic(
+                                semB
+                            )}
                         </strong>
 
                     </div>
@@ -835,8 +329,8 @@ function calculateTwoGroupComparison() {
 
                     Two-tailed Welch's t-test.
                     A p-value below 0.05 indicates
-                    statistically significant evidence
-                    of a difference between the group means.
+                    a statistically significant difference
+                    between the group means.
 
                 </small>
 
@@ -846,5 +340,194 @@ function calculateTwoGroupComparison() {
         </div>
 
     `;
+
+}
+
+
+/* ===================================
+   WELCH'S T-TEST
+   =================================== */
+
+function calculateWelchTTest(
+    groupA,
+    groupB
+) {
+
+    const nA =
+        groupA.length;
+
+
+    const nB =
+        groupB.length;
+
+
+    const meanA =
+        calculateMean(
+            groupA
+        );
+
+
+    const meanB =
+        calculateMean(
+            groupB
+        );
+
+
+    const varianceA =
+        calculateVariance(
+            groupA,
+            true
+        );
+
+
+    const varianceB =
+        calculateVariance(
+            groupB,
+            true
+        );
+
+
+    /* =================================
+       STANDARD ERROR
+       ================================= */
+
+    const standardError =
+        Math.sqrt(
+            (
+                varianceA /
+                nA
+            ) +
+            (
+                varianceB /
+                nB
+            )
+        );
+
+
+    /* =================================
+       T STATISTIC
+       ================================= */
+
+    const t =
+        (
+            meanA -
+            meanB
+        ) /
+        standardError;
+
+
+    /* =================================
+       WELCH–SATTERTHWAITE DF
+       ================================= */
+
+    const numerator =
+        Math.pow(
+            (
+                varianceA /
+                nA
+            ) +
+            (
+                varianceB /
+                nB
+            ),
+            2
+        );
+
+
+    const denominator =
+        (
+            Math.pow(
+                varianceA /
+                nA,
+                2
+            ) /
+            (
+                nA - 1
+            )
+        ) +
+        (
+            Math.pow(
+                varianceB /
+                nB,
+                2
+            ) /
+            (
+                nB - 1
+            )
+        );
+
+
+    const df =
+        numerator /
+        denominator;
+
+
+    /* =================================
+       TWO-TAILED P-VALUE
+       ================================= */
+
+    const pValue =
+        calculateTTestPValue(
+            Math.abs(t),
+            df
+        );
+
+
+    return {
+
+        t:
+            t,
+
+        df:
+            df,
+
+        pValue:
+            pValue,
+
+        standardError:
+            standardError
+
+    };
+
+}
+
+
+/* ===================================
+   T-TEST P-VALUE
+   =================================== */
+
+function calculateTTestPValue(
+    t,
+    df
+) {
+
+    if (
+        !Number.isFinite(t) ||
+        !Number.isFinite(df) ||
+        df <= 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const x =
+        df /
+        (
+            df +
+            t * t
+        );
+
+
+    const probability =
+        regularizedIncompleteBeta(
+            x,
+            df / 2,
+            0.5
+        );
+
+
+    return probability;
 
 }
