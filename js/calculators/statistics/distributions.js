@@ -13,6 +13,7 @@ function normalCDF(x) {
     const sign =
         x < 0 ? -1 : 1;
 
+
     x =
         Math.abs(x) /
         Math.sqrt(2);
@@ -67,9 +68,19 @@ function normalCDF(x) {
 
 function inverseNormalCDF(p) {
 
+    if (
+        p <= 0 ||
+        p >= 1
+    ) {
+
+        return NaN;
+
+    }
+
+
     const a = [
         -39.6968302866538,
-        220.946098424521,
+        220.946098798521,
         -275.928510446969,
         138.357751867269,
         -30.6647980661472,
@@ -104,16 +115,17 @@ function inverseNormalCDF(p) {
     ];
 
 
-    const pLow = 0.02425;
-    const pHigh = 1 - pLow;
+    const pLow =
+        0.02425;
 
 
-    if (p <= 0 || p >= 1) {
+    const pHigh =
+        1 - pLow;
 
-        return NaN;
 
-    }
-
+    /* =================================
+       LOWER REGION
+       ================================= */
 
     if (p < pLow) {
 
@@ -123,38 +135,30 @@ function inverseNormalCDF(p) {
             );
 
 
+        const numerator =
+            ((((c[0] * q + c[1]) * q + c[2])
+                * q + c[3])
+                * q + c[4])
+                * q + c[5];
+
+
+        const denominator =
+            (((d[0] * q + d[1]) * q + d[2])
+                * q + d[3])
+                * q + 1;
+
+
         return (
-            (
-                (
-                    (
-                        (
-                            c[0] * q +
-                            c[1]
-                        ) * q +
-                        c[2]
-                    ) * q +
-                    c[3]
-                ) * q +
-                c[4]
-            ) * q +
-            c[5]
-        ) /
-        (
-            (
-                (
-                    (
-                        d[0] * q +
-                        d[1]
-                    ) * q +
-                    d[2]
-                ) * q +
-                d[3]
-            ) * q +
-            1
+            numerator /
+            denominator
         );
 
     }
 
+
+    /* =================================
+       CENTRAL REGION
+       ================================= */
 
     if (p <= pHigh) {
 
@@ -166,40 +170,32 @@ function inverseNormalCDF(p) {
             q * q;
 
 
+        const numerator =
+            (((((a[0] * r + a[1]) * r + a[2])
+                * r + a[3])
+                * r + a[4])
+                * r + a[5])
+                * q;
+
+
+        const denominator =
+            ((((b[0] * r + b[1]) * r + b[2])
+                * r + b[3])
+                * r + b[4])
+                * r + 1;
+
+
         return (
-            (
-                (
-                    (
-                        (
-                            a[0] * r +
-                            a[1]
-                        ) * r +
-                        a[2]
-                    ) * r +
-                    a[3]
-                ) * r +
-                a[4]
-            ) * r +
-            a[5]
-        ) * q /
-        (
-            (
-                (
-                    (
-                        b[0] * r +
-                        b[1]
-                    ) * r +
-                    b[2]
-                ) * r +
-                b[3]
-            ) * r +
-            b[4]
-        ) * r +
-        1
+            numerator /
+            denominator
         );
 
     }
 
+
+    /* =================================
+       UPPER REGION
+       ================================= */
 
     const q =
         Math.sqrt(
@@ -207,34 +203,22 @@ function inverseNormalCDF(p) {
         );
 
 
-    return -(
-        (
-            (
-                (
-                    (
-                        c[0] * q +
-                        c[1]
-                    ) * q +
-                    c[2]
-                ) * q +
-                c[3]
-            ) * q +
-            c[4]
-        ) * q +
-        c[5]
-    ) /
-    (
-        (
-            (
-                (
-                    d[0] * q +
-                    d[1]
-                ) * q +
-                d[2]
-            ) * q +
-            d[3]
-        ) * q +
-        1
+    const numerator =
+        ((((c[0] * q + c[1]) * q + c[2])
+            * q + c[3])
+            * q + c[4])
+            * q + c[5];
+
+
+    const denominator =
+        (((d[0] * q + d[1]) * q + d[2])
+            * q + d[3])
+            * q + 1;
+
+
+    return (
+        -numerator /
+        denominator
     );
 
 }
@@ -260,9 +244,11 @@ function logGamma(z) {
 
     if (z < 0.5) {
 
-        return Math.log(Math.PI) -
+        return (
+            Math.log(Math.PI) -
             Math.log(Math.sin(Math.PI * z)) -
-            logGamma(1 - z);
+            logGamma(1 - z)
+        );
 
     }
 
@@ -304,66 +290,456 @@ function logGamma(z) {
 
 
 /* ===================================
+   LOG BETA
+   =================================== */
+
+function logBeta(a, b) {
+
+    return (
+        logGamma(a) +
+        logGamma(b) -
+        logGamma(a + b)
+    );
+
+}
+
+
+/* ===================================
+   REGULARIZED INCOMPLETE BETA
+   =================================== */
+
+function regularizedIncompleteBeta(
+    x,
+    a,
+    b
+) {
+
+    if (
+        !Number.isFinite(x) ||
+        !Number.isFinite(a) ||
+        !Number.isFinite(b) ||
+        a <= 0 ||
+        b <= 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    if (x <= 0) {
+        return 0;
+    }
+
+
+    if (x >= 1) {
+        return 1;
+    }
+
+
+    const MAX_ITERATIONS =
+        200;
+
+
+    const EPSILON =
+        1e-12;
+
+
+    const FPMIN =
+        1e-30;
+
+
+    function betaFraction(
+        x,
+        a,
+        b
+    ) {
+
+        const qab =
+            a + b;
+
+
+        const qap =
+            a + 1;
+
+
+        const qam =
+            a - 1;
+
+
+        let c = 1;
+
+
+        let d =
+            1 -
+            (
+                qab *
+                x
+            ) /
+            qap;
+
+
+        if (
+            Math.abs(d) <
+            FPMIN
+        ) {
+
+            d = FPMIN;
+
+        }
+
+
+        d =
+            1 / d;
+
+
+        let h =
+            d;
+
+
+        for (
+            let m = 1;
+            m <= MAX_ITERATIONS;
+            m++
+        ) {
+
+            const m2 =
+                2 * m;
+
+
+            /* Even step */
+
+            let aa =
+                (
+                    m *
+                    (b - m) *
+                    x
+                ) /
+                (
+                    (qam + m2) *
+                    (a + m2)
+                );
+
+
+            d =
+                1 +
+                aa * d;
+
+
+            if (
+                Math.abs(d) <
+                FPMIN
+            ) {
+
+                d = FPMIN;
+
+            }
+
+
+            c =
+                1 +
+                aa / c;
+
+
+            if (
+                Math.abs(c) <
+                FPMIN
+            ) {
+
+                c = FPMIN;
+
+            }
+
+
+            d =
+                1 / d;
+
+
+            h *=
+                d * c;
+
+
+            /* Odd step */
+
+            aa =
+                -(
+                    (a + m) *
+                    (a + b + m) *
+                    x
+                ) /
+                (
+                    (a + m2) *
+                    (a + 1 + m2)
+                );
+
+
+            d =
+                1 +
+                aa * d;
+
+
+            if (
+                Math.abs(d) <
+                FPMIN
+            ) {
+
+                d = FPMIN;
+
+            }
+
+
+            c =
+                1 +
+                aa / c;
+
+
+            if (
+                Math.abs(c) <
+                FPMIN
+            ) {
+
+                c = FPMIN;
+
+            }
+
+
+            d =
+                1 / d;
+
+
+            const delta =
+                d * c;
+
+
+            h *=
+                delta;
+
+
+            if (
+                Math.abs(delta - 1) <
+                EPSILON
+            ) {
+
+                break;
+
+            }
+
+        }
+
+
+        return h;
+
+    }
+
+
+    const bt =
+        Math.exp(
+            a * Math.log(x) +
+            b * Math.log(1 - x) -
+            logBeta(a, b)
+        );
+
+
+    if (
+        x <
+        (a + 1) /
+        (a + b + 2)
+    ) {
+
+        return (
+            bt *
+            betaFraction(
+                x,
+                a,
+                b
+            )
+        ) / a;
+
+    }
+
+
+    return (
+        1 -
+        (
+            bt *
+            betaFraction(
+                1 - x,
+                b,
+                a
+            )
+        ) / b
+    );
+
+}
+
+
+/* ===================================
+   STUDENT T CDF
+   =================================== */
+
+function studentTCDF(
+    t,
+    df
+) {
+
+    if (
+        !Number.isFinite(t) ||
+        !Number.isFinite(df) ||
+        df <= 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    if (t === 0) {
+
+        return 0.5;
+
+    }
+
+
+    const x =
+        df /
+        (
+            df +
+            t * t
+        );
+
+
+    const ibeta =
+        regularizedIncompleteBeta(
+            x,
+            df / 2,
+            0.5
+        );
+
+
+    if (t > 0) {
+
+        return (
+            1 -
+            0.5 * ibeta
+        );
+
+    }
+
+
+    return (
+        0.5 * ibeta
+    );
+
+}
+
+
+/* ===================================
    T CRITICAL VALUE — 95% CI
    =================================== */
 
 function getTValue95(df) {
 
-    const tTable = {
-
-        1: 12.706,
-        2: 4.303,
-        3: 3.182,
-        4: 2.776,
-        5: 2.571,
-        6: 2.447,
-        7: 2.365,
-        8: 2.306,
-        9: 2.262,
-        10: 2.228,
-        11: 2.201,
-        12: 2.179,
-        13: 2.160,
-        14: 2.145,
-        15: 2.131,
-        16: 2.120,
-        17: 2.110,
-        18: 2.101,
-        19: 2.093,
-        20: 2.086,
-        21: 2.080,
-        22: 2.074,
-        23: 2.069,
-        24: 2.064,
-        25: 2.060,
-        26: 2.056,
-        27: 2.052,
-        28: 2.048,
-        29: 2.045,
-        30: 2.042
-    };
-
-
     if (
-        Number.isFinite(df) &&
-        tTable[df]
+        !Number.isFinite(df) ||
+        df <= 0
     ) {
 
-        return tTable[df];
+        return NaN;
 
     }
 
 
     /*
-       For larger degrees of freedom,
-       t approaches the normal critical
-       value of 1.96.
+     * Two-tailed 95% confidence interval.
+     *
+     * Target probability:
+     * P(T <= t) = 0.975
+     */
 
-       This approximation will later be
-       replaced by a proper inverse
-       Student's t distribution function.
-    */
+    const target =
+        0.975;
 
-    return 1.96;
+
+    /*
+     * For very large degrees of freedom,
+     * Student's t approaches the normal
+     * distribution.
+     */
+
+    if (df > 100000) {
+
+        return 1.959963984540054;
+
+    }
+
+
+    let lower = 0;
+
+
+    let upper = 10;
+
+
+    /*
+     * Expand the upper bound if necessary.
+     */
+
+    while (
+        studentTCDF(
+            upper,
+            df
+        ) < target
+    ) {
+
+        upper *= 2;
+
+    }
+
+
+    /*
+     * Binary search.
+     */
+
+    for (
+        let i = 0;
+        i < 100;
+        i++
+    ) {
+
+        const middle =
+            (
+                lower +
+                upper
+            ) / 2;
+
+
+        const probability =
+            studentTCDF(
+                middle,
+                df
+            );
+
+
+        if (
+            probability <
+            target
+        ) {
+
+            lower =
+                middle;
+
+        } else {
+
+            upper =
+                middle;
+
+        }
+
+    }
+
+
+    return (
+        lower +
+        upper
+    ) / 2;
 
 }
