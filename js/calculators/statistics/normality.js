@@ -17,11 +17,8 @@ function calculateShapiroWilk(data) {
     if (n < 3) {
 
         return {
-
             W: NaN,
-
             pValue: NaN
-
         };
 
     }
@@ -49,28 +46,25 @@ function calculateShapiroWilk(data) {
         );
 
 
-    /*
-     * All observations are identical.
-     */
-
     if (denominator === 0) {
 
         return {
-
             W: 1,
-
             pValue: 1
-
         };
 
     }
 
 
-    /* =================================
-       EXPECTED NORMAL ORDER STATISTICS
-       ================================= */
+    /*
+     * Approximation of Shapiro-Wilk W.
+     *
+     * Expected normal order statistics
+     * are estimated using the Blom
+     * approximation.
+     */
 
-    const expected = [];
+    const m = [];
 
 
     for (
@@ -80,29 +74,21 @@ function calculateShapiroWilk(data) {
     ) {
 
         const p =
-            (
-                i -
-                0.375
-            ) /
-            (
-                n +
-                0.25
-            );
+            (i - 0.375) /
+            (n + 0.25);
 
 
-        expected.push(
-            inverseNormalCDF(p)
-        );
+        const z =
+            inverseNormalCDF(p);
+
+
+        m.push(z);
 
     }
 
 
-    /* =================================
-       NORMALIZED WEIGHTS
-       ================================= */
-
-    const sumSquares =
-        expected.reduce(
+    const mSquared =
+        m.reduce(
             (sum, value) =>
                 sum +
                 value * value,
@@ -111,18 +97,14 @@ function calculateShapiroWilk(data) {
 
 
     const weights =
-        expected.map(
+        m.map(
             value =>
                 value /
                 Math.sqrt(
-                    sumSquares
+                    mSquared
                 )
         );
 
-
-    /* =================================
-       WEIGHTED SUM
-       ================================= */
 
     let numerator = 0;
 
@@ -140,10 +122,6 @@ function calculateShapiroWilk(data) {
     }
 
 
-    /* =================================
-       W STATISTIC
-       ================================= */
-
     const W =
         Math.pow(
             numerator,
@@ -152,9 +130,9 @@ function calculateShapiroWilk(data) {
         denominator;
 
 
-    /* =================================
-       P-VALUE
-       ================================= */
+    /*
+     * Approximate p-value.
+     */
 
     const pValue =
         shapiroPValue(
@@ -165,9 +143,11 @@ function calculateShapiroWilk(data) {
 
     return {
 
-        W: W,
+        W:
+            W,
 
-        pValue: pValue
+        pValue:
+            pValue
 
     };
 
@@ -208,10 +188,9 @@ function shapiroPValue(
 
 
     /*
-     * Royston-style approximation.
-     *
-     * This provides an approximate p-value
-     * from the Shapiro–Wilk W statistic.
+     * Approximation based on the
+     * distribution of the Shapiro-Wilk
+     * statistic.
      */
 
     const y =
@@ -243,12 +222,15 @@ function shapiroPValue(
 
 
     const z =
-        (
-            y -
-            mu
-        ) /
+        (y - mu) /
         sigma;
 
+
+    /*
+     * Small W corresponds to
+     * stronger evidence against
+     * normality.
+     */
 
     let p =
         1 -
@@ -284,121 +266,22 @@ function calculateNormality() {
         parsed.data;
 
 
-    const invalid =
-        parsed.invalid;
-
-
     const result =
         document.getElementById(
             "result"
         );
 
 
-    if (!result) {
-
-        return;
-
-    }
-
-
     /* =================================
-       EMPTY INPUT
+       VALIDATION
        ================================= */
 
     if (
-        data.length === 0 &&
-        invalid.length === 0
+        !validateParsedData(
+            parsed,
+            3
+        )
     ) {
-
-        result.innerHTML = `
-
-            <div class="statistics-error">
-
-                <strong>
-                    Please enter valid numerical data.
-                </strong>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    /* =================================
-       INVALID VALUES
-       ================================= */
-
-    if (
-        invalid.length > 0
-    ) {
-
-        const uniqueInvalid =
-            [
-                ...new Set(
-                    invalid
-                )
-            ];
-
-
-        result.innerHTML = `
-
-            <div class="statistics-error">
-
-                <strong>
-                    Invalid data detected.
-                </strong>
-
-                <br><br>
-
-                The following value(s) are not valid
-                numerical values:
-
-                <br><br>
-
-                <strong>
-                    ${uniqueInvalid.join(", ")}
-                </strong>
-
-                <br><br>
-
-                Please enter numerical values only.
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    /* =================================
-       SAMPLE SIZE
-       ================================= */
-
-    if (
-        data.length < 3
-    ) {
-
-        result.innerHTML = `
-
-            <div class="statistics-error">
-
-                <strong>
-                    Not enough data for the normality test.
-                </strong>
-
-                <br><br>
-
-                Please enter at least
-                3 observations.
-
-            </div>
-
-        `;
 
         return;
 
@@ -523,11 +406,8 @@ function calculateNormality() {
 
 
                 <small>
-
-                    A p-value below 0.05 indicates
-                    significant evidence against
-                    the assumption of normality.
-
+                    A p-value below 0.05 indicates significant
+                    evidence against the assumption of normality.
                 </small>
 
             </div>
@@ -538,4 +418,3 @@ function calculateNormality() {
     `;
 
 }
-
