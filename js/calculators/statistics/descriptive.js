@@ -7,6 +7,342 @@
 /* ===================================
    DESCRIPTIVE STATISTICS
    =================================== */
+/* ===================================
+   MEAN
+   =================================== */
+
+function calculateMean(data) {
+
+    if (data.length === 0) {
+
+        return NaN;
+
+    }
+
+
+    const sum =
+        data.reduce(
+            (total, value) =>
+                total + value,
+            0
+        );
+
+
+    return sum /
+        data.length;
+
+}
+
+
+/* ===================================
+   MEDIAN
+   =================================== */
+
+function calculateMedian(data) {
+
+    if (data.length === 0) {
+
+        return NaN;
+
+    }
+
+
+    const sorted =
+        [...data].sort(
+            (a, b) => a - b
+        );
+
+
+    const middle =
+        Math.floor(
+            sorted.length / 2
+        );
+
+
+    if (
+        sorted.length % 2 === 0
+    ) {
+
+        return (
+            sorted[middle - 1] +
+            sorted[middle]
+        ) / 2;
+
+    }
+
+
+    return sorted[middle];
+
+}
+
+
+/* ===================================
+   QUARTILE
+   =================================== */
+
+function calculateQuartile(
+    data,
+    percentile
+) {
+
+    if (data.length === 0) {
+
+        return NaN;
+
+    }
+
+
+    const sorted =
+        [...data].sort(
+            (a, b) => a - b
+        );
+
+
+    const position =
+        (sorted.length - 1) *
+        percentile;
+
+
+    const lower =
+        Math.floor(position);
+
+
+    const upper =
+        Math.ceil(position);
+
+
+    if (
+        lower === upper
+    ) {
+
+        return sorted[lower];
+
+    }
+
+
+    const weight =
+        position -
+        lower;
+
+
+    return (
+        sorted[lower] +
+        weight *
+        (
+            sorted[upper] -
+            sorted[lower]
+        )
+    );
+
+}
+
+
+/* ===================================
+   VARIANCE
+   =================================== */
+
+function calculateVariance(
+    data,
+    sample = false
+) {
+
+    if (
+        data.length === 0 ||
+        (
+            sample &&
+            data.length < 2
+        )
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const mean =
+        calculateMean(data);
+
+
+    const squaredDifferences =
+        data.map(
+            value =>
+                Math.pow(
+                    value - mean,
+                    2
+                )
+        );
+
+
+    const sum =
+        squaredDifferences.reduce(
+            (total, value) =>
+                total + value,
+            0
+        );
+
+
+    const divisor =
+        sample
+            ? data.length - 1
+            : data.length;
+
+
+    return sum /
+        divisor;
+
+}
+
+
+/* ===================================
+   STANDARD DEVIATION
+   =================================== */
+
+function calculateStandardDeviation(
+    data,
+    sample = false
+) {
+
+    const variance =
+        calculateVariance(
+            data,
+            sample
+        );
+
+
+    return Math.sqrt(
+        variance
+    );
+
+}
+
+
+/* ===================================
+   STANDARD ERROR OF THE MEAN
+   =================================== */
+
+function calculateSEM(data) {
+
+    if (
+        data.length < 2
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const sampleSD =
+        calculateStandardDeviation(
+            data,
+            true
+        );
+
+
+    return sampleSD /
+        Math.sqrt(
+            data.length
+        );
+
+}
+
+
+/* ===================================
+   COEFFICIENT OF VARIATION
+   =================================== */
+
+function calculateCV(data) {
+
+    if (
+        data.length < 2
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const mean =
+        calculateMean(data);
+
+
+    if (
+        mean === 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const sampleSD =
+        calculateStandardDeviation(
+            data,
+            true
+        );
+
+
+    return (
+        sampleSD /
+        Math.abs(mean)
+    ) * 100;
+
+}
+
+
+/* ===================================
+   95% CONFIDENCE INTERVAL
+   =================================== */
+
+function calculateConfidenceInterval95(
+    data
+) {
+
+    if (
+        data.length < 2
+    ) {
+
+        return {
+
+            lower: NaN,
+            upper: NaN
+
+        };
+
+    }
+
+
+    const mean =
+        calculateMean(data);
+
+
+    const sem =
+        calculateSEM(data);
+
+
+    const df =
+        data.length - 1;
+
+
+    const t =
+        getTValue95(df);
+
+
+    const margin =
+        t * sem;
+
+
+    return {
+
+        lower:
+            mean - margin,
+
+        upper:
+            mean + margin
+
+    };
+
+}
+
 
 function calculateDescriptiveStatistics() {
 
