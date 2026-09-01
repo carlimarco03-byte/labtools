@@ -13,23 +13,10 @@ function calculateStatistics() {
     const analysisType =
         document.getElementById(
             "analysisType"
-        );
+        )?.value;
 
 
-    const result =
-        document.getElementById(
-            "result"
-        );
-
-
-    if (!analysisType || !result) {
-
-        return;
-
-    }
-
-
-    switch (analysisType.value) {
+    switch (analysisType) {
 
         case "descriptive":
 
@@ -54,17 +41,27 @@ function calculateStatistics() {
 
         default:
 
-            result.innerHTML = `
+            const result =
+                document.getElementById(
+                    "result"
+                );
 
-                <div class="statistics-error">
 
-                    <strong>
-                        Please select a valid analysis.
-                    </strong>
+            if (result) {
 
-                </div>
+                result.innerHTML = `
 
-            `;
+                    <div class="statistics-error">
+
+                        <strong>
+                            Please select a valid analysis.
+                        </strong>
+
+                    </div>
+
+                `;
+
+            }
 
     }
 
@@ -132,8 +129,9 @@ function resetStatistics() {
 
     if (result) {
 
-        result.innerHTML =
-            "Result will appear here";
+        result.innerHTML = `
+            Result will appear here
+        `;
 
     }
 
@@ -141,7 +139,7 @@ function resetStatistics() {
 
 
 /* ===================================
-   INITIALIZATION
+   INTERFACE INITIALIZATION
    =================================== */
 
 document.addEventListener(
@@ -167,9 +165,12 @@ document.addEventListener(
 
 
         /*
-         * Stop initialization if the
-         * required interface elements
-         * are not present.
+         * If the current HTML does not yet
+         * contain these elements, simply stop.
+         *
+         * This allows the JavaScript files
+         * to be prepared before the HTML
+         * is updated.
          */
 
         if (
@@ -182,9 +183,9 @@ document.addEventListener(
         }
 
 
-        /* ==============================
+        /* =================================
            UPDATE ANALYSIS INTERFACE
-           ============================== */
+           ================================= */
 
         function updateAnalysisInterface() {
 
@@ -222,6 +223,10 @@ document.addEventListener(
         }
 
 
+        /* =================================
+           ANALYSIS TYPE CHANGE
+           ================================= */
+
         analysisType.addEventListener(
             "change",
             updateAnalysisInterface
@@ -231,9 +236,9 @@ document.addEventListener(
         updateAnalysisInterface();
 
 
-        /* ==============================
+        /* =================================
            CTRL + ENTER
-           ============================== */
+           ================================= */
 
         if (input) {
 
@@ -257,5 +262,3 @@ document.addEventListener(
 
     }
 );
-
-
