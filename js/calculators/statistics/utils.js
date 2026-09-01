@@ -61,7 +61,8 @@ function parseData(inputId = "dataInput") {
         }
 
 
-        const number = Number(value);
+        const number =
+            Number(value);
 
 
         if (Number.isFinite(number)) {
@@ -106,10 +107,13 @@ function formatStatistic(value) {
 
 
 /* ===================================
-   VALIDATE DATA
+   VALIDATE PARSED DATA
    =================================== */
 
-function validateParsedData(parsed, minimum = 2) {
+function validateParsedData(
+    parsed,
+    minimum = 2
+) {
 
     const result =
         document.getElementById("result");
@@ -120,7 +124,9 @@ function validateParsedData(parsed, minimum = 2) {
     }
 
 
-    /* Empty input */
+    /* =================================
+       EMPTY INPUT
+       ================================= */
 
     if (
         parsed.data.length === 0 &&
@@ -144,12 +150,16 @@ function validateParsedData(parsed, minimum = 2) {
     }
 
 
-    /* Invalid values */
+    /* =================================
+       INVALID VALUES
+       ================================= */
 
     if (parsed.invalid.length > 0) {
 
         const uniqueInvalid =
-            [...new Set(parsed.invalid)];
+            [...new Set(
+                parsed.invalid
+            )];
 
 
         result.innerHTML = `
@@ -184,9 +194,13 @@ function validateParsedData(parsed, minimum = 2) {
     }
 
 
-    /* Minimum sample size */
+    /* =================================
+       MINIMUM SAMPLE SIZE
+       ================================= */
 
-    if (parsed.data.length < minimum) {
+    if (
+        parsed.data.length < minimum
+    ) {
 
         result.innerHTML = `
 
