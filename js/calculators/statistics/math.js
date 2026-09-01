@@ -10,11 +10,18 @@
 
 function normalCDF(x) {
 
+    if (!Number.isFinite(x)) {
+
+        return NaN;
+
+    }
+
+
     const sign =
         x < 0 ? -1 : 1;
 
 
-    x =
+    const absoluteX =
         Math.abs(x) /
         Math.sqrt(2);
 
@@ -23,15 +30,25 @@ function normalCDF(x) {
         1 /
         (
             1 +
-            0.3275911 * x
+            0.3275911 *
+            absoluteX
         );
 
 
-    const a1 = 0.254829592;
-    const a2 = -0.284496736;
-    const a3 = 1.421413741;
-    const a4 = -1.453152027;
-    const a5 = 1.061405429;
+    const a1 =
+        0.254829592;
+
+    const a2 =
+        -0.284496736;
+
+    const a3 =
+        1.421413741;
+
+    const a4 =
+        -1.453152027;
+
+    const a5 =
+        1.061405429;
 
 
     const erf =
@@ -52,7 +69,8 @@ function normalCDF(x) {
             ) * t
         ) *
         Math.exp(
-            -x * x
+            -absoluteX *
+            absoluteX
         );
 
 
@@ -71,6 +89,7 @@ function normalCDF(x) {
 function inverseNormalCDF(p) {
 
     if (
+        !Number.isFinite(p) ||
         p <= 0 ||
         p >= 1
     ) {
@@ -81,39 +100,47 @@ function inverseNormalCDF(p) {
 
 
     const a = [
+
         -39.6968302866538,
         220.946098424521,
         -275.928510446969,
         138.357751867269,
         -30.6647980661472,
         2.50662827745924
+
     ];
 
 
     const b = [
+
         -54.4760987982241,
         161.585836858041,
         -155.698979859887,
         66.8013118877197,
         -13.2806815528857
+
     ];
 
 
     const c = [
+
         -0.00778489400243029,
         -0.322396458041136,
         -2.40075827716184,
         -2.54973253934373,
         4.37466414146497,
         2.93816398269878
+
     ];
 
 
     const d = [
+
         0.00778469570904146,
         0.32246712907004,
         2.445134137143,
         3.75440866190742
+
     ];
 
 
@@ -122,12 +149,17 @@ function inverseNormalCDF(p) {
 
 
     const pHigh =
-        1 - pLow;
+        1 -
+        pLow;
 
 
-    /* LOWER REGION */
+    /* =================================
+       LOWER REGION
+       ================================= */
 
-    if (p < pLow) {
+    if (
+        p < pLow
+    ) {
 
         const q =
             Math.sqrt(
@@ -157,16 +189,22 @@ function inverseNormalCDF(p) {
     }
 
 
-    /* CENTRAL REGION */
+    /* =================================
+       CENTRAL REGION
+       ================================= */
 
-    if (p <= pHigh) {
+    if (
+        p <= pHigh
+    ) {
 
         const q =
-            p - 0.5;
+            p -
+            0.5;
 
 
         const r =
-            q * q;
+            q *
+            q;
 
 
         const numerator =
@@ -192,13 +230,16 @@ function inverseNormalCDF(p) {
     }
 
 
-    /* UPPER REGION */
+    /* =================================
+       UPPER REGION
+       ================================= */
 
     const q =
         Math.sqrt(
             -2 *
             Math.log(
-                1 - p
+                1 -
+                p
             )
         );
 
@@ -223,13 +264,25 @@ function inverseNormalCDF(p) {
 
 }
 
+
 /* ===================================
    LOG GAMMA
    =================================== */
 
 function logGamma(z) {
 
+    if (
+        !Number.isFinite(z) ||
+        z <= 0
+    ) {
+
+        return NaN;
+
+    }
+
+
     const coefficients = [
+
         676.5203681218851,
         -1259.1392167224028,
         771.32342877765313,
@@ -238,17 +291,26 @@ function logGamma(z) {
         -0.13857109526572012,
         9.9843695780195716e-6,
         1.5056327351493116e-7
+
     ];
 
 
-    if (z < 0.5) {
+    if (
+        z < 0.5
+    ) {
 
         return (
             Math.log(Math.PI) -
             Math.log(
-                Math.sin(Math.PI * z)
+                Math.sin(
+                    Math.PI *
+                    z
+                )
             ) -
-            logGamma(1 - z)
+            logGamma(
+                1 -
+                z
+            )
         );
 
     }
@@ -269,7 +331,11 @@ function logGamma(z) {
 
         x +=
             coefficients[i] /
-            (z + i + 1);
+            (
+                z +
+                i +
+                1
+            );
 
     }
 
@@ -281,15 +347,23 @@ function logGamma(z) {
 
 
     return (
-        0.5 *
-        Math.log(2 * Math.PI) +
 
-        (z + 0.5) *
+        0.5 *
+        Math.log(
+            2 *
+            Math.PI
+        ) +
+
+        (
+            z +
+            0.5
+        ) *
         Math.log(t) -
 
         t +
 
         Math.log(x)
+
     );
 
 }
@@ -299,12 +373,28 @@ function logGamma(z) {
    LOG BETA FUNCTION
    =================================== */
 
-function logBeta(a, b) {
+function logBeta(
+    a,
+    b
+) {
+
+    if (
+        a <= 0 ||
+        b <= 0
+    ) {
+
+        return NaN;
+
+    }
+
 
     return (
         logGamma(a) +
         logGamma(b) -
-        logGamma(a + b)
+        logGamma(
+            a +
+            b
+        )
     );
 
 }
@@ -320,13 +410,34 @@ function regularizedIncompleteBeta(
     b
 ) {
 
-    if (x <= 0) {
-        return 0;
+    if (
+        !Number.isFinite(x) ||
+        !Number.isFinite(a) ||
+        !Number.isFinite(b) ||
+        a <= 0 ||
+        b <= 0
+    ) {
+
+        return NaN;
+
     }
 
 
-    if (x >= 1) {
+    if (
+        x <= 0
+    ) {
+
+        return 0;
+
+    }
+
+
+    if (
+        x >= 1
+    ) {
+
         return 1;
+
     }
 
 
@@ -345,15 +456,18 @@ function regularizedIncompleteBeta(
     ) {
 
         const qab =
-            a + b;
+            a +
+            b;
 
 
         const qap =
-            a + 1;
+            a +
+            1;
 
 
         const qam =
-            a - 1;
+            a -
+            1;
 
 
         let c =
@@ -374,13 +488,15 @@ function regularizedIncompleteBeta(
             1e-30
         ) {
 
-            d = 1e-30;
+            d =
+                1e-30;
 
         }
 
 
         d =
-            1 / d;
+            1 /
+            d;
 
 
         let h =
@@ -394,22 +510,33 @@ function regularizedIncompleteBeta(
         ) {
 
             const m2 =
-                2 * m;
+                2 *
+                m;
 
 
             let aa =
                 m *
-                (b - m) *
+                (
+                    b -
+                    m
+                ) *
                 x /
                 (
-                    (qam + m2) *
-                    (a + m2)
+                    (
+                        qam +
+                        m2
+                    ) *
+                    (
+                        a +
+                        m2
+                    )
                 );
 
 
             d =
                 1 +
-                aa * d;
+                aa *
+                d;
 
 
             if (
@@ -417,14 +544,16 @@ function regularizedIncompleteBeta(
                 1e-30
             ) {
 
-                d = 1e-30;
+                d =
+                    1e-30;
 
             }
 
 
             c =
                 1 +
-                aa / c;
+                aa /
+                c;
 
 
             if (
@@ -432,34 +561,50 @@ function regularizedIncompleteBeta(
                 1e-30
             ) {
 
-                c = 1e-30;
+                c =
+                    1e-30;
 
             }
 
 
             d =
-                1 / d;
+                1 /
+                d;
 
 
             h *=
-                d * c;
+                d *
+                c;
 
 
             aa =
                 -(
-                    (a + m) *
-                    (qab + m) *
+                    (
+                        a +
+                        m
+                    ) *
+                    (
+                        qab +
+                        m
+                    ) *
                     x
                 ) /
                 (
-                    (a + m2) *
-                    (qap + m2)
+                    (
+                        a +
+                        m2
+                    ) *
+                    (
+                        qap +
+                        m2
+                    )
                 );
 
 
             d =
                 1 +
-                aa * d;
+                aa *
+                d;
 
 
             if (
@@ -467,14 +612,16 @@ function regularizedIncompleteBeta(
                 1e-30
             ) {
 
-                d = 1e-30;
+                d =
+                    1e-30;
 
             }
 
 
             c =
                 1 +
-                aa / c;
+                aa /
+                c;
 
 
             if (
@@ -482,17 +629,20 @@ function regularizedIncompleteBeta(
                 1e-30
             ) {
 
-                c = 1e-30;
+                c =
+                    1e-30;
 
             }
 
 
             d =
-                1 / d;
+                1 /
+                d;
 
 
             const delta =
-                d * c;
+                d *
+                c;
 
 
             h *=
@@ -500,7 +650,10 @@ function regularizedIncompleteBeta(
 
 
             if (
-                Math.abs(delta - 1) <
+                Math.abs(
+                    delta -
+                    1
+                ) <
                 epsilon
             ) {
 
@@ -516,18 +669,39 @@ function regularizedIncompleteBeta(
     }
 
 
+    const logBT =
+        a *
+        Math.log(x) +
+
+        b *
+        Math.log(
+            1 -
+            x
+        ) -
+
+        logBeta(
+            a,
+            b
+        );
+
+
     const bt =
         Math.exp(
-            a * Math.log(x) +
-            b * Math.log(1 - x) -
-            logBeta(a, b)
+            logBT
         );
 
 
     if (
         x <
-        (a + 1) /
-        (a + b + 2)
+        (
+            a +
+            1
+        ) /
+        (
+            a +
+            b +
+            2
+        )
     ) {
 
         return (
@@ -537,7 +711,8 @@ function regularizedIncompleteBeta(
                 a,
                 b
             )
-        ) / a;
+        ) /
+        a;
 
     }
 
@@ -547,18 +722,20 @@ function regularizedIncompleteBeta(
         (
             bt *
             betaFraction(
-                1 - x,
+                1 -
+                x,
                 b,
                 a
             )
-        ) / b
+        ) /
+        b
     );
 
 }
 
 
 /* ===================================
-   STUDENT T CDF
+   STUDENT'S T CDF
    =================================== */
 
 function studentTCDF(
@@ -577,7 +754,9 @@ function studentTCDF(
     }
 
 
-    if (t === 0) {
+    if (
+        t === 0
+    ) {
 
         return 0.5;
 
@@ -588,7 +767,8 @@ function studentTCDF(
         df /
         (
             df +
-            t * t
+            t *
+            t
         );
 
 
@@ -600,18 +780,60 @@ function studentTCDF(
         );
 
 
-    if (t > 0) {
+    if (
+        t > 0
+    ) {
 
         return (
             1 -
-            0.5 * ibeta
+            0.5 *
+            ibeta
         );
 
     }
 
 
     return (
-        0.5 * ibeta
+        0.5 *
+        ibeta
+    );
+
+}
+
+
+/* ===================================
+   STUDENT'S T P-VALUE
+   =================================== */
+
+function studentTTwoTailedPValue(
+    t,
+    df
+) {
+
+    if (
+        !Number.isFinite(t) ||
+        !Number.isFinite(df) ||
+        df <= 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const probability =
+        studentTCDF(
+            Math.abs(t),
+            df
+        );
+
+
+    return (
+        2 *
+        (
+            1 -
+            probability
+        )
     );
 
 }
@@ -638,12 +860,15 @@ function getTValue95(df) {
 
 
     /*
-     * For extremely large degrees
-     * of freedom, Student's t approaches
-     * the standard normal distribution.
+     * For very large degrees
+     * of freedom, Student's t
+     * approaches the standard
+     * normal distribution.
      */
 
-    if (df > 100000) {
+    if (
+        df > 100000
+    ) {
 
         return 1.959963984540054;
 
@@ -662,10 +887,12 @@ function getTValue95(df) {
         studentTCDF(
             upper,
             df
-        ) < target
+        ) <
+        target
     ) {
 
-        upper *= 2;
+        upper *=
+            2;
 
     }
 
@@ -677,7 +904,10 @@ function getTValue95(df) {
     ) {
 
         const middle =
-            (lower + upper) /
+            (
+                lower +
+                upper
+            ) /
             2;
 
 
@@ -712,3 +942,4 @@ function getTValue95(df) {
     ) / 2;
 
 }
+
