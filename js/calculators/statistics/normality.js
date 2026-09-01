@@ -5,7 +5,7 @@
 
 
 /* ===================================
-   SHAPIRO–WILK
+   SHAPIRO–WILK TEST
    =================================== */
 
 function calculateShapiroWilk(data) {
@@ -13,6 +13,11 @@ function calculateShapiroWilk(data) {
     const n =
         data.length;
 
+
+    /*
+     * Shapiro–Wilk requires
+     * at least 3 observations.
+     */
 
     if (n < 3) {
 
@@ -24,15 +29,27 @@ function calculateShapiroWilk(data) {
     }
 
 
+    /* =================================
+       SORT DATA
+       ================================= */
+
     const sorted =
         [...data].sort(
             (a, b) => a - b
         );
 
 
+    /* =================================
+       SAMPLE MEAN
+       ================================= */
+
     const mean =
         calculateMean(sorted);
 
+
+    /* =================================
+       SUM OF SQUARED DEVIATIONS
+       ================================= */
 
     const denominator =
         sorted.reduce(
@@ -46,6 +63,11 @@ function calculateShapiroWilk(data) {
         );
 
 
+    /*
+     * Constant data cannot be evaluated
+     * in the usual way.
+     */
+
     if (denominator === 0) {
 
         return {
@@ -56,15 +78,11 @@ function calculateShapiroWilk(data) {
     }
 
 
-    /*
-     * Approximation of Shapiro-Wilk W.
-     *
-     * Expected normal order statistics
-     * are estimated using the Blom
-     * approximation.
-     */
+    /* =================================
+       EXPECTED NORMAL ORDER STATISTICS
+       ================================= */
 
-    const m = [];
+    const expected = [];
 
 
     for (
@@ -73,22 +91,32 @@ function calculateShapiroWilk(data) {
         i++
     ) {
 
-        const p =
-            (i - 0.375) /
-            (n + 0.25);
+        const probability =
+            (
+                i - 0.375
+            ) /
+            (
+                n + 0.25
+            );
 
 
         const z =
-            inverseNormalCDF(p);
+            inverseNormalCDF(
+                probability
+            );
 
 
-        m.push(z);
+        expected.push(z);
 
     }
 
 
-    const mSquared =
-        m.reduce(
+    /* =================================
+       NORMALIZED WEIGHTS
+       ================================= */
+
+    const sumSquares =
+        expected.reduce(
             (sum, value) =>
                 sum +
                 value * value,
@@ -96,17 +124,25 @@ function calculateShapiroWilk(data) {
         );
 
 
-    const weights =
-        m.map(
-            value =>
-                value /
-                Math.sqrt(
-                    mSquared
-                )
+    const normalization =
+        Math.sqrt(
+            sumSquares
         );
 
 
-    let numerator = 0;
+    const weights =
+        expected.map(
+            value =>
+                value /
+                normalization
+        );
+
+
+    /* =================================
+       WEIGHTED SUM
+       ================================= */
+
+    let weightedSum = 0;
 
 
     for (
@@ -115,24 +151,28 @@ function calculateShapiroWilk(data) {
         i++
     ) {
 
-        numerator +=
+        weightedSum +=
             weights[i] *
             sorted[i];
 
     }
 
 
+    /* =================================
+       W STATISTIC
+       ================================= */
+
     const W =
         Math.pow(
-            numerator,
+            weightedSum,
             2
         ) /
         denominator;
 
 
-    /*
-     * Approximate p-value.
-     */
+    /* =================================
+       P-VALUE
+       ================================= */
 
     const pValue =
         shapiroPValue(
@@ -173,6 +213,10 @@ function shapiroPValue(
     }
 
 
+    /*
+     * Numerical protection.
+     */
+
     if (W >= 1) {
 
         return 1;
@@ -188,9 +232,11 @@ function shapiroPValue(
 
 
     /*
-     * Approximation based on the
-     * distribution of the Shapiro-Wilk
-     * statistic.
+     * Approximation of the
+     * Shapiro–Wilk p-value.
+     *
+     * This transformation follows
+     * the Royston-style approximation.
      */
 
     const y =
@@ -222,38 +268,46 @@ function shapiroPValue(
 
 
     const z =
-        (y - mu) /
+        (
+            y -
+            mu
+        ) /
         sigma;
 
 
     /*
-     * Small W corresponds to
-     * stronger evidence against
-     * normality.
+     * Smaller W corresponds
+     * to stronger evidence
+     * against normality.
      */
 
-    let p =
+    let pValue =
         1 -
         normalCDF(z);
 
 
-    p =
+    /*
+     * Keep p-value within
+     * the valid [0, 1] interval.
+     */
+
+    pValue =
         Math.max(
             0,
             Math.min(
                 1,
-                p
+                pValue
             )
         );
 
 
-    return p;
+    return pValue;
 
 }
 
 
 /* ===================================
-   NORMALITY TEST
+   NORMALITY ANALYSIS
    =================================== */
 
 function calculateNormality() {
@@ -418,3 +472,4 @@ function calculateNormality() {
     `;
 
 }
+
