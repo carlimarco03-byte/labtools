@@ -348,6 +348,76 @@ const mannWhitney =
 
             </div>
 
+           
+<!-- MANN–WHITNEY U TEST -->
+
+<div class="statistics-section">
+
+    <h4>
+        Mann–Whitney U test
+    </h4>
+
+
+    <div class="statistics-grid">
+
+        <div>
+
+            <span>
+                U statistic
+            </span>
+
+            <strong>
+                ${formatStatistic(
+                    mannWhitney.U
+                )}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                z statistic
+            </span>
+
+            <strong>
+                ${formatStatistic(
+                    mannWhitney.z
+                )}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                p-value
+            </span>
+
+            <strong>
+                ${formatStatistic(
+                    mannWhitney.pValue
+                )}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <small>
+
+        Two-tailed Mann–Whitney U test.
+        A p-value below 0.05 indicates
+        a statistically significant difference
+        between the two groups.
+
+    </small>
+
+</div>
+
 
         </div>
 
