@@ -677,6 +677,17 @@ let W =
 
 
 /*
+    w1 = 1 - W
+
+    Required by the Royston p-value
+    approximation below.
+*/
+
+const w1 =
+    1 - W;
+
+
+/*
     Numerical protection.
 */
 
