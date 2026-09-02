@@ -24,6 +24,17 @@ function calculateNormality() {
 
     const result = calculateShapiroWilk(data);
 
+   if (result.error) {
+
+    document.getElementById("result").innerHTML = `
+        <div class="statistics-error">
+            <strong>${result.error}</strong>
+        </div>
+    `;
+
+    return;
+}
+
     const interpretation =
         result.pValue < 0.05
             ? "The data significantly deviate from a normal distribution."
@@ -103,18 +114,32 @@ function calculateShapiroWilk(data) {
 
     const n = data.length;
 
-    if (n < 3) {
+    /*
+        Shapiro-Wilk supported range
+    */
+
+    if (n < 3 || n > 5000) {
 
         return {
             W: NaN,
-            pValue: NaN
+            pValue: NaN,
+            error:
+                n < 3
+                    ? "The Shapiro–Wilk test requires at least 3 observations."
+                    : "The Shapiro–Wilk test is limited to 5000 observations."
         };
 
     }
 
+
+    /*
+        Sort observations
+    */
+
     const sorted = [...data].sort((a, b) => a - b);
 
     const mean = calculateMean(sorted);
+
 
     /*
         Sum of squared deviations
@@ -124,11 +149,14 @@ function calculateShapiroWilk(data) {
 
     for (let i = 0; i < n; i++) {
 
-        const deviation = sorted[i] - mean;
+        const deviation =
+            sorted[i] - mean;
 
-        denominator += deviation * deviation;
+        denominator +=
+            deviation * deviation;
 
     }
+
 
     /*
         Constant dataset
@@ -149,13 +177,10 @@ function calculateShapiroWilk(data) {
 
         Blom approximation:
 
-        p_i = (i - 0.375) / (n + 0.25)
-
-        The expected normal order statistics
-        are obtained through the inverse normal CDF.
+        p = (i - 0.375) / (n + 0.25)
     */
 
-    const expected = [];
+    const m = [];
 
     for (let i = 1; i <= n; i++) {
 
@@ -163,7 +188,7 @@ function calculateShapiroWilk(data) {
             (i - 0.375) /
             (n + 0.25);
 
-        expected.push(
+        m.push(
             inverseNormalCDF(p)
         );
 
@@ -171,44 +196,76 @@ function calculateShapiroWilk(data) {
 
 
     /*
-        Normalize expected coefficients.
+        Calculate the coefficient normalization.
 
-        This produces an approximation of the
-        Shapiro-Wilk coefficient vector.
+        The Shapiro-Wilk numerator is based on
+        symmetric coefficients.
     */
 
-    let coefficientSumSquares = 0;
+    let sumSquares = 0;
 
     for (let i = 0; i < n; i++) {
 
-        coefficientSumSquares +=
-            expected[i] * expected[i];
+        sumSquares +=
+            m[i] * m[i];
 
     }
 
-    const normalization =
-        Math.sqrt(coefficientSumSquares);
 
-
-    const coefficients =
-        expected.map(value =>
-            value / normalization
-        );
+    const norm =
+        Math.sqrt(sumSquares);
 
 
     /*
-        Numerator of W
+        Normalized coefficients
+    */
+
+    const a = [];
+
+    for (let i = 0; i < n; i++) {
+
+        a.push(
+            m[i] / norm
+        );
+
+    }
+
+
+    /*
+        Use symmetric coefficient pairing.
+
+        This avoids accumulating numerical
+        errors from summing all coefficients
+        independently.
     */
 
     let numerator = 0;
 
-    for (let i = 0; i < n; i++) {
+    const half =
+        Math.floor(n / 2);
 
-        numerator +=
-            coefficients[i] *
+    for (let i = 0; i < half; i++) {
+
+        const coefficient =
+            a[n - 1 - i];
+
+        const difference =
+            sorted[n - 1 - i] -
             sorted[i];
 
+        numerator +=
+            coefficient *
+            difference;
+
     }
+
+
+    /*
+        Odd sample size:
+
+        The middle observation does not
+        contribute to the symmetric numerator.
+    */
 
 
     numerator *= numerator;
@@ -224,18 +281,18 @@ function calculateShapiroWilk(data) {
 
 
     /*
-        Numerical protection.
+        Numerical protection
     */
 
     const boundedW =
-        Math.min(
-            1,
-            Math.max(0, W)
+        Math.max(
+            0,
+            Math.min(1, W)
         );
 
 
     /*
-        Approximate p-value.
+        Approximate p-value
     */
 
     const pValue =
@@ -262,6 +319,10 @@ function calculateShapiroWilk(data) {
 
 function shapiroPValue(W, n) {
 
+    if (!Number.isFinite(W)) {
+        return NaN;
+    }
+
     if (W >= 1) {
         return 1;
     }
@@ -272,33 +333,29 @@ function shapiroPValue(W, n) {
 
 
     /*
-        Approximation based on the
-        transformation of W.
+        Transform W.
 
-        This is intended for practical
-        screening rather than exact
-        reproduction of statistical
-        software implementations.
+        Smaller W indicates stronger
+        deviation from normality.
     */
 
-    const lnN =
-        Math.log(n);
-
     const y =
-        Math.log(
-            1 - W
-        );
+        Math.log(1 - W);
 
+
+    /*
+        Approximation of the distribution
+        of the transformed statistic.
+    */
 
     let mu;
     let sigma;
 
 
-    /*
-        Small / moderate sample sizes
-    */
-
     if (n <= 11) {
+
+        const lnN =
+            Math.log(n);
 
         mu =
             -0.0006714 *
@@ -328,6 +385,9 @@ function shapiroPValue(W, n) {
 
     } else {
 
+        const lnN =
+            Math.log(n);
+
         mu =
             0.0038915 *
             Math.pow(lnN, 3)
@@ -354,25 +414,34 @@ function shapiroPValue(W, n) {
     }
 
 
+    /*
+        Standardized statistic
+    */
+
     const z =
         (y - mu) /
         sigma;
 
 
-    let p =
+    /*
+        Upper-tail probability
+    */
+
+    let pValue =
         1 - normalCDF(z);
 
 
     /*
-        Numerical protection.
+        Numerical protection
     */
 
-    p =
+    pValue =
         Math.max(
             0,
-            Math.min(1, p)
+            Math.min(1, pValue)
         );
 
 
-    return p;
+    return pValue;
+
 }
