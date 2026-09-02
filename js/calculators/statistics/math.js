@@ -1389,3 +1389,256 @@ function chiSquareSurvival(x, df) {
 
     return NaN;
 }
+
+/* ===================================
+   D'AGOSTINO-PEARSON NORMALITY TEST
+   =================================== */
+
+function calculateDAgostinoPearson(data) {
+
+    const n = data.length;
+
+    /*
+        D'Agostino-Pearson is not reliable
+        for very small samples.
+
+        Labistry will use it for n >= 8.
+    */
+
+    if (n < 8) {
+
+        return {
+            available: false,
+            K2: NaN,
+            pValue: NaN,
+            skewness: calculateSkewness(data),
+            kurtosis: calculateKurtosis(data)
+        };
+
+    }
+
+
+    const skewness =
+        calculateSkewness(data);
+
+    const kurtosis =
+        calculateKurtosis(data);
+
+
+    if (
+        !Number.isFinite(skewness) ||
+        !Number.isFinite(kurtosis)
+    ) {
+
+        return {
+            available: false,
+            K2: NaN,
+            pValue: NaN,
+            skewness,
+            kurtosis
+        };
+
+    }
+
+
+    /* =================================
+       SKEWNESS TRANSFORMATION
+       ================================= */
+
+    /*
+        Approximate standard error
+        of sample skewness.
+    */
+
+    const skewnessSE =
+        Math.sqrt(
+            6 * n * (n - 1)
+            /
+            (
+                (n - 2) *
+                (n + 1) *
+                (n + 3)
+            )
+        );
+
+
+    const zSkewness =
+        skewness /
+        skewnessSE;
+
+
+    /*
+        Finite-sample correction.
+
+        This transformation improves the
+        approximation of skewness to a
+        standard normal distribution.
+    */
+
+    const y =
+        zSkewness *
+        Math.sqrt(
+            (
+                (n + 1) *
+                (n + 3)
+            )
+            /
+            (
+                6 *
+                (n - 2)
+            )
+        );
+
+
+    const beta2 =
+        3 *
+        (
+            n * n
+            + 27 * n
+            - 70
+        )
+        /
+        (
+            (n - 2) *
+            (n + 5)
+        );
+
+
+    const W =
+        -1 +
+        Math.sqrt(
+            2 *
+            (beta2 - 1)
+        );
+
+
+    /*
+        Numerical protection.
+    */
+
+    const Wsafe =
+        Math.max(
+            1.0000001,
+            W
+        );
+
+
+    const delta =
+        1 /
+        Math.sqrt(
+            Math.log(Wsafe)
+        );
+
+
+    const alpha =
+        Math.sqrt(
+            2 /
+            (Wsafe - 1)
+        );
+
+
+    const transformedSkewness =
+        alpha *
+        Math.asinh(
+            y / delta
+        );
+
+
+    /* =================================
+       KURTOSIS TRANSFORMATION
+       ================================= */
+
+    /*
+        Expected excess kurtosis
+        for a finite sample.
+    */
+
+    const expectedKurtosis =
+        -6 /
+        (n + 1);
+
+
+    /*
+        Variance of sample excess
+        kurtosis.
+    */
+
+    const varianceKurtosis =
+        24 *
+        n *
+        (n - 2) *
+        (n - 3)
+        /
+        (
+            Math.pow(n + 1, 2) *
+            (n + 3) *
+            (n + 5)
+        );
+
+
+    const zKurtosis =
+        (
+            kurtosis -
+            expectedKurtosis
+        )
+        /
+        Math.sqrt(
+            varianceKurtosis
+        );
+
+
+    /*
+        The transformed skewness and
+        kurtosis are approximately
+        standard normal.
+    */
+
+
+    /* =================================
+       OMNIBUS STATISTIC
+       ================================= */
+
+    const K2 =
+        Math.pow(
+            transformedSkewness,
+            2
+        )
+        +
+        Math.pow(
+            zKurtosis,
+            2
+        );
+
+
+    /*
+        Under H0:
+
+            K² ~ Chi-square(df = 2)
+
+        For df = 2:
+
+            p = exp(-K² / 2)
+    */
+
+    const pValue =
+        chiSquareSurvival(
+            K2,
+            2
+        );
+
+
+    return {
+
+        available: true,
+
+        K2,
+
+        pValue,
+
+        skewness,
+
+        kurtosis
+
+    };
+
+}
