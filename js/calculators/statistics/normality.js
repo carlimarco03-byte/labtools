@@ -35,6 +35,9 @@ function calculateNormality() {
     return;
 }
 
+   const dagostino =
+    calculateDAgostinoPearson(data);
+
     const interpretation =
         result.pValue < 0.05
             ? "The data significantly deviate from a normal distribution."
@@ -75,6 +78,47 @@ function calculateNormality() {
                 </div>
 
             </div>
+
+            <div class="statistics-section">
+
+    <h4>D’Agostino–Pearson Test</h4>
+
+    ${
+        dagostino.available
+        ? `
+            <div class="statistics-row">
+                <span>K² statistic</span>
+                <strong>${formatStatistic(dagostino.K2)}</strong>
+            </div>
+
+            <div class="statistics-row">
+                <span>Skewness</span>
+                <strong>${formatStatistic(dagostino.skewness)}</strong>
+            </div>
+
+            <div class="statistics-row">
+                <span>Excess kurtosis</span>
+                <strong>${formatStatistic(dagostino.kurtosis)}</strong>
+            </div>
+
+            <div class="statistics-row">
+                <span>p-value</span>
+                <strong>${
+                    dagostino.pValue < 0.000001
+                        ? "p < 0.000001"
+                        : formatStatistic(dagostino.pValue)
+                }</strong>
+            </div>
+        `
+        : `
+            <p>
+                The D’Agostino–Pearson test requires at least
+                8 observations.
+            </p>
+        `
+    }
+
+</div>
 
             <div class="statistics-section">
 
