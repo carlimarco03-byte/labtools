@@ -581,21 +581,44 @@ function calculateShapiroWilk(data) {
         numerical stability.
     */
 
-    const scaled =
-        x.map(
-            value =>
-                value / range
-        );
+    /*
+    Center data before scaling.
+
+    Using the first observation as reference
+    avoids unnecessary loss of precision when
+    values are very close to each other.
+*/
+
+const reference =
+    x[0];
+
+const centered =
+    x.map(
+        value =>
+            value - reference
+    );
+
+const centeredMean =
+    centered.reduce(
+        (sum, value) => sum + value,
+        0
+    ) / n;
+
+const scaled =
+    centered.map(
+        value =>
+            (value - centeredMean) / range
+    );
 
 
-    let xx =
-        scaled[0];
+let xx =
+    scaled[0];
 
-    let sx =
-        xx;
+let sx =
+    xx;
 
-    let sa =
-        -a[1];
+let sa =
+    -a[1];
 
 
     let i = 1;
