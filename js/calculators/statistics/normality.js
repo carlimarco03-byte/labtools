@@ -38,16 +38,93 @@ function calculateNormality() {
    const dagostino =
     calculateDAgostinoPearson(data);
 
-    const interpretation =
-        result.pValue < 0.05
-            ? "The data significantly deviate from a normal distribution."
-            : "There is no significant evidence that the data deviate from a normal distribution.";
+   /* ===================================
+   COMBINED INTERPRETATION
+   =================================== */
 
-    const recommendation =
-        result.pValue < 0.05
-            ? "Consider using a non-parametric test or an appropriate data transformation."
-            : "Parametric statistical methods may be appropriate, provided that other assumptions are also satisfied.";
+const shapiroNonNormal =
+    result.pValue < 0.05;
 
+const dagostinoAvailable =
+    dagostino.available;
+
+const dagostinoNonNormal =
+    dagostinoAvailable &&
+    dagostino.pValue < 0.05;
+
+
+let interpretation;
+let recommendation;
+
+
+if (!dagostinoAvailable) {
+
+    /*
+        For small samples, rely on
+        Shapiro-Wilk only.
+    */
+
+    if (shapiroNonNormal) {
+
+        interpretation =
+            "The Shapiro–Wilk test provides evidence against normality.";
+
+        recommendation =
+            "Consider a non-parametric statistical method or an appropriate data transformation.";
+
+    } else {
+
+        interpretation =
+            "The Shapiro–Wilk test provides no significant evidence against normality.";
+
+        recommendation =
+            "Parametric statistical methods may be appropriate, provided that other assumptions are also satisfied.";
+
+    }
+
+} else {
+
+    /*
+        Both tests available.
+    */
+
+    if (
+        shapiroNonNormal &&
+        dagostinoNonNormal
+    ) {
+
+        interpretation =
+            "Both normality tests provide evidence against a normal distribution.";
+
+        recommendation =
+            "Consider using a non-parametric statistical method or an appropriate data transformation.";
+
+    }
+
+    else if (
+        !shapiroNonNormal &&
+        !dagostinoNonNormal
+    ) {
+
+        interpretation =
+            "Neither normality test provides significant evidence against a normal distribution.";
+
+        recommendation =
+            "Parametric statistical methods may be appropriate, provided that other assumptions are also satisfied.";
+
+    }
+
+    else {
+
+        interpretation =
+            "The normality tests provide discordant results.";
+
+        recommendation =
+            "Inspect the data distribution and Q–Q plot before selecting a parametric or non-parametric method.";
+
+    }
+
+}
     document.getElementById("result").innerHTML = `
 
         <div class="statistics-result">
