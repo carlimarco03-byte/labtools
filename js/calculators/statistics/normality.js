@@ -239,55 +239,41 @@ function calculateShapiroWilk(data) {
 
     const n = data.length;
 
-    /*
-        Shapiro-Wilk supported range
-    */
-
-    if (n < 3 || n > 5000) {
+    if (n < 3) {
 
         return {
             W: NaN,
             pValue: NaN,
             error:
-                n < 3
-                    ? "The Shapiro–Wilk test requires at least 3 observations."
-                    : "The Shapiro–Wilk test is limited to 5000 observations."
+                "The Shapiro–Wilk test requires at least 3 observations."
+        };
+
+    }
+
+    if (n > 5000) {
+
+        return {
+            W: NaN,
+            pValue: NaN,
+            error:
+                "The Shapiro–Wilk test is limited to 5000 observations."
         };
 
     }
 
 
-    /*
-        Sort observations
-    */
-
-    const sorted = [...data].sort((a, b) => a - b);
-
-    const mean = calculateMean(sorted);
+    const x =
+        [...data].sort((a, b) => a - b);
 
 
     /*
-        Sum of squared deviations
+        Check for constant data
     */
 
-    let denominator = 0;
+    const range =
+        x[n - 1] - x[0];
 
-    for (let i = 0; i < n; i++) {
-
-        const deviation =
-            sorted[i] - mean;
-
-        denominator +=
-            deviation * deviation;
-
-    }
-
-
-    /*
-        Constant dataset
-    */
-
-    if (denominator === 0) {
+    if (range === 0) {
 
         return {
             W: 1,
@@ -298,275 +284,634 @@ function calculateShapiroWilk(data) {
 
 
     /*
-        Expected normal order statistics.
-
-        Blom approximation:
-
-        p = (i - 0.375) / (n + 0.25)
+        AS R94 / Royston coefficients
     */
 
-    const m = [];
+    const g = [
+        -2.273,
+        0.459
+    ];
 
-    for (let i = 1; i <= n; i++) {
+    const c1 = [
+        0.0,
+        0.221157,
+        -0.147981,
+        -2.07119,
+        4.434685,
+        -2.706056
+    ];
 
-        const p =
-            (i - 0.375) /
-            (n + 0.25);
+    const c2 = [
+        0.0,
+        0.042981,
+        -0.293762,
+        -1.752461,
+        5.682633,
+        -3.582633
+    ];
 
-        m.push(
-            inverseNormalCDF(p)
-        );
+    const c3 = [
+        0.544,
+        -0.39978,
+        0.025054,
+        -0.0006714
+    ];
 
+    const c4 = [
+        1.3822,
+        -0.77857,
+        0.062767,
+        -0.0020322
+    ];
+
+    const c5 = [
+        -1.5861,
+        -0.31082,
+        -0.083751,
+        0.0038915
+    ];
+
+    const c6 = [
+        -0.4803,
+        -0.082676,
+        0.0030302
+    ];
+
+
+    /*
+        Polynomial evaluation
+    */
+
+    function polynomial(coefficients, x) {
+
+        let result =
+            coefficients[0];
+
+        if (coefficients.length > 1) {
+
+            let p =
+                x *
+                coefficients[
+                    coefficients.length - 1
+                ];
+
+            for (
+                let j = coefficients.length - 2;
+                j > 0;
+                j--
+            ) {
+
+                p =
+                    (p + coefficients[j]) *
+                    x;
+
+            }
+
+            result += p;
+        }
+
+        return result;
     }
 
 
     /*
-        Calculate the coefficient normalization.
-
-        The Shapiro-Wilk numerator is based on
-        symmetric coefficients.
+        Number of coefficients
     */
 
-    let sumSquares = 0;
-
-    for (let i = 0; i < n; i++) {
-
-        sumSquares +=
-            m[i] * m[i];
-
-    }
-
-
-    const norm =
-        Math.sqrt(sumSquares);
-
-
-    /*
-        Normalized coefficients
-    */
-
-    const a = [];
-
-    for (let i = 0; i < n; i++) {
-
-        a.push(
-            m[i] / norm
-        );
-
-    }
-
-
-    /*
-        Use symmetric coefficient pairing.
-
-        This avoids accumulating numerical
-        errors from summing all coefficients
-        independently.
-    */
-
-    let numerator = 0;
-
-    const half =
+    const nn2 =
         Math.floor(n / 2);
 
-    for (let i = 0; i < half; i++) {
+    const a =
+        new Array(nn2 + 1);
 
-        const coefficient =
-            a[n - 1 - i];
 
-        const difference =
-            sorted[n - 1 - i] -
-            sorted[i];
+    /*
+        Calculate Shapiro-Wilk coefficients
+    */
 
-        numerator +=
-            coefficient *
-            difference;
+    if (n === 3) {
+
+        a[1] =
+            0.70710678;
+
+    } else {
+
+        const an =
+            n;
+
+        const an25 =
+            an + 0.25;
+
+        let summ2 = 0;
+
+
+        for (
+            let i = 1;
+            i <= nn2;
+            i++
+        ) {
+
+            const p =
+                (i - 0.375) /
+                an25;
+
+            a[i] =
+                inverseNormalCDF(p);
+
+            summ2 +=
+                a[i] *
+                a[i];
+
+        }
+
+
+        summ2 *= 2;
+
+
+        const ssumm2 =
+            Math.sqrt(summ2);
+
+
+        const rsn =
+            1 /
+            Math.sqrt(an);
+
+
+        /*
+            First coefficient
+        */
+
+        let a1 =
+            polynomial(c1, rsn)
+            -
+            a[1] / ssumm2;
+
+
+        let i1;
+        let fac;
+
+
+        /*
+            Second coefficient
+        */
+
+        if (n > 5) {
+
+            i1 = 3;
+
+
+            const a2 =
+                -a[2] / ssumm2
+                +
+                polynomial(c2, rsn);
+
+
+            fac =
+                Math.sqrt(
+                    (
+                        summ2
+                        -
+                        2 *
+                        a[1] *
+                        a[1]
+                        -
+                        2 *
+                        a[2] *
+                        a[2]
+                    )
+                    /
+                    (
+                        1
+                        -
+                        2 *
+                        a1 *
+                        a1
+                        -
+                        2 *
+                        a2 *
+                        a2
+                    )
+                );
+
+
+            a[2] =
+                a2;
+
+        } else {
+
+            i1 = 2;
+
+
+            fac =
+                Math.sqrt(
+                    (
+                        summ2
+                        -
+                        2 *
+                        a[1] *
+                        a[1]
+                    )
+                    /
+                    (
+                        1
+                        -
+                        2 *
+                        a1 *
+                        a1
+                    )
+                );
+
+        }
+
+
+        a[1] =
+            a1;
+
+
+        /*
+            Normalize remaining coefficients
+        */
+
+        for (
+            let i = i1;
+            i <= nn2;
+            i++
+        ) {
+
+            a[i] =
+                a[i] /
+                (-fac);
+
+        }
 
     }
 
 
     /*
-        Odd sample size:
+        Calculate W
 
-        The middle observation does not
-        contribute to the symmetric numerator.
+        Scaling by the range improves
+        numerical stability.
     */
 
+    const scaled =
+        x.map(
+            value =>
+                value / range
+        );
 
-    numerator *= numerator;
+
+    let xx =
+        scaled[0];
+
+    let sx =
+        xx;
+
+    let sa =
+        -a[1];
+
+
+    let i = 1;
+    let j = n - 1;
+
+
+    while (i < n) {
+
+        const xi =
+            scaled[i];
+
+
+        sx +=
+            xi;
+
+
+        i++;
+
+
+        if (i !== j) {
+
+            const index =
+                Math.min(i, j);
+
+
+            const sign =
+                i - j > 0
+                    ? 1
+                    : -1;
+
+
+            sa +=
+                sign *
+                a[index];
+
+        }
+
+
+        xx =
+            xi;
+
+        j--;
+
+    }
+
+
+    sa /=
+        n;
+
+    sx /=
+        n;
 
 
     /*
-        Shapiro-Wilk statistic
+        Calculate covariance components
     */
+
+    let ssa = 0;
+    let ssx = 0;
+    let sax = 0;
+
+
+    i = 0;
+    j = n - 1;
+
+
+    while (i < n) {
+
+        let asa;
+
+
+        if (i !== j) {
+
+            const index =
+                1 +
+                Math.min(i, j);
+
+
+            const sign =
+                i - j > 0
+                    ? 1
+                    : -1;
+
+
+            asa =
+                sign *
+                a[index]
+                -
+                sa;
+
+        } else {
+
+            asa =
+                -sa;
+
+        }
+
+
+        const xsx =
+            scaled[i] -
+            sx;
+
+
+        ssa +=
+            asa *
+            asa;
+
+        ssx +=
+            xsx *
+            xsx;
+
+        sax +=
+            asa *
+            xsx;
+
+
+        i++;
+        j--;
+
+    }
+
+
+    /*
+        Calculate 1 - W first.
+
+        This improves numerical precision
+        when W is very close to 1.
+    */
+
+    const ssassx =
+        Math.sqrt(
+            ssa * ssx
+        );
+
+
+    const w1 =
+        (
+            (ssassx - sax) *
+            (ssassx + sax)
+        )
+        /
+        (
+            ssa * ssx
+        );
+
 
     const W =
-        numerator /
-        denominator;
-
-
-    /*
-        Numerical protection
-    */
-
-    const boundedW =
         Math.max(
             0,
-            Math.min(1, W)
+            Math.min(
+                1,
+                1 - w1
+            )
         );
 
 
     /*
-        Approximate p-value
+        Calculate p-value
     */
 
-    const pValue =
-        shapiroPValue(
-            boundedW,
-            n
-        );
+    let pValue;
+
+
+    /*
+        n = 3 has an exact p-value
+    */
+
+    if (n === 3) {
+
+        const pi6 =
+            6 / Math.PI;
+
+        const stqr =
+            Math.asin(
+                Math.sqrt(0.75)
+            );
+
+
+        pValue =
+            pi6 *
+            (
+                Math.asin(
+                    Math.sqrt(W)
+                )
+                -
+                stqr
+            );
+
+
+        pValue =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    pValue
+                )
+            );
+
+
+    } else {
+
+        /*
+            Royston approximation
+        */
+
+        let y =
+            Math.log(w1);
+
+
+        const an =
+            n;
+
+
+        const logN =
+            Math.log(an);
+
+
+        let mean;
+        let sigma;
+
+
+        /*
+            n = 4 ... 11
+        */
+
+        if (n <= 11) {
+
+            const gamma =
+                polynomial(
+                    g,
+                    an
+                );
+
+
+            /*
+                Extremely small p-value
+            */
+
+            if (y >= gamma) {
+
+                pValue =
+                    1e-99;
+
+            } else {
+
+                y =
+                    -Math.log(
+                        gamma - y
+                    );
+
+
+                mean =
+                    polynomial(
+                        c3,
+                        an
+                    );
+
+
+                sigma =
+                    Math.exp(
+                        polynomial(
+                            c4,
+                            an
+                        )
+                    );
+
+
+                const z =
+                    (y - mean) /
+                    sigma;
+
+
+                /*
+                    Upper-tail probability
+                */
+
+                pValue =
+                    1 -
+                    normalCDF(z);
+
+            }
+
+        }
+
+        /*
+            n >= 12
+        */
+
+        else {
+
+            mean =
+                polynomial(
+                    c5,
+                    logN
+                );
+
+
+            sigma =
+                Math.exp(
+                    polynomial(
+                        c6,
+                        logN
+                    )
+                );
+
+
+            const z =
+                (
+                    y - mean
+                )
+                /
+                sigma;
+
+
+            pValue =
+                1 -
+                normalCDF(z);
+
+        }
+
+
+        /*
+            Numerical protection
+        */
+
+        pValue =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    pValue
+                )
+            );
+
+    }
 
 
     return {
 
-        W: boundedW,
+        W,
 
         pValue
 
     };
-
-}
-
-
-/* ===================================
-   SHAPIRO-WILK P-VALUE
-   =================================== */
-
-function shapiroPValue(W, n) {
-
-    if (!Number.isFinite(W)) {
-        return NaN;
-    }
-
-    if (W >= 1) {
-        return 1;
-    }
-
-    if (W <= 0) {
-        return 0;
-    }
-
-
-    /*
-        Transform W.
-
-        Smaller W indicates stronger
-        deviation from normality.
-    */
-
-    const y =
-        Math.log(1 - W);
-
-
-    /*
-        Approximation of the distribution
-        of the transformed statistic.
-    */
-
-    let mu;
-    let sigma;
-
-
-    if (n <= 11) {
-
-        const lnN =
-            Math.log(n);
-
-        mu =
-            -0.0006714 *
-            Math.pow(n, 3)
-            +
-            0.025054 *
-            Math.pow(n, 2)
-            -
-            0.39978 *
-            n
-            +
-            0.5440;
-
-        sigma =
-            Math.exp(
-                -0.0020322 *
-                Math.pow(n, 3)
-                +
-                0.062767 *
-                Math.pow(n, 2)
-                -
-                0.77857 *
-                n
-                +
-                1.3822
-            );
-
-    } else {
-
-        const lnN =
-            Math.log(n);
-
-        mu =
-            0.0038915 *
-            Math.pow(lnN, 3)
-            -
-            0.083751 *
-            Math.pow(lnN, 2)
-            -
-            0.31082 *
-            lnN
-            -
-            1.5861;
-
-        sigma =
-            Math.exp(
-                0.0030302 *
-                Math.pow(lnN, 2)
-                -
-                0.082676 *
-                lnN
-                -
-                0.4803
-            );
-
-    }
-
-
-    /*
-        Standardized statistic
-    */
-
-    const z =
-        (y - mu) /
-        sigma;
-
-
-    /*
-        Upper-tail probability
-    */
-
-    let pValue =
-        1 - normalCDF(z);
-
-
-    /*
-        Numerical protection
-    */
-
-    pValue =
-        Math.max(
-            0,
-            Math.min(1, pValue)
-        );
-
-
-    return pValue;
 
 }
