@@ -1,23 +1,107 @@
 /* ===================================
-   LABISTRY STATISTICAL TOOLS
-   NORMALITY TESTS
+   NORMALITY TEST
    =================================== */
+
+/*
+    Shapiro-Wilk normality test
+
+    Notes:
+    - Suitable for small and moderate sample sizes.
+    - W close to 1 indicates agreement with normality.
+    - p < 0.05 indicates evidence against normality.
+*/
+
+
+function calculateNormality() {
+
+    const parsed = parseData("dataInput");
+
+    if (!validateParsedData(parsed, 3)) {
+        return;
+    }
+
+    const data = parsed.data;
+
+    const result = calculateShapiroWilk(data);
+
+    const interpretation =
+        result.pValue < 0.05
+            ? "The data significantly deviate from a normal distribution."
+            : "There is no significant evidence that the data deviate from a normal distribution.";
+
+    const recommendation =
+        result.pValue < 0.05
+            ? "Consider using a non-parametric test or an appropriate data transformation."
+            : "Parametric statistical methods may be appropriate, provided that other assumptions are also satisfied.";
+
+    document.getElementById("result").innerHTML = `
+
+        <div class="statistics-result">
+
+            <h3>Shapiro–Wilk Normality Test</h3>
+
+            <div class="statistics-section">
+
+                <h4>Test Summary</h4>
+
+                <div class="statistics-row">
+                    <span>Sample size (n)</span>
+                    <strong>${data.length}</strong>
+                </div>
+
+                <div class="statistics-row">
+                    <span>W statistic</span>
+                    <strong>${formatStatistic(result.W)}</strong>
+                </div>
+
+                <div class="statistics-row">
+                    <span>p-value</span>
+                    <strong>${formatStatistic(result.pValue)}</strong>
+                </div>
+
+            </div>
+
+            <div class="statistics-section">
+
+                <h4>Interpretation</h4>
+
+                <p>
+                    ${interpretation}
+                </p>
+
+                <p>
+                    <strong>Recommendation:</strong>
+                    ${recommendation}
+                </p>
+
+            </div>
+
+            <div class="statistics-section">
+
+                <h4>Statistical criterion</h4>
+
+                <p>
+                    The null hypothesis of the Shapiro–Wilk test is that
+                    the data come from a normal distribution.
+                    A p-value below 0.05 indicates statistically significant
+                    evidence against normality.
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+}
 
 
 /* ===================================
-   SHAPIRO–WILK TEST
+   SHAPIRO-WILK
    =================================== */
 
 function calculateShapiroWilk(data) {
 
-    const n =
-        data.length;
-
-
-    /*
-     * Shapiro–Wilk requires
-     * at least 3 observations.
-     */
+    const n = data.length;
 
     if (n < 3) {
 
@@ -28,45 +112,27 @@ function calculateShapiroWilk(data) {
 
     }
 
+    const sorted = [...data].sort((a, b) => a - b);
 
-    /* =================================
-       SORT DATA
-       ================================= */
-
-    const sorted =
-        [...data].sort(
-            (a, b) => a - b
-        );
-
-
-    /* =================================
-       SAMPLE MEAN
-       ================================= */
-
-    const mean =
-        calculateMean(sorted);
-
-
-    /* =================================
-       SUM OF SQUARED DEVIATIONS
-       ================================= */
-
-    const denominator =
-        sorted.reduce(
-            (sum, value) =>
-                sum +
-                Math.pow(
-                    value - mean,
-                    2
-                ),
-            0
-        );
-
+    const mean = calculateMean(sorted);
 
     /*
-     * Constant data cannot be evaluated
-     * in the usual way.
-     */
+        Sum of squared deviations
+    */
+
+    let denominator = 0;
+
+    for (let i = 0; i < n; i++) {
+
+        const deviation = sorted[i] - mean;
+
+        denominator += deviation * deviation;
+
+    }
+
+    /*
+        Constant dataset
+    */
 
     if (denominator === 0) {
 
@@ -78,116 +144,112 @@ function calculateShapiroWilk(data) {
     }
 
 
-    /* =================================
-       EXPECTED NORMAL ORDER STATISTICS
-       ================================= */
+    /*
+        Expected normal order statistics.
+
+        Blom approximation:
+
+        p_i = (i - 0.375) / (n + 0.25)
+
+        The expected normal order statistics
+        are obtained through the inverse normal CDF.
+    */
 
     const expected = [];
 
+    for (let i = 1; i <= n; i++) {
 
-    for (
-        let i = 1;
-        i <= n;
-        i++
-    ) {
+        const p =
+            (i - 0.375) /
+            (n + 0.25);
 
-        const probability =
-            (
-                i - 0.375
-            ) /
-            (
-                n + 0.25
-            );
-
-
-        const z =
-            inverseNormalCDF(
-                probability
-            );
-
-
-        expected.push(z);
+        expected.push(
+            inverseNormalCDF(p)
+        );
 
     }
 
 
-    /* =================================
-       NORMALIZED WEIGHTS
-       ================================= */
+    /*
+        Normalize expected coefficients.
 
-    const sumSquares =
-        expected.reduce(
-            (sum, value) =>
-                sum +
-                value * value,
-            0
-        );
+        This produces an approximation of the
+        Shapiro-Wilk coefficient vector.
+    */
 
+    let coefficientSumSquares = 0;
+
+    for (let i = 0; i < n; i++) {
+
+        coefficientSumSquares +=
+            expected[i] * expected[i];
+
+    }
 
     const normalization =
-        Math.sqrt(
-            sumSquares
+        Math.sqrt(coefficientSumSquares);
+
+
+    const coefficients =
+        expected.map(value =>
+            value / normalization
         );
 
 
-    const weights =
-        expected.map(
-            value =>
-                value /
-                normalization
-        );
+    /*
+        Numerator of W
+    */
 
+    let numerator = 0;
 
-    /* =================================
-       WEIGHTED SUM
-       ================================= */
+    for (let i = 0; i < n; i++) {
 
-    let weightedSum = 0;
-
-
-    for (
-        let i = 0;
-        i < n;
-        i++
-    ) {
-
-        weightedSum +=
-            weights[i] *
+        numerator +=
+            coefficients[i] *
             sorted[i];
 
     }
 
 
-    /* =================================
-       W STATISTIC
-       ================================= */
+    numerator *= numerator;
+
+
+    /*
+        Shapiro-Wilk statistic
+    */
 
     const W =
-        Math.pow(
-            weightedSum,
-            2
-        ) /
+        numerator /
         denominator;
 
 
-    /* =================================
-       P-VALUE
-       ================================= */
+    /*
+        Numerical protection.
+    */
+
+    const boundedW =
+        Math.min(
+            1,
+            Math.max(0, W)
+        );
+
+
+    /*
+        Approximate p-value.
+    */
 
     const pValue =
         shapiroPValue(
-            W,
+            boundedW,
             n
         );
 
 
     return {
 
-        W:
-            W,
+        W: boundedW,
 
-        pValue:
-            pValue
+        pValue
 
     };
 
@@ -195,49 +257,32 @@ function calculateShapiroWilk(data) {
 
 
 /* ===================================
-   SHAPIRO–WILK P-VALUE
+   SHAPIRO-WILK P-VALUE
    =================================== */
 
-function shapiroPValue(
-    W,
-    n
-) {
-
-    if (
-        !Number.isFinite(W) ||
-        n < 3
-    ) {
-
-        return NaN;
-
-    }
-
-
-    /*
-     * Numerical protection.
-     */
+function shapiroPValue(W, n) {
 
     if (W >= 1) {
-
         return 1;
-
     }
 
-
     if (W <= 0) {
-
         return 0;
-
     }
 
 
     /*
-     * Approximation of the
-     * Shapiro–Wilk p-value.
-     *
-     * This transformation follows
-     * the Royston-style approximation.
-     */
+        Approximation based on the
+        transformation of W.
+
+        This is intended for practical
+        screening rather than exact
+        reproduction of statistical
+        software implementations.
+    */
+
+    const lnN =
+        Math.log(n);
 
     const y =
         Math.log(
@@ -245,231 +290,89 @@ function shapiroPValue(
         );
 
 
-    const lnN =
-        Math.log(n);
-
-
-    const mu =
-        -1.5861 -
-        0.31082 * lnN -
-        0.083751 *
-        lnN *
-        lnN;
-
-
-    const sigma =
-        Math.exp(
-            -0.4803 -
-            0.082676 * lnN +
-            0.0030302 *
-            lnN *
-            lnN
-        );
-
-
-    const z =
-        (
-            y -
-            mu
-        ) /
-        sigma;
+    let mu;
+    let sigma;
 
 
     /*
-     * Smaller W corresponds
-     * to stronger evidence
-     * against normality.
-     */
+        Small / moderate sample sizes
+    */
 
-    let pValue =
-        1 -
-        normalCDF(z);
+    if (n <= 11) {
 
+        mu =
+            -0.0006714 *
+            Math.pow(n, 3)
+            +
+            0.025054 *
+            Math.pow(n, 2)
+            -
+            0.39978 *
+            n
+            +
+            0.5440;
 
-    /*
-     * Keep p-value within
-     * the valid [0, 1] interval.
-     */
-
-    pValue =
-        Math.max(
-            0,
-            Math.min(
-                1,
-                pValue
-            )
-        );
-
-
-    return pValue;
-
-}
-
-
-/* ===================================
-   NORMALITY ANALYSIS
-   =================================== */
-
-function calculateNormality() {
-
-    const parsed =
-        parseData();
-
-
-    const data =
-        parsed.data;
-
-
-    const result =
-        document.getElementById(
-            "result"
-        );
-
-
-    /* =================================
-       VALIDATION
-       ================================= */
-
-    if (
-        !validateParsedData(
-            parsed,
-            3
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    /* =================================
-       SHAPIRO–WILK
-       ================================= */
-
-    const shapiro =
-        calculateShapiroWilk(
-            data
-        );
-
-
-    const W =
-        shapiro.W;
-
-
-    const pValue =
-        shapiro.pValue;
-
-
-    /* =================================
-       INTERPRETATION
-       ================================= */
-
-    let interpretation;
-
-
-    if (
-        pValue < 0.05
-    ) {
-
-        interpretation =
-            "The data show significant evidence of deviation from normality (p < 0.05).";
+        sigma =
+            Math.exp(
+                -0.0020322 *
+                Math.pow(n, 3)
+                +
+                0.062767 *
+                Math.pow(n, 2)
+                -
+                0.77857 *
+                n
+                +
+                1.3822
+            );
 
     } else {
 
-        interpretation =
-            "The data do not show significant evidence of deviation from normality (p ≥ 0.05).";
+        mu =
+            0.0038915 *
+            Math.pow(lnN, 3)
+            -
+            0.083751 *
+            Math.pow(lnN, 2)
+            -
+            0.31082 *
+            lnN
+            -
+            1.5861;
+
+        sigma =
+            Math.exp(
+                0.0030302 *
+                Math.pow(lnN, 2)
+                -
+                0.082676 *
+                lnN
+                -
+                0.4803
+            );
 
     }
 
 
-    /* =================================
-       RESULTS
-       ================================= */
-
-    result.innerHTML = `
-
-        <div class="statistics-result">
-
-            <h3>
-                Normality Test
-            </h3>
+    const z =
+        (y - mu) /
+        sigma;
 
 
-            <div class="statistics-section">
-
-                <h4>
-                    Shapiro–Wilk Test
-                </h4>
+    let p =
+        1 - normalCDF(z);
 
 
-                <div class="statistics-grid">
+    /*
+        Numerical protection.
+    */
 
-                    <div>
-
-                        <span>
-                            Observations (n)
-                        </span>
-
-                        <strong>
-                            ${data.length}
-                        </strong>
-
-                    </div>
+    p =
+        Math.max(
+            0,
+            Math.min(1, p)
+        );
 
 
-                    <div>
-
-                        <span>
-                            W statistic
-                        </span>
-
-                        <strong>
-                            ${formatStatistic(W)}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            p-value
-                        </span>
-
-                        <strong>
-                            ${formatStatistic(pValue)}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="statistics-section">
-
-                <h4>
-                    Interpretation
-                </h4>
-
-
-                <p>
-                    ${interpretation}
-                </p>
-
-
-                <small>
-                    A p-value below 0.05 indicates significant
-                    evidence against the assumption of normality.
-                </small>
-
-            </div>
-
-
-        </div>
-
-    `;
-
+    return p;
 }
-
