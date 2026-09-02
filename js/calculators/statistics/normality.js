@@ -67,7 +67,11 @@ function calculateNormality() {
 
                 <div class="statistics-row">
                     <span>p-value</span>
-                    <strong>${formatStatistic(result.pValue)}</strong>
+                    <strong>${
+    result.pValue < 0.000001
+        ? "p < 0.000001"
+        : formatStatistic(result.pValue)
+}</strong>
                 </div>
 
             </div>
