@@ -574,19 +574,23 @@ function calculateShapiroWilk(data) {
     }
 
 
-    /*
-        Calculate W
+   /*
+    Calculate W
 
-        Scaling by the range improves
-        numerical stability.
-    */
+    Standard Shapiro-Wilk formulation:
 
-    /*
-    Center data before scaling.
+        W = [sum(a[i] * (x[n-i] - x[i-1]))]^2
+            / sum((x[i] - mean)^2)
 
-    Using the first observation as reference
-    avoids unnecessary loss of precision when
-    values are very close to each other.
+    The calculation is performed on centered data
+    to improve numerical stability for observations
+    that are very close to each other.
+*/
+
+
+/*
+    Center data using the first observation as
+    reference to reduce loss of precision.
 */
 
 const reference =
@@ -598,181 +602,92 @@ const centered =
             value - reference
     );
 
+
 const centeredMean =
     centered.reduce(
         (sum, value) => sum + value,
         0
     ) / n;
 
-const scaled =
-    centered.map(
-        value =>
-            (value - centeredMean) / range
-    );
 
+/*
+    Calculate the numerator.
 
-let xx =
-    scaled[0];
+    The paired differences are used directly,
+    avoiding subtraction of large nearly equal
+    values after scaling.
+*/
 
-let sx =
-    xx;
+let numerator =
+    0;
 
-let sa =
-    -a[1];
-
-
+for (
     let i = 1;
-    let j = n - 1;
+    i <= nn2;
+    i++
+) {
 
-
-    while (i < n) {
-
-        const xi =
-            scaled[i];
-
-
-        sx +=
-            xi;
-
-
-        i++;
-
-
-        if (i !== j) {
-
-            const index =
-                Math.min(i, j);
-
-
-            const sign =
-                i - j > 0
-                    ? 1
-                    : -1;
-
-
-            sa +=
-                sign *
-                a[index];
-
-        }
-
-
-        xx =
-            xi;
-
-        j--;
-
-    }
-
-
-    sa /=
-        n;
-
-    sx /=
-        n;
-
-
-    /*
-        Calculate covariance components
-    */
-
-    let ssa = 0;
-    let ssx = 0;
-    let sax = 0;
-
-
-    i = 0;
-    j = n - 1;
-
-
-    while (i < n) {
-
-        let asa;
-
-
-        if (i !== j) {
-
-            const index =
-                1 +
-                Math.min(i, j);
-
-
-            const sign =
-                i - j > 0
-                    ? 1
-                    : -1;
-
-
-            asa =
-                sign *
-                a[index]
-                -
-                sa;
-
-        } else {
-
-            asa =
-                -sa;
-
-        }
-
-
-        const xsx =
-            scaled[i] -
-            sx;
-
-
-        ssa +=
-            asa *
-            asa;
-
-        ssx +=
-            xsx *
-            xsx;
-
-        sax +=
-            asa *
-            xsx;
-
-
-        i++;
-        j--;
-
-    }
-
-
-    /*
-        Calculate 1 - W first.
-
-        This improves numerical precision
-        when W is very close to 1.
-    */
-
-    const ssassx =
-        Math.sqrt(
-            ssa * ssx
+    numerator +=
+        a[i] *
+        (
+            x[n - i] -
+            x[i - 1]
         );
 
+}
 
-    const w1 =
-        (
-            (ssassx - sax) *
-            (ssassx + sax)
+
+/*
+    Calculate the denominator.
+
+    Use centered values rather than the raw
+    observations to avoid numerical cancellation.
+*/
+
+let denominator =
+    0;
+
+for (
+    let i = 0;
+    i < n;
+    i++
+) {
+
+    const deviation =
+        centered[i] -
+        centeredMean;
+
+    denominator +=
+        deviation *
+        deviation;
+
+}
+
+
+/*
+    Calculate W.
+*/
+
+let W =
+    (
+        numerator *
+        numerator
+    ) /
+    denominator;
+
+
+/*
+    Numerical protection.
+*/
+
+W =
+    Math.max(
+        0,
+        Math.min(
+            1,
+            W
         )
-        /
-        (
-            ssa * ssx
-        );
-
-
-    const W =
-        Math.max(
-            0,
-            Math.min(
-                1,
-                1 - w1
-            )
-        );
+    );
 
 
     /*
