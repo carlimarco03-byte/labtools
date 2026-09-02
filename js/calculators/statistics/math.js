@@ -1212,3 +1212,180 @@ function calculateMannWhitneyU(
 
 }
 
+/* ===================================
+   D'AGOSTINO-PEARSON NORMALITY TEST
+   =================================== */
+
+
+/*
+    Sample skewness
+*/
+
+function calculateSkewness(data) {
+
+    const n = data.length;
+
+    if (n < 3) {
+        return NaN;
+    }
+
+    const mean = calculateMean(data);
+
+    let m2 = 0;
+    let m3 = 0;
+
+    for (let i = 0; i < n; i++) {
+
+        const deviation =
+            data[i] - mean;
+
+        m2 +=
+            deviation * deviation;
+
+        m3 +=
+            deviation * deviation * deviation;
+
+    }
+
+    if (m2 === 0) {
+        return 0;
+    }
+
+    /*
+        Unbiased sample skewness
+    */
+
+    const s =
+        Math.sqrt(
+            m2 / (n - 1)
+        );
+
+    const skewness =
+        (n / ((n - 1) * (n - 2))) *
+        (m3 / Math.pow(s, 3));
+
+    return skewness;
+}
+
+
+/*
+    Sample excess kurtosis
+*/
+
+function calculateKurtosis(data) {
+
+    const n = data.length;
+
+    if (n < 4) {
+        return NaN;
+    }
+
+    const mean = calculateMean(data);
+
+    let m2 = 0;
+    let m4 = 0;
+
+    for (let i = 0; i < n; i++) {
+
+        const deviation =
+            data[i] - mean;
+
+        const squared =
+            deviation * deviation;
+
+        m2 += squared;
+
+        m4 +=
+            squared * squared;
+
+    }
+
+    if (m2 === 0) {
+        return 0;
+    }
+
+    /*
+        Unbiased excess kurtosis
+
+        Normal distribution → 0
+    */
+
+    const variance =
+        m2 / (n - 1);
+
+    const rawKurtosis =
+        (m4 / n) /
+        Math.pow(variance, 2);
+
+    const excessKurtosis =
+        (
+            (n - 1) *
+            (
+                (n + 1) *
+                rawKurtosis
+                - 3 *
+                (n - 1)
+            )
+        )
+        /
+        (
+            (n - 2) *
+            (n - 3)
+        );
+
+    return excessKurtosis;
+}
+
+
+/*
+    Log Gamma helper
+
+    Already available above in this file.
+*/
+
+
+/*
+    Chi-square survival probability
+
+    P(X >= x)
+*/
+
+function chiSquareSurvival(x, df) {
+
+    if (
+        !Number.isFinite(x) ||
+        !Number.isFinite(df) ||
+        x < 0 ||
+        df <= 0
+    ) {
+        return NaN;
+    }
+
+    /*
+        For the D'Agostino-Pearson test,
+        df = 2.
+
+        The chi-square survival function
+        for df = 2 has a simple closed form:
+
+            P(X >= x) = exp(-x / 2)
+    */
+
+    if (df === 2) {
+
+        return Math.exp(
+            -x / 2
+        );
+
+    }
+
+    /*
+        General fallback using the
+        regularized incomplete gamma
+        function would be implemented here
+        if additional chi-square tests
+        are required in the future.
+    */
+
+    return NaN;
+}
