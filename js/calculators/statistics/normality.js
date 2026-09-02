@@ -22,9 +22,43 @@ function calculateNormality() {
 
     const data = parsed.data;
 
-    const result = calculateShapiroWilk(data);
 
-   if (result.error) {
+/* ===================================
+   CONSTANT DATA CHECK
+   =================================== */
+
+const min =
+    Math.min(...data);
+
+const max =
+    Math.max(...data);
+
+if (min === max) {
+
+    document.getElementById("result").innerHTML = `
+
+        <div class="statistics-error">
+
+            <strong>
+                Normality tests cannot be performed.
+            </strong>
+
+            <p>
+                All observations are identical (zero variance).
+            </p>
+
+        </div>
+
+    `;
+
+    return;
+}
+
+
+const result =
+    calculateShapiroWilk(data);
+
+if (result.error) {
 
     document.getElementById("result").innerHTML = `
         <div class="statistics-error">
@@ -273,14 +307,7 @@ function calculateShapiroWilk(data) {
     const range =
         x[n - 1] - x[0];
 
-    if (range === 0) {
-
-        return {
-            W: 1,
-            pValue: 1
-        };
-
-    }
+   
 
 
     /*
