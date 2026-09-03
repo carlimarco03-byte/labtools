@@ -159,109 +159,215 @@ if (!dagostinoAvailable) {
     }
 
 }
-    document.getElementById("result").innerHTML = `
+   
+document.getElementById("result").innerHTML = `
 
-        <div class="statistics-result">
+    <div class="statistics-result">
 
-            <h3>Shapiro–Wilk Normality Test</h3>
 
-            <div class="statistics-section">
+        <!-- ===================================
+             TEST SUMMARY
+             =================================== -->
 
-                <h4>Test Summary</h4>
+        <div class="statistics-section">
 
-                <div class="statistics-row">
-                    <span>Sample size (n)</span>
-                    <strong>${data.length}</strong>
-                </div>
-
-                <div class="statistics-row">
-                    <span>W statistic</span>
-                    <strong>${formatStatistic(result.W)}</strong>
-                </div>
-
-                <div class="statistics-row">
-                    <span>p-value</span>
-                    <strong>${
-    result.pValue < 0.000001
-        ? "p < 0.000001"
-        : formatStatistic(result.pValue)
-}</strong>
-                </div>
-
-            </div>
-
-            <div class="statistics-section">
-
-    <h4>D’Agostino–Pearson Test</h4>
-
-    ${
-        dagostino.available
-        ? `
-            <div class="statistics-row">
-                <span>K² statistic</span>
-                <strong>${formatStatistic(dagostino.K2)}</strong>
-            </div>
+            <h3>
+                Test Summary
+            </h3>
 
             <div class="statistics-row">
-                <span>Skewness</span>
-                <strong>${formatStatistic(dagostino.skewness)}</strong>
-            </div>
 
-            <div class="statistics-row">
-                <span>Excess kurtosis</span>
-                <strong>${formatStatistic(dagostino.kurtosis)}</strong>
-            </div>
+                <span>
+                    Sample size (n)
+                </span>
 
-            <div class="statistics-row">
-                <span>p-value</span>
-                <strong>${
-                    dagostino.pValue < 0.000001
-                        ? "p < 0.000001"
-                        : formatStatistic(dagostino.pValue)
-                }</strong>
-            </div>
-        `
-        : `
-            <p>
-                The D’Agostino–Pearson test requires at least
-                8 observations.
-            </p>
-        `
-    }
-
-</div>
-
-            <div class="statistics-section">
-
-                <h4>Interpretation</h4>
-
-                <p>
-                    ${interpretation}
-                </p>
-
-                <p>
-                    <strong>Recommendation:</strong>
-                    ${recommendation}
-                </p>
-
-            </div>
-
-            <div class="statistics-section">
-
-                <h4>Statistical criterion</h4>
-
-                <p>
-                    The null hypothesis of the Shapiro–Wilk test is that
-                    the data come from a normal distribution.
-                    A p-value below 0.05 indicates statistically significant
-                    evidence against normality.
-                </p>
+                <strong>
+                    ${data.length}
+                </strong>
 
             </div>
 
         </div>
 
-    `;
+
+        <!-- ===================================
+             SHAPIRO-WILK
+             =================================== -->
+
+        <div class="statistics-section">
+
+            <h3>
+                Shapiro–Wilk Normality Test
+            </h3>
+
+            <div class="statistics-row">
+
+                <span>
+                    W statistic
+                </span>
+
+                <strong>
+                    ${formatStatistic(result.W)}
+                </strong>
+
+            </div>
+
+
+            <div class="statistics-row">
+
+                <span>
+                    p-value
+                </span>
+
+                <strong>
+                    ${
+                        result.pValue < 0.000001
+                            ? "p < 0.000001"
+                            : formatStatistic(result.pValue)
+                    }
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ===================================
+             D'AGOSTINO-PEARSON
+             =================================== -->
+
+        <div class="statistics-section">
+
+            <h3>
+                D’Agostino–Pearson Test
+            </h3>
+
+            ${
+                dagostino.available
+                ? `
+
+                    <div class="statistics-row">
+
+                        <span>
+                            K² statistic
+                        </span>
+
+                        <strong>
+                            ${formatStatistic(dagostino.K2)}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="statistics-row">
+
+                        <span>
+                            Skewness
+                        </span>
+
+                        <strong>
+                            ${formatStatistic(dagostino.skewness)}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="statistics-row">
+
+                        <span>
+                            Excess kurtosis
+                        </span>
+
+                        <strong>
+                            ${formatStatistic(dagostino.kurtosis)}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="statistics-row">
+
+                        <span>
+                            p-value
+                        </span>
+
+                        <strong>
+                            ${
+                                dagostino.pValue < 0.000001
+                                    ? "p < 0.000001"
+                                    : formatStatistic(dagostino.pValue)
+                            }
+                        </strong>
+
+                    </div>
+
+                `
+                : `
+
+                    <p>
+                        The D’Agostino–Pearson test requires at least
+                        8 observations.
+                    </p>
+
+                `
+            }
+
+        </div>
+
+
+        <!-- ===================================
+             INTERPRETATION
+             =================================== -->
+
+        <div class="statistics-section">
+
+            <h3>
+                Interpretation
+            </h3>
+
+            <p>
+                ${interpretation}
+            </p>
+
+            <p>
+
+                <strong>
+                    Recommendation:
+                </strong>
+
+                ${recommendation}
+
+            </p>
+
+        </div>
+
+
+        <!-- ===================================
+             STATISTICAL CRITERION
+             =================================== -->
+
+        <div class="statistics-section">
+
+            <h3>
+                Statistical criterion
+            </h3>
+
+            <p>
+
+                The null hypothesis of the Shapiro–Wilk test is that
+                the data come from a normal distribution.
+                A p-value below 0.05 indicates statistically significant
+                evidence against normality.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+`;
+
 }
 
 
