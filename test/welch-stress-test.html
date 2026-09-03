@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Labistry Welch Stress Test</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            margin: 0;
+            padding: 30px;
+
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 10px;
+            padding: 18px;
+
+            box-shadow:
+                0 1px 4px
+                rgba(0,0,0,0.08);
+        }
+
+        .summary-card span {
+            display: block;
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .summary-card strong {
+            font-size: 25px;
+        }
+
+        .test {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            padding: 20px;
+
+            box-shadow:
+                0 1px 4px
+                rgba(0,0,0,0.08);
+        }
+
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 15px;
+        }
+
+        .test-title {
+            font-weight: 700;
+            font-size: 17px;
+        }
+
+        .status {
+            padding: 5px 11px;
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .PASS {
+            background: #dff5e3;
+            color: #176b2c;
+        }
+
+        .WARNING {
+            background: #fff1c7;
+            color: #795900;
+        }
+
+        .FAIL {
+            background: #ffdede;
+            color: #9b1c1c;
+        }
+
+        .DEGENERATE {
+            background: #e5e5e5;
+            color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 9px 10px;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+        }
+
+        th:first-child,
+        td:first-child {
+            text-align: left;
+        }
+
+        th {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .error {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .datasets {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #777;
+            word-break: break-word;
+        }
+
+        .controls {
+            margin-bottom: 25px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 7px;
+            padding: 10px 18px;
+            cursor: pointer;
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 800px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .summary {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .test {
+                overflow-x: auto;
+            }
+
+        }
+
+    </style>
+
+    <!--
+        IMPORTANT:
+        Change this path if your math.js
+        is stored somewhere else.
+    -->
+
+    <script src="../js/calculators/statistics/math.js"></script>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>
+        Labistry Welch's t-test Stress Test
+    </h1>
+
+    <div class="subtitle">
+        Independent validation harness —
+        does not modify Labistry statistical functions.
+    </div>
+
+
+    <div class="controls">
+
+        <button onclick="runTests()">
+            Run stress tests
+        </button>
+
+    </div>
+
+
+    <div class="summary">
+
+        <div class="summary-card">
+            <span>Tests</span>
+            <strong id="total">
+                0
+            </strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Valid</span>
+            <strong id="valid">
+                0
+            </strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Warnings</span>
+            <strong id="warnings">
+                0
+            </strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Failures</span>
+            <strong id="failures">
+                0
+            </strong>
+        </div>
+
+    </div>
+
+
+    <div id="results"></div>
+
+</div>
+
+
+<script>
+
+
+/* ===================================
+   REFERENCE DATA
+   Calculated independently with SciPy
+   scipy.stats.ttest_ind(...,
+   equal_var=False)
+   =================================== */
+
+
+const TESTS = [
+
+    {
+        name:
+            "Normal n=2 vs n=2",
+
+        groupA:
+            [1, 2],
+
+        groupB:
+            [3, 4],
+
+        reference: {
+            t:
+                -2.82842712474619,
+
+            df:
+                2.0,
+
+            p:
+                0.10557280900008414
+        },
+
+        type:
+            "standard"
+    },
+
+
+    {
+        name:
+            "Strongly unbalanced n=3 vs n=30",
+
+        groupA:
+            [1, 2, 3],
+
+        groupB:
+            Array.from(
+                { length: 30 },
+                (_, i) => i + 10
+            ),
+
+        reference: {
+            t:
+                -13.174650984805197,
+
+            df:
+                29.777870913663037,
+
+            p:
+                5.899906853970759e-14
+        },
+
+        type:
+            "standard"
+    },
+
+
+    {
+        name:
+            "Variance A = 0",
+
+        groupA:
+            [5, 5, 5],
+
+        groupB:
+            [1, 2, 4, 7],
+
+        reference: {
+            t:
+                1.1338934190276817,
+
+            df:
+                3.0,
+
+            p:
+                0.3392540508564546
+        },
+
+        type:
+            "standard"
+    },
+
+
+    {
+        name:
+            "Both variances = 0",
+
+        groupA:
+            [5, 5, 5],
+
+        groupB:
+            [5, 5, 5],
+
+        reference: {
+            t:
+                NaN,
+
+            df:
+                NaN,
+
+            p:
+                NaN
+        },
+
+        type:
+            "degenerate"
+    },
+
+
+    {
+        name:
+            "Same mean",
+
+        groupA:
+            [1, 2, 3, 4],
+
+        groupB:
+            [0, 2, 4, 4],
+
+        reference: {
+            t:
+                0,
+
+            df:
+                5.26027397260274,
+
+            p:
+                1.0
+        },
+
+        type:
+            "standard"
+    },
+
+
+    {
+        name:
+            "Identical groups",
+
+        groupA:
+            [1, 2, 3, 4, 5],
+
+        groupB:
+            [1, 2, 3, 4, 5],
+
+        reference: {
+            t:
+                0,
+
+            df:
+                8.0,
+
+            p:
+                1.0
+        },
+
+        type:
+            "standard"
+    },
+
+
+    {
+        name:
+            "Scale = 1e-12",
+
+        groupA:
+            [
+                1e-12,
+                2e-12,
+                3e-12
+            ],
+
+        groupB:
+            [
+                4e-12,
+                5e-12,
+                7e-12
+            ],
+
+        reference: {
+            t:
+                -3.162277660168379,
+
+            df:
+                3.448275862068966,
+
+            p:
+                0.04191451747145406
+        },
+
+        type:
+            "scale"
+    },
+
+
+    {
+        name:
+            "Scale = 1e12",
+
+        groupA:
+            [
+                1e12,
+                2e12,
+                3e12
+            ],
+
+        groupB:
+            [
+                4e12,
+                5e12,
+                7e12
+            ],
+
+        reference: {
+            t:
+                -3.162277660168379,
+
+            df:
+                3.4482758620689653,
+
+            p:
+                0.041914517471454076
+        },
+
+        type:
+            "scale"
+    },
+
+
+    {
+        name:
+            "Borderline p > 0.05",
+
+        groupA:
+            [1, 2, 3, 4, 5],
+
+        groupB:
+            [
+                3.304,
+                4.304,
+                5.304,
+                6.304,
+                7.304
+            ],
+
+        reference: {
+            t:
+                -2.3040000000000003,
+
+            df:
+                8.0,
+
+            p:
+                0.05015667093304014
+        },
+
+        type:
+            "threshold"
+    },
+
+
+    {
+        name:
+            "Borderline p ≈ 0.05",
+
+        groupA:
+            [1, 2, 3, 4, 5],
+
+        groupB:
+            [
+                3.306,
+                4.306,
+                5.306,
+                6.306,
+                7.306
+            ],
+
+        reference: {
+            t:
+                -2.306,
+
+            df:
+                8.0,
+
+            p:
+                0.050000322761284174
+        },
+
+        type:
+            "threshold"
+    },
+
+
+    {
+        name:
+            "Borderline p < 0.05",
+
+        groupA:
+            [1, 2, 3, 4, 5],
+
+        groupB:
+            [
+                3.307,
+                4.307,
+                5.307,
+                6.307,
+                7.307
+            ],
+
+        reference: {
+            t:
+                -2.3070000000000004,
+
+            df:
+                7.999999999999998,
+
+            p:
+                0.04992233121829021
+        },
+
+        type:
+            "threshold"
+    }
+
+];
+
+
+/* ===================================
+   NUMERICAL COMPARISON
+   =================================== */
+
+function numbersClose(
+    actual,
+    expected,
+    relativeTolerance = 1e-9,
+    absoluteTolerance = 1e-14
+) {
+
+    if (
+        Number.isNaN(actual) &&
+        Number.isNaN(expected)
+    ) {
+
+        return true;
+
+    }
+
+
+    if (
+        !Number.isFinite(actual) ||
+        !Number.isFinite(expected)
+    ) {
+
+        return actual === expected;
+
+    }
+
+
+    const difference =
+        Math.abs(
+            actual -
+            expected
+        );
+
+
+    const scale =
+        Math.max(
+            Math.abs(expected),
+            1
+        );
+
+
+    return (
+        difference <=
+        Math.max(
+            absoluteTolerance,
+            relativeTolerance * scale
+        )
+    );
+
+}
+
+
+/* ===================================
+   P-VALUE COMPARISON
+   =================================== */
+
+function pValuesClose(
+    actual,
+    expected
+) {
+
+    if (
+        Number.isNaN(actual) &&
+        Number.isNaN(expected)
+    ) {
+
+        return true;
+
+    }
+
+
+    if (
+        !Number.isFinite(actual) ||
+        !Number.isFinite(expected)
+    ) {
+
+        return actual === expected;
+
+    }
+
+
+    /*
+        For very small p-values,
+        relative error is more informative
+        than a fixed absolute tolerance.
+    */
+
+    const difference =
+        Math.abs(
+            actual -
+            expected
+        );
+
+
+    const scale =
+        Math.max(
+            Math.abs(expected),
+            1e-16
+        );
+
+
+    return (
+        difference /
+        scale
+        <=
+        1e-7
+    );
+
+}
+
+
+/* ===================================
+   FORMAT NUMBER
+   =================================== */
+
+function formatNumber(
+    value
+) {
+
+    if (Number.isNaN(value)) {
+        return "NaN";
+    }
+
+    if (value === Infinity) {
+        return "Infinity";
+    }
+
+    if (value === -Infinity) {
+        return "-Infinity";
+    }
+
+    if (!Number.isFinite(value)) {
+        return String(value);
+    }
+
+    if (value === 0) {
+        return "0";
+    }
+
+    return value.toExponential(8);
+
+}
+
+
+/* ===================================
+   DECISION
+   =================================== */
+
+function significance(
+    p
+) {
+
+    if (!Number.isFinite(p)) {
+        return "—";
+    }
+
+    return p < 0.05
+        ? "Significant"
+        : "Not significant";
+
+}
+
+
+/* ===================================
+   RUN TESTS
+   =================================== */
+
+function runTests() {
+
+    const container =
+        document.getElementById(
+            "results"
+        );
+
+
+    container.innerHTML = "";
+
+
+    let valid = 0;
+    let warnings = 0;
+    let failures = 0;
+
+
+    TESTS.forEach(
+        test => {
+
+            let actual;
+
+
+            try {
+
+                actual =
+                    calculateWelchTTest(
+                        test.groupA,
+                        test.groupB
+                    );
+
+            }
+            catch (error) {
+
+                actual = {
+
+                    t: NaN,
+                    df: NaN,
+                    pValue: NaN,
+
+                    error:
+                        error.message
+
+                };
+
+            }
+
+
+            let status =
+                "PASS";
+
+
+            let reason =
+                "";
+
+
+            /*
+             * =================================
+             * DEGENERATE CASE
+             * =================================
+             */
+
+            if (
+                test.type ===
+                "degenerate"
+            ) {
+
+                const correct =
+                    Number.isNaN(
+                        actual.t
+                    ) &&
+                    Number.isNaN(
+                        actual.df
+                    ) &&
+                    Number.isNaN(
+                        actual.pValue
+                    );
+
+
+                if (correct) {
+
+                    status =
+                        "PASS";
+
+                    reason =
+                        "Correctly identified as a degenerate case.";
+
+                }
+                else {
+
+                    status =
+                        "WARNING";
+
+                    reason =
+                        "Different handling of the mathematically undefined case.";
+
+                }
+
+            }
+
+
+            /*
+             * =================================
+             * STANDARD CASE
+             * =================================
+             */
+
+            else {
+
+                const tOK =
+                    numbersClose(
+                        actual.t,
+                        test.reference.t
+                    );
+
+
+                const dfOK =
+                    numbersClose(
+                        actual.df,
+                        test.reference.df
+                    );
+
+
+                const pOK =
+                    pValuesClose(
+                        actual.pValue,
+                        test.reference.p
+                    );
+
+
+                /*
+                 * Statistical decision must
+                 * agree at alpha = 0.05.
+                 */
+
+                const decisionLabistry =
+                    actual.pValue < 0.05;
+
+
+                const decisionReference =
+                    test.reference.p < 0.05;
+
+
+                const decisionOK =
+                    decisionLabistry ===
+                    decisionReference;
+
+
+                if (
+                    tOK &&
+                    dfOK &&
+                    pOK &&
+                    decisionOK
+                ) {
+
+                    status =
+                        "PASS";
+
+                    valid++;
+
+                    reason =
+                        "Numerically consistent with the reference.";
+
+                }
+                else if (
+                    decisionOK &&
+                    (
+                        tOK ||
+                        dfOK ||
+                        pOK
+                    )
+                ) {
+
+                    status =
+                        "WARNING";
+
+                    warnings++;
+
+                    reason =
+                        "Minor numerical difference; statistical decision unchanged.";
+
+                }
+                else {
+
+                    status =
+                        "FAIL";
+
+                    failures++;
+
+                    reason =
+                        "Numerical discrepancy or different α = 0.05 decision.";
+
+                }
+
+            }
+
+
+            /*
+             * =================================
+             * SCALE / THRESHOLD INFORMATION
+             * =================================
+             */
+
+            if (
+                test.type === "scale"
+            ) {
+
+                if (
+                    status === "PASS"
+                ) {
+
+                    reason +=
+                        " Scale invariance preserved.";
+
+                }
+
+            }
+
+
+            if (
+                test.type === "threshold"
+            ) {
+
+                const refDecision =
+                    test.reference.p <
+                    0.05;
+
+                const labDecision =
+                    actual.pValue <
+                    0.05;
+
+
+                if (
+                    refDecision ===
+                    labDecision
+                ) {
+
+                    reason +=
+                        ` α=0.05 decision agrees (${labDecision ? "significant" : "not significant"}).`;
+
+                }
+            }
+
+
+            /*
+             * =================================
+             * TEST CARD
+             * ================================= */
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "test";
+
+
+            card.innerHTML = `
+
+                <div class="test-header">
+
+                    <div class="test-title">
+                        ${test.name}
+                    </div>
+
+                    <div class="status ${status}">
+                        ${status}
+                    </div>
+
+                </div>
+
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Statistic
+                            </th>
+
+                            <th>
+                                Labistry
+                            </th>
+
+                            <th>
+                                Reference
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>
+                                t statistic
+                            </td>
+
+                            <td>
+                                ${formatNumber(actual.t)}
+                            </td>
+
+                            <td>
+                                ${formatNumber(
+                                    test.reference.t
+                                )}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Degrees of freedom
+                            </td>
+
+                            <td>
+                                ${formatNumber(actual.df)}
+                            </td>
+
+                            <td>
+                                ${formatNumber(
+                                    test.reference.df
+                                )}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                p-value
+                            </td>
+
+                            <td>
+                                ${formatNumber(
+                                    actual.pValue
+                                )}
+                            </td>
+
+                            <td>
+                                ${formatNumber(
+                                    test.reference.p
+                                )}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                α = 0.05
+                            </td>
+
+                            <td>
+                                ${significance(
+                                    actual.pValue
+                                )}
+                            </td>
+
+                            <td>
+                                ${significance(
+                                    test.reference.p
+                                )}
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+
+                <div class="error">
+                    ${reason}
+                </div>
+
+
+                <div class="datasets">
+
+                    A:
+                    ${JSON.stringify(test.groupA)}
+
+                    <br>
+
+                    B:
+                    ${JSON.stringify(test.groupB)}
+
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                card
+            );
+
+        }
+    );
+
+
+    /*
+     * =================================
+     * SUMMARY
+     * =================================
+     */
+
+    /*
+        Recalculate total from the
+        actual status cards so that
+        degenerate PASS cases are
+        included correctly.
+    */
+
+    const cards =
+        document.querySelectorAll(
+            ".test"
+        );
+
+
+    let passCount = 0;
+    let warningCount = 0;
+    let failCount = 0;
+
+
+    cards.forEach(
+        card => {
+
+            const status =
+                card.querySelector(
+                    ".status"
+                ).textContent.trim();
+
+
+            if (status === "PASS") {
+                passCount++;
+            }
+
+            else if (
+                status === "WARNING"
+            ) {
+                warningCount++;
+            }
+
+            else if (
+                status === "FAIL"
+            ) {
+                failCount++;
+            }
+
+        }
+    );
+
+
+    document.getElementById(
+        "total"
+    ).textContent =
+        TESTS.length;
+
+
+    document.getElementById(
+        "valid"
+    ).textContent =
+        passCount;
+
+
+    document.getElementById(
+        "warnings"
+    ).textContent =
+        warningCount;
+
+
+    document.getElementById(
+        "failures"
+    ).textContent =
+        failCount;
+
+}
+
+
+/* ===================================
+   AUTOMATIC RUN
+   =================================== */
+
+window.addEventListener(
+    "load",
+    runTests
+);
+
+
+</script>
+
+</body>
+
+</html>
