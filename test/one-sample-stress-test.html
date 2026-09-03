@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Labistry One-Sample t-Test Stress Test
+    </title>
+
+
+    <style>
+
+        body {
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            margin:
+                30px;
+
+            background:
+                #f5f5f5;
+
+            color:
+                #222;
+
+        }
+
+
+        h1 {
+
+            margin-bottom:
+                10px;
+
+        }
+
+
+        p {
+
+            line-height:
+                1.5;
+
+        }
+
+
+        .summary {
+
+            display:
+                flex;
+
+            gap:
+                20px;
+
+            flex-wrap:
+                wrap;
+
+            margin:
+                25px 0;
+
+        }
+
+
+        .summary-card {
+
+            background:
+                white;
+
+            padding:
+                15px 25px;
+
+            border-radius:
+                8px;
+
+            min-width:
+                120px;
+
+            box-shadow:
+                0 1px 4px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.10
+                );
+
+        }
+
+
+        .summary-card span {
+
+            display:
+                block;
+
+            font-size:
+                14px;
+
+            color:
+                #666;
+
+        }
+
+
+        .summary-card strong {
+
+            display:
+                block;
+
+            margin-top:
+                5px;
+
+            font-size:
+                24px;
+
+        }
+
+
+        button {
+
+            padding:
+                10px 18px;
+
+            border:
+                none;
+
+            border-radius:
+                6px;
+
+            background:
+                #222;
+
+            color:
+                white;
+
+            cursor:
+                pointer;
+
+            font-size:
+                15px;
+
+        }
+
+
+        button:hover {
+
+            opacity:
+                0.85;
+
+        }
+
+
+        .table-container {
+
+            overflow-x:
+                auto;
+
+        }
+
+
+        table {
+
+            width:
+                100%;
+
+            border-collapse:
+                collapse;
+
+            background:
+                white;
+
+        }
+
+
+        th,
+        td {
+
+            padding:
+                10px;
+
+            border:
+                1px solid #ddd;
+
+            text-align:
+                left;
+
+            white-space:
+                nowrap;
+
+        }
+
+
+        th {
+
+            background:
+                #eeeeee;
+
+        }
+
+
+        .pass {
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .fail {
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .note {
+
+            margin-top:
+                20px;
+
+            padding:
+                15px;
+
+            background:
+                white;
+
+            border-radius:
+                8px;
+
+            font-size:
+                14px;
+
+            color:
+                #555;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <h1>
+        Labistry One-Sample t-Test Stress Test
+    </h1>
+
+
+    <p>
+        Validation harness — does not modify Labistry
+        statistical functions.
+    </p>
+
+
+    <p>
+        The test compares Labistry calculations against
+        reference values generated with SciPy
+        <code>scipy.stats.ttest_1samp</code>.
+    </p>
+
+
+    <button
+        type="button"
+        onclick="runStressTests()"
+    >
+        Run stress tests
+    </button>
+
+
+    <!-- =================================
+         SUMMARY
+         ================================= -->
+
+    <div class="summary">
+
+
+        <div class="summary-card">
+
+            <span>
+                Tests
+            </span>
+
+            <strong id="tests">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>
+                Valid
+            </span>
+
+            <strong id="valid">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>
+                Failures
+            </span>
+
+            <strong id="failures">
+                0
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =================================
+         RESULTS
+         ================================= -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Test
+                    </th>
+
+                    <th>
+                        Metric
+                    </th>
+
+                    <th>
+                        Labistry
+                    </th>
+
+                    <th>
+                        SciPy
+                    </th>
+
+                    <th>
+                        Difference
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="results">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="note">
+
+        <strong>
+            Tolerances:
+        </strong>
+
+        t statistic:
+        relative tolerance 1 × 10⁻⁸
+
+        <br>
+
+        Degrees of freedom:
+        exact comparison
+
+        <br>
+
+        p-value:
+        absolute tolerance 1 × 10⁻¹⁰ or
+        relative tolerance 1 × 10⁻⁵
+
+        <br><br>
+
+        Very small p-values are therefore not expected
+        to match digit-for-digit.
+
+    </div>
+
+
+    <!-- =================================
+         LABISTRY DEPENDENCIES
+         ================================= -->
+
+    <script
+        src="../js/calculators/statistics/math.js"
+    ></script>
+
+
+    <script>
+
+
+        /* =================================
+           TEST DATA
+           ================================= */
+
+        const testCases = [
+
+            {
+                name:
+                    "Normal n=5",
+
+                data:
+                    [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ],
+
+                reference:
+                    {
+                        t:
+                            4.2426406871192848,
+
+                        df:
+                            4,
+
+                        pValue:
+                            0.01323559956368269
+                    }
+            },
+
+
+            {
+                name:
+                    "Normal n=10",
+
+                data:
+                    [
+                        4.2,
+                        5.1,
+                        4.8,
+                        5.5,
+                        6.0,
+                        4.7,
+                        5.3,
+                        5.8,
+                        4.9,
+                        5.2
+                    ],
+
+                reference:
+                    {
+                        t:
+                            30.387726576679498,
+
+                        df:
+                            9,
+
+                        pValue:
+                            2.2148968514313279e-10
+                    }
+            },
+
+
+            {
+                name:
+                    "Negative values",
+
+                data:
+                    [
+                        -1,
+                        -2,
+                        -3,
+                        -4,
+                        -5
+                    ],
+
+                reference:
+                    {
+                        t:
+                            -4.2426406871192848,
+
+                        df:
+                            4,
+
+                        pValue:
+                            0.01323559956368269
+                    }
+            },
+
+
+            {
+                name:
+                    "Mean exactly zero",
+
+                data:
+                    [
+                        -2,
+                        -1,
+                        0,
+                        1,
+                        2
+                    ],
+
+                reference:
+                    {
+                        t:
+                            0,
+
+                        df:
+                            4,
+
+                        pValue:
+                            1
+                    }
+            },
+
+
+            {
+                name:
+                    "Small variance",
+
+                data:
+                    [
+                        1.000001,
+                        1.000002,
+                        1.000003,
+                        1.000004,
+                        1.000005
+                    ],
+
+                reference:
+                    {
+                        t:
+                            1414217.8050045173,
+
+                        df:
+                            4,
+
+                        pValue:
+                            1.4999820001693063e-24
+                    }
+            },
+
+
+            {
+                name:
+                    "Large values",
+
+                data:
+                    [
+                        1e12,
+                        1.000000000001e12,
+                        0.999999999999e12,
+                        1.000000000002e12,
+                        1.000000000001e12
+                    ],
+
+                reference:
+                    {
+                        t:
+                            1961161350821.0249,
+
+                        df:
+                            4,
+
+                        pValue:
+                            4.0560000046394301e-49
+                    }
+            },
+
+
+            {
+                name:
+                    "Small values",
+
+                data:
+                    [
+                        1e-12,
+                        2e-12,
+                        3e-12,
+                        4e-12,
+                        5e-12
+                    ],
+
+                reference:
+                    {
+                        t:
+                            4.2426406871192857,
+
+                        df:
+                            4,
+
+                        pValue:
+                            0.013235599563682681
+                    }
+            },
+
+
+            {
+                name:
+                    "Normal n=20",
+
+                data:
+                    [
+                        2.1,
+                        1.8,
+                        2.4,
+                        2.2,
+                        1.9,
+                        2.5,
+                        2.0,
+                        2.3,
+                        1.7,
+                        2.1,
+                        2.2,
+                        2.4,
+                        1.9,
+                        2.0,
+                        2.3,
+                        2.1,
+                        1.8,
+                        2.5,
+                        2.2,
+                        2.0
+                    ],
+
+                reference:
+                    {
+                        t:
+                            40.292089440520336,
+
+                        df:
+                            19,
+
+                        pValue:
+                            7.2462593876449675e-20
+                    }
+            },
+
+
+            {
+                name:
+                    "Mixed values",
+
+                data:
+                    [
+                        -4.5,
+                        -1.2,
+                        0.8,
+                        2.4,
+                        3.1,
+                        5.7
+                    ],
+
+                reference:
+                    {
+                        t:
+                            0.7212847366015892,
+
+                        df:
+                            5,
+
+                        pValue:
+                            0.50304115992219922
+                    }
+            },
+
+
+            {
+                name:
+                    "Moderate n=8",
+
+                data:
+                    [
+                        10.1,
+                        9.8,
+                        10.5,
+                        10.2,
+                        9.9,
+                        10.7,
+                        10.3,
+                        10.0
+                    ],
+
+                reference:
+                    {
+                        t:
+                            94.650508132751582,
+
+                        df:
+                            7,
+
+                        pValue:
+                            3.8713214032952724e-12
+                    }
+            },
+
+
+            {
+                name:
+                    "Outlier",
+
+                data:
+                    [
+                        1,
+                        2,
+                        2,
+                        3,
+                        3,
+                        4,
+                        4,
+                        20
+                    ],
+
+                reference:
+                    {
+                        t:
+                            2.2248125302998183,
+
+                        df:
+                            7,
+
+                        pValue:
+                            0.061439368910335475
+                    }
+            },
+
+
+            {
+                name:
+                    "Constant offset",
+
+                data:
+                    [
+                        11,
+                        12,
+                        13,
+                        14,
+                        15
+                    ],
+
+                reference:
+                    {
+                        t:
+                            18.384776310850235,
+
+                        df:
+                            4,
+
+                        pValue:
+                            5.1499152873082705e-05
+                    }
+            }
+
+        ];
+
+
+        /* =================================
+           LABISTRY CALCULATION
+           ================================= */
+
+        function calculateLabistryOneSample(
+            data
+        ) {
+
+            const n =
+                data.length;
+
+
+            const mean =
+                data.reduce(
+                    (
+                        sum,
+                        value
+                    ) =>
+                        sum + value,
+                    0
+                ) / n;
+
+
+            const variance =
+                data.reduce(
+                    (
+                        sum,
+                        value
+                    ) =>
+                        sum +
+                        Math.pow(
+                            value - mean,
+                            2
+                        ),
+                    0
+                ) /
+                (
+                    n - 1
+                );
+
+
+            const sd =
+                Math.sqrt(
+                    variance
+                );
+
+
+            const sem =
+                sd /
+                Math.sqrt(
+                    n
+                );
+
+
+            const t =
+                mean /
+                sem;
+
+
+            const df =
+                n - 1;
+
+
+            const pValue =
+                studentTTwoTailedPValue(
+                    Math.abs(t),
+                    df
+                );
+
+
+            return {
+
+                t:
+                    t,
+
+                df:
+                    df,
+
+                pValue:
+                    pValue
+
+            };
+
+        }
+
+
+        /* =================================
+           VALUE COMPARISON
+           ================================= */
+
+        function valuesMatch(
+            actual,
+            expected,
+            absoluteTolerance,
+            relativeTolerance
+        ) {
+
+            if (
+                !Number.isFinite(
+                    actual
+                ) ||
+                !Number.isFinite(
+                    expected
+                )
+            ) {
+
+                return false;
+
+            }
+
+
+            const difference =
+                Math.abs(
+                    actual -
+                    expected
+                );
+
+
+            if (
+                difference <=
+                absoluteTolerance
+            ) {
+
+                return true;
+
+            }
+
+
+            const scale =
+                Math.max(
+                    Math.abs(
+                        expected
+                    ),
+                    1
+                );
+
+
+            return (
+                difference /
+                scale
+            ) <=
+                relativeTolerance;
+
+        }
+
+
+        /* =================================
+           FORMAT VALUE
+           ================================= */
+
+        function formatValue(
+            value
+        ) {
+
+            if (
+                !Number.isFinite(
+                    value
+                )
+            ) {
+
+                return "NaN";
+
+            }
+
+
+            if (
+                value === 0
+            ) {
+
+                return "0";
+
+            }
+
+
+            return value.toExponential(
+                10
+            );
+
+        }
+
+
+        /* =================================
+           ADD RESULT ROW
+           ================================= */
+
+        function addResultRow(
+            testName,
+            metricName,
+            actual,
+            expected,
+            pass
+        ) {
+
+            const results =
+                document.getElementById(
+                    "results"
+                );
+
+
+            const difference =
+                Math.abs(
+                    actual -
+                    expected
+                );
+
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${testName}
+                </td>
+
+                <td>
+                    ${metricName}
+                </td>
+
+                <td>
+                    ${formatValue(
+                        actual
+                    )}
+                </td>
+
+                <td>
+                    ${formatValue(
+                        expected
+                    )}
+                </td>
+
+                <td>
+                    ${formatValue(
+                        difference
+                    )}
+                </td>
+
+                <td class="${
+                    pass
+                        ? "pass"
+                        : "fail"
+                }">
+
+                    ${
+                        pass
+                            ? "PASS"
+                            : "FAIL"
+                    }
+
+                </td>
+
+            `;
+
+
+            results.appendChild(
+                row
+            );
+
+        }
+
+
+        /* =================================
+           RUN STRESS TESTS
+           ================================= */
+
+        function runStressTests() {
+
+            const results =
+                document.getElementById(
+                    "results"
+                );
+
+
+            results.innerHTML =
+                "";
+
+
+            let tests =
+                0;
+
+
+            let valid =
+                0;
+
+
+            let failures =
+                0;
+
+
+            testCases.forEach(
+                testCase => {
+
+                    const actual =
+                        calculateLabistryOneSample(
+                            testCase.data
+                        );
+
+
+                    /* =============================
+                       T STATISTIC
+                       ============================= */
+
+                    const tPass =
+                        valuesMatch(
+                            actual.t,
+                            testCase.reference.t,
+                            1e-10,
+                            1e-8
+                        );
+
+
+                    addResultRow(
+                        testCase.name,
+                        "t statistic",
+                        actual.t,
+                        testCase.reference.t,
+                        tPass
+                    );
+
+
+                    tests++;
+
+
+                    if (
+                        tPass
+                    ) {
+
+                        valid++;
+
+                    } else {
+
+                        failures++;
+
+                    }
+
+
+                    /* =============================
+                       DEGREES OF FREEDOM
+                       ============================= */
+
+                    const dfPass =
+                        actual.df ===
+                        testCase.reference.df;
+
+
+                    addResultRow(
+                        testCase.name,
+                        "Degrees of freedom",
+                        actual.df,
+                        testCase.reference.df,
+                        dfPass
+                    );
+
+
+                    tests++;
+
+
+                    if (
+                        dfPass
+                    ) {
+
+                        valid++;
+
+                    } else {
+
+                        failures++;
+
+                    }
+
+
+                    /* =============================
+                       P-VALUE
+                       ============================= */
+
+                    const pPass =
+                        valuesMatch(
+                            actual.pValue,
+                            testCase.reference.pValue,
+                            1e-10,
+                            1e-5
+                        );
+
+
+                    addResultRow(
+                        testCase.name,
+                        "p-value",
+                        actual.pValue,
+                        testCase.reference.pValue,
+                        pPass
+                    );
+
+
+                    tests++;
+
+
+                    if (
+                        pPass
+                    ) {
+
+                        valid++;
+
+                    } else {
+
+                        failures++;
+
+                    }
+
+                }
+            );
+
+
+            document.getElementById(
+                "tests"
+            ).textContent =
+                tests;
+
+
+            document.getElementById(
+                "valid"
+            ).textContent =
+                valid;
+
+
+            document.getElementById(
+                "failures"
+            ).textContent =
+                failures;
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
