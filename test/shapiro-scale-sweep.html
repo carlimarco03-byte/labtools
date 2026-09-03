@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Labistry — Shapiro-Wilk Scale Sweep</title>
+
+    <style>
+
+        body {
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            margin: 0;
+
+            padding: 30px;
+
+            background: #f5f7fa;
+
+            color: #222;
+
+        }
+
+        h1 {
+
+            margin-bottom: 5px;
+
+        }
+
+        .subtitle {
+
+            color: #666;
+
+            margin-bottom: 30px;
+
+        }
+
+        button {
+
+            padding: 12px 20px;
+
+            border: 0;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            margin-right: 10px;
+
+        }
+
+        #runSweep {
+
+            background: #222;
+
+            color: white;
+
+        }
+
+        #downloadData {
+
+            background: #ddd;
+
+        }
+
+        .summary {
+
+            margin-top: 25px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    4,
+                    minmax(140px, 1fr)
+                );
+
+            gap: 15px;
+
+        }
+
+        .summary-card {
+
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0,0,0,0.08);
+
+        }
+
+        .summary-card strong {
+
+            display: block;
+
+            font-size: 28px;
+
+            margin-top: 5px;
+
+        }
+
+        .table-container {
+
+            margin-top: 30px;
+
+            overflow-x: auto;
+
+            background: white;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0,0,0,0.08);
+
+        }
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            font-size: 14px;
+
+        }
+
+        th,
+        td {
+
+            padding: 10px;
+
+            border-bottom:
+                1px solid #eee;
+
+            text-align: right;
+
+            white-space: nowrap;
+
+        }
+
+        th:first-child,
+        td:first-child {
+
+            text-align: left;
+
+        }
+
+        th {
+
+            background: #f0f2f5;
+
+            position: sticky;
+
+            top: 0;
+
+        }
+
+        .stable {
+
+            font-weight: bold;
+
+        }
+
+        .drift {
+
+            font-weight: bold;
+
+        }
+
+        .breakdown {
+
+            font-weight: bold;
+
+        }
+
+        .log {
+
+            margin-top: 30px;
+
+            background: #111;
+
+            color: #ddd;
+
+            padding: 20px;
+
+            border-radius: 8px;
+
+            font-family:
+                monospace;
+
+            white-space: pre-wrap;
+
+            overflow-x: auto;
+
+        }
+
+        @media (max-width: 700px) {
+
+            body {
+
+                padding: 15px;
+
+            }
+
+            .summary {
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        1fr
+                    );
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<h1>
+    Labistry Shapiro–Wilk Scale Sweep
+</h1>
+
+<p class="subtitle">
+    Numerical stability test — does not modify Labistry statistical functions.
+</p>
+
+
+<button id="runSweep">
+    Run scale sweep
+</button>
+
+
+<button id="downloadData">
+    Download datasets
+</button>
+
+
+<div
+    id="summary"
+    class="summary"
+></div>
+
+
+<div class="table-container">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Scale</th>
+
+                <th>n</th>
+
+                <th>W Labistry</th>
+
+                <th>p Labistry</th>
+
+                <th>Range</th>
+
+                <th>Status</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="resultsBody">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<div
+    id="log"
+    class="log"
+>
+Waiting for test...
+</div>
+
+
+<!-- ===================================
+     LABISTRY STATISTICAL FUNCTIONS
+     =================================== -->
+
+<script src="../js/calculators/statistics/math.js"></script>
+
+<script src="../js/calculators/statistics/normality.js"></script>
+
+
+<script>
+
+
+/* ===================================
+   TEST CONFIGURATION
+   =================================== */
+
+
+const SAMPLE_SIZE = 20;
+
+
+/*
+    Exponents to test.
+
+    The sweep goes from normal numerical
+    values down toward the limits of
+    IEEE-754 double precision.
+*/
+
+
+const SCALE_EXPONENTS = [
+
+     0,
+
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+    -6,
+    -7,
+    -8,
+    -9,
+    -10,
+    -11,
+    -12,
+    -13,
+    -14,
+    -15,
+    -16,
+    -17,
+    -18,
+    -19,
+    -20,
+
+    -25,
+    -30,
+    -35,
+    -40,
+    -45,
+    -50,
+    -55,
+    -60,
+    -65,
+    -70,
+    -75,
+    -80,
+    -85,
+    -90,
+    -95,
+    -100,
+
+    -110,
+    -120,
+    -130,
+    -140,
+    -150,
+    -160,
+    -170,
+    -180,
+    -190,
+    -200,
+
+    -210,
+    -220,
+    -230,
+    -240,
+    -250,
+    -260,
+    -270,
+    -280,
+    -290,
+    -300
+
+];
+
+
+/* ===================================
+   SEEDED RANDOM NUMBER GENERATOR
+   =================================== */
+
+
+let seed = 20260903;
+
+
+function random() {
+
+    seed =
+        (
+            seed * 1664525 +
+            1013904223
+        ) >>> 0;
+
+    return seed / 4294967296;
+
+}
+
+
+/* ===================================
+   STANDARD NORMAL
+   =================================== */
+
+
+function randomNormal() {
+
+    let u1 = 0;
+
+    let u2 = 0;
+
+
+    while (u1 === 0) {
+
+        u1 = random();
+
+    }
+
+
+    u2 = random();
+
+
+    return Math.sqrt(
+        -2 *
+        Math.log(u1)
+    ) *
+    Math.cos(
+        2 *
+        Math.PI *
+        u2
+    );
+
+}
+
+
+/* ===================================
+   BASE DATASET
+   =================================== */
+
+
+function generateBaseDataset() {
+
+    seed = 20260903;
+
+
+    const data = [];
+
+
+    for (
+        let i = 0;
+        i < SAMPLE_SIZE;
+        i++
+    ) {
+
+        data.push(
+            randomNormal()
+        );
+
+    }
+
+
+    return data;
+
+}
+
+
+/* ===================================
+   SCALE DATASET
+   =================================== */
+
+
+function scaleDataset(
+    baseData,
+    exponent
+) {
+
+    const scale =
+        Math.pow(
+            10,
+            exponent
+        );
+
+
+    return baseData.map(
+        value =>
+            value * scale
+    );
+
+}
+
+
+/* ===================================
+   RANGE
+   =================================== */
+
+
+function getRange(data) {
+
+    let min = Infinity;
+
+    let max = -Infinity;
+
+
+    for (
+        const value of data
+    ) {
+
+        if (value < min) {
+
+            min = value;
+
+        }
+
+
+        if (value > max) {
+
+            max = value;
+
+        }
+
+    }
+
+
+    return {
+
+        min,
+        max
+
+    };
+
+}
+
+
+/* ===================================
+   STATUS
+   =================================== */
+
+
+function classifyResult(
+    result,
+    data
+) {
+
+    if (
+        result.error
+    ) {
+
+        return "BREAKDOWN";
+
+    }
+
+
+    if (
+        !Number.isFinite(result.W) ||
+        !Number.isFinite(result.pValue)
+    ) {
+
+        return "BREAKDOWN";
+
+    }
+
+
+    if (
+        result.W < 0 ||
+        result.W > 1
+    ) {
+
+        return "BREAKDOWN";
+
+    }
+
+
+    if (
+        result.pValue < 0 ||
+        result.pValue > 1
+    ) {
+
+        return "BREAKDOWN";
+
+    }
+
+
+    const range =
+        getRange(data);
+
+
+    /*
+        If all values collapse to the
+        same floating-point value,
+        numerical resolution has been
+        exhausted.
+    */
+
+
+    if (
+        range.min === range.max
+    ) {
+
+        return "DRIFT";
+
+    }
+
+
+    return "STABLE";
+
+}
+
+
+/* ===================================
+   NUMBER FORMATTING
+   =================================== */
+
+
+function formatNumber(value) {
+
+    if (
+        !Number.isFinite(value)
+    ) {
+
+        return String(value);
+
+    }
+
+
+    return value.toPrecision(12);
+
+}
+
+
+function formatPValue(value) {
+
+    if (
+        !Number.isFinite(value)
+    ) {
+
+        return String(value);
+
+    }
+
+
+    if (
+        value === 0
+    ) {
+
+        return "0";
+
+    }
+
+
+    if (
+        value < 1e-6
+    ) {
+
+        return value.toExponential(8);
+
+    }
+
+
+    return value.toPrecision(12);
+
+}
+
+
+function formatScale(
+    exponent
+) {
+
+    if (
+        exponent === 0
+    ) {
+
+        return "1";
+
+    }
+
+
+    return `1e${exponent}`;
+
+}
+
+
+/* ===================================
+   STORAGE
+   =================================== */
+
+
+let sweepResults = [];
+
+
+/* ===================================
+   RUN SWEEP
+   =================================== */
+
+
+function runSweep() {
+
+    sweepResults = [];
+
+
+    const tbody =
+        document.getElementById(
+            "resultsBody"
+        );
+
+
+    const log =
+        document.getElementById(
+            "log"
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    log.textContent =
+        "Running scale sweep...\n";
+
+
+    const baseData =
+        generateBaseDataset();
+
+
+    let stable = 0;
+
+    let drift = 0;
+
+    let breakdown = 0;
+
+
+    for (
+        const exponent
+        of SCALE_EXPONENTS
+    ) {
+
+        const data =
+            scaleDataset(
+                baseData,
+                exponent
+            );
+
+
+        const result =
+            calculateShapiroWilk(
+                data
+            );
+
+
+        const range =
+            getRange(data);
+
+
+        const status =
+            classifyResult(
+                result,
+                data
+            );
+
+
+        if (
+            status === "STABLE"
+        ) {
+
+            stable++;
+
+        }
+
+        else if (
+            status === "DRIFT"
+        ) {
+
+            drift++;
+
+        }
+
+        else {
+
+            breakdown++;
+
+        }
+
+
+        const entry = {
+
+            exponent,
+
+            scale:
+                Math.pow(
+                    10,
+                    exponent
+                ),
+
+            n:
+                data.length,
+
+            data,
+
+            W:
+                result.W,
+
+            pValue:
+                result.pValue,
+
+            min:
+                range.min,
+
+            max:
+                range.max,
+
+            status
+
+        };
+
+
+        sweepResults.push(
+            entry
+        );
+
+
+        const row =
+            document.createElement(
+                "tr"
+            );
+
+
+        row.innerHTML = `
+
+            <td>
+                ${formatScale(exponent)}
+            </td>
+
+            <td>
+                ${data.length}
+            </td>
+
+            <td>
+                ${formatNumber(result.W)}
+            </td>
+
+            <td>
+                ${formatPValue(result.pValue)}
+            </td>
+
+            <td>
+                ${formatNumber(range.min)}
+                →
+                ${formatNumber(range.max)}
+            </td>
+
+            <td class="${status.toLowerCase()}">
+                ${status}
+            </td>
+
+        `;
+
+
+        tbody.appendChild(row);
+
+
+        log.textContent +=
+            `Scale ${formatScale(exponent)}\n` +
+            `  W = ${result.W}\n` +
+            `  p = ${result.pValue}\n` +
+            `  min = ${range.min}\n` +
+            `  max = ${range.max}\n` +
+            `  status = ${status}\n\n`;
+
+    }
+
+
+    renderSummary(
+        stable,
+        drift,
+        breakdown
+    );
+
+
+    log.textContent +=
+        "\nSweep complete.\n";
+
+}
+
+
+/* ===================================
+   SUMMARY
+   =================================== */
+
+
+function renderSummary(
+    stable,
+    drift,
+    breakdown
+) {
+
+    const total =
+        SCALE_EXPONENTS.length;
+
+
+    document.getElementById(
+        "summary"
+    ).innerHTML = `
+
+        <div class="summary-card">
+            Scales
+            <strong>${total}</strong>
+        </div>
+
+        <div class="summary-card">
+            Stable
+            <strong>${stable}</strong>
+        </div>
+
+        <div class="summary-card">
+            Drift
+            <strong>${drift}</strong>
+        </div>
+
+        <div class="summary-card">
+            Breakdown
+            <strong>${breakdown}</strong>
+        </div>
+
+    `;
+
+}
+
+
+/* ===================================
+   DOWNLOAD
+   =================================== */
+
+
+function downloadDatasets() {
+
+    if (
+        sweepResults.length === 0
+    ) {
+
+        alert(
+            "Run the scale sweep first."
+        );
+
+        return;
+
+    }
+
+
+    const payload = {
+
+        test:
+            "Labistry Shapiro-Wilk Scale Sweep",
+
+        seed:
+            20260903,
+
+        n:
+            SAMPLE_SIZE,
+
+        generatedAt:
+            new Date().toISOString(),
+
+        baseData:
+            generateBaseDataset(),
+
+        results:
+            sweepResults
+
+    };
+
+
+    const blob =
+        new Blob(
+            [
+                JSON.stringify(
+                    payload,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:
+                    "application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.href = url;
+
+
+    link.download =
+        "labistry-shapiro-scale-sweep.json";
+
+
+    link.click();
+
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+/* ===================================
+   EVENTS
+   =================================== */
+
+
+document.getElementById(
+    "runSweep"
+).addEventListener(
+    "click",
+    runSweep
+);
+
+
+document.getElementById(
+    "downloadData"
+).addEventListener(
+    "click",
+    downloadDatasets
+);
+
+
+/* ===================================
+   INITIAL MESSAGE
+   =================================== */
+
+
+document.getElementById(
+    "log"
+).textContent =
+    "Ready.\n\n" +
+    "Click 'Run scale sweep' to begin.";
+
+
+</script>
+
+</body>
+
+</html>
