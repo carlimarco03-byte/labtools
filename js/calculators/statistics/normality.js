@@ -196,9 +196,9 @@ document.getElementById("result").innerHTML = `
 
         <div class="statistics-section">
 
-            <h3>
+            <h4>
                 Shapiro–Wilk Normality Test
-            </h3>
+            </h4>
 
             <div class="statistics-row">
 
@@ -238,9 +238,9 @@ document.getElementById("result").innerHTML = `
 
         <div class="statistics-section">
 
-            <h3>
+            <h4>
                 D’Agostino–Pearson Test
-            </h3>
+            </h4>
 
             ${
                 dagostino.available
