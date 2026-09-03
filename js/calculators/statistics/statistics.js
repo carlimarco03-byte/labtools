@@ -31,6 +31,12 @@ function calculateStatistics() {
 
             break;
 
+        case "one-sample":
+          
+            calculateOneSampleTTest();
+          
+            break;
+          
 
         case "two-group":
 
