@@ -975,6 +975,7 @@ function calculateMannWhitneyPValue(
 }
 
 
+
 /* ===================================
    MANN–WHITNEY U STATISTIC
    =================================== */
@@ -1047,11 +1048,23 @@ function calculateMannWhitneyU(
 
     let rank = 1;
 
-
     let rankSumA = 0;
 
-
     let i = 0;
+
+
+    /*
+        Store the size of each tie group.
+
+        Example:
+
+        [1, 1, 2, 3, 3, 3]
+
+        tie groups:
+        2, 1, 3
+    */
+
+    const tieGroupSizes = [];
 
 
     while (
@@ -1073,10 +1086,19 @@ function calculateMannWhitneyU(
         }
 
 
+        const tieSize =
+            j - i;
+
+
+        tieGroupSizes.push(
+            tieSize
+        );
+
+
         const averageRank =
             (
                 rank +
-                (rank + j - i - 1)
+                (rank + tieSize - 1)
             ) / 2;
 
 
@@ -1100,7 +1122,7 @@ function calculateMannWhitneyU(
 
 
         rank +=
-            j - i;
+            tieSize;
 
 
         i =
@@ -1119,6 +1141,10 @@ function calculateMannWhitneyU(
 
     const nB =
         groupB.length;
+
+
+    const n =
+        nA + nB;
 
 
     const U1 =
@@ -1143,7 +1169,7 @@ function calculateMannWhitneyU(
 
 
     /* =================================
-       NORMAL APPROXIMATION
+       MEAN U
        ================================= */
 
     const meanU =
@@ -1153,19 +1179,83 @@ function calculateMannWhitneyU(
         ) / 2;
 
 
-    const standardDeviationU =
-        Math.sqrt(
+    /* =================================
+       TIE-CORRECTED VARIANCE
+       ================================= */
+
+    let tieCorrectionTerm = 0;
+
+
+    tieGroupSizes.forEach(
+        tieSize => {
+
+            if (
+                tieSize > 1
+            ) {
+
+                tieCorrectionTerm +=
+                    (
+                        Math.pow(
+                            tieSize,
+                            3
+                        ) -
+                        tieSize
+                    );
+
+            }
+
+        }
+    );
+
+
+    let varianceU;
+
+
+    if (
+        n > 1
+    ) {
+
+        varianceU =
             (
                 nA *
-                nB *
+                nB
+            ) / 12 *
+            (
+                n + 1 -
+                tieCorrectionTerm /
                 (
-                    nA +
-                    nB +
-                    1
+                    n *
+                    (n - 1)
                 )
-            ) / 12
+            );
+
+    }
+    else {
+
+        varianceU =
+            NaN;
+
+    }
+
+
+    const standardDeviationU =
+        Math.sqrt(
+            varianceU
         );
 
+
+    /* =================================
+       DEGENERATE CASE
+       ================================= */
+
+    /*
+        If every observation has the
+        same value, there is no variance
+        in the ranks.
+
+        In this situation the normal
+        approximation is undefined.
+    */
 
     let z = NaN;
 
@@ -1175,15 +1265,45 @@ function calculateMannWhitneyU(
         0
     ) {
 
+        /* =================================
+           CONTINUITY CORRECTION
+           ================================= */
+
+        let continuityCorrection = 0;
+
+
+        if (
+            U < meanU
+        ) {
+
+            continuityCorrection =
+                0.5;
+
+        }
+        else if (
+            U > meanU
+        ) {
+
+            continuityCorrection =
+                -0.5;
+
+        }
+
+
         z =
             (
                 U -
-                meanU
+                meanU +
+                continuityCorrection
             ) /
             standardDeviationU;
 
     }
 
+
+    /* =================================
+       P-VALUE
+       ================================= */
 
     const pValue =
         calculateMannWhitneyPValue(
@@ -1211,6 +1331,8 @@ function calculateMannWhitneyU(
     };
 
 }
+
+
 
 /* ===================================
    D'AGOSTINO-PEARSON NORMALITY TEST
