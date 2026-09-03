@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Labistry — Shapiro-Wilk Stress Test</title>
+
+    <style>
+
+        body {
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            margin: 0;
+
+            padding: 30px;
+
+            background: #f5f7fa;
+
+            color: #222;
+
+        }
+
+        h1 {
+
+            margin-bottom: 5px;
+
+        }
+
+        .subtitle {
+
+            color: #666;
+
+            margin-bottom: 30px;
+
+        }
+
+        button {
+
+            padding: 12px 20px;
+
+            border: 0;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            margin-right: 10px;
+
+        }
+
+        #runTests {
+
+            background: #222;
+
+            color: white;
+
+        }
+
+        #downloadData {
+
+            background: #ddd;
+
+        }
+
+        .summary {
+
+            margin-top: 25px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    4,
+                    minmax(140px, 1fr)
+                );
+
+            gap: 15px;
+
+        }
+
+        .summary-card {
+
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0,0,0,0.08);
+
+        }
+
+        .summary-card strong {
+
+            display: block;
+
+            font-size: 28px;
+
+            margin-top: 5px;
+
+        }
+
+        .table-container {
+
+            margin-top: 30px;
+
+            overflow-x: auto;
+
+            background: white;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0,0,0,0.08);
+
+        }
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            font-size: 14px;
+
+        }
+
+        th,
+        td {
+
+            padding: 10px;
+
+            border-bottom:
+                1px solid #eee;
+
+            text-align: right;
+
+            white-space: nowrap;
+
+        }
+
+        th:first-child,
+        td:first-child {
+
+            text-align: left;
+
+        }
+
+        th {
+
+            background: #f0f2f5;
+
+            position: sticky;
+
+            top: 0;
+
+        }
+
+        .pass {
+
+            font-weight: bold;
+
+        }
+
+        .warning {
+
+            font-weight: bold;
+
+        }
+
+        .fail {
+
+            font-weight: bold;
+
+        }
+
+        .log {
+
+            margin-top: 30px;
+
+            background: #111;
+
+            color: #ddd;
+
+            padding: 20px;
+
+            border-radius: 8px;
+
+            font-family:
+                monospace;
+
+            white-space: pre-wrap;
+
+            overflow-x: auto;
+
+        }
+
+        @media (max-width: 700px) {
+
+            body {
+
+                padding: 15px;
+
+            }
+
+            .summary {
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        1fr
+                    );
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<h1>
+    Labistry Shapiro–Wilk Stress Test
+</h1>
+
+<p class="subtitle">
+    Validation harness — does not modify Labistry statistical functions.
+</p>
+
+
+<button id="runTests">
+    Run stress tests
+</button>
+
+
+<button id="downloadData">
+    Download datasets
+</button>
+
+
+<div
+    id="summary"
+    class="summary"
+></div>
+
+
+<div class="table-container">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Test</th>
+
+                <th>n</th>
+
+                <th>W Labistry</th>
+
+                <th>p Labistry</th>
+
+                <th>Status</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="resultsBody">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<div
+    id="log"
+    class="log"
+>
+Waiting for test...
+</div>
+
+
+<!-- ===================================
+     LABISTRY STATISTICAL FUNCTIONS
+     =================================== -->
+
+<!--
+    IMPORTANT:
+
+    Replace the path below with the actual
+    path of your Labistry mathematical
+    functions file.
+-->
+
+<script src="../js/math.js"></script>
+
+<!--
+    Replace this path with the actual
+    file containing calculateShapiroWilk().
+-->
+
+<script src="../js/normality.js"></script>
+
+
+<script>
+
+
+/* ===================================
+   TEST CONFIGURATION
+   =================================== */
+
+
+const TEST_CONFIG = [
+
+    {
+        name: "Normal n=3",
+        type: "normal",
+        n: 3
+    },
+
+    {
+        name: "Normal n=4",
+        type: "normal",
+        n: 4
+    },
+
+    {
+        name: "Normal n=5",
+        type: "normal",
+        n: 5
+    },
+
+    {
+        name: "Normal n=10",
+        type: "normal",
+        n: 10
+    },
+
+    {
+        name: "Normal n=11",
+        type: "normal",
+        n: 11
+    },
+
+    {
+        name: "Normal n=12",
+        type: "normal",
+        n: 12
+    },
+
+    {
+        name: "Normal n=20",
+        type: "normal",
+        n: 20
+    },
+
+    {
+        name: "Normal n=50",
+        type: "normal",
+        n: 50
+    },
+
+    {
+        name: "Normal n=100",
+        type: "normal",
+        n: 100
+    },
+
+    {
+        name: "Normal n=500",
+        type: "normal",
+        n: 500
+    },
+
+    {
+        name: "Normal n=1000",
+        type: "normal",
+        n: 1000
+    },
+
+    {
+        name: "Normal n=5000",
+        type: "normal",
+        n: 5000
+    },
+
+    {
+        name: "Uniform n=20",
+        type: "uniform",
+        n: 20
+    },
+
+    {
+        name: "Exponential n=20",
+        type: "exponential",
+        n: 20
+    },
+
+    {
+        name: "Lognormal n=20",
+        type: "lognormal",
+        n: 20
+    },
+
+    {
+        name: "Normal + outlier",
+        type: "outlier",
+        n: 20
+    },
+
+    {
+        name: "Almost constant",
+        type: "almostConstant",
+        n: 20
+    },
+
+    {
+        name: "Offset 1e6",
+        type: "offset",
+        n: 20,
+        offset: 1e6
+    },
+
+    {
+        name: "Offset 1e12",
+        type: "offset",
+        n: 20,
+        offset: 1e12
+    },
+
+    {
+        name: "Offset 1e15",
+        type: "offset",
+        n: 20,
+        offset: 1e15
+    },
+
+    {
+        name: "Scale 1e-6",
+        type: "scale",
+        n: 20,
+        scale: 1e-6
+    },
+
+    {
+        name: "Scale 1e-12",
+        type: "scale",
+        n: 20,
+        scale: 1e-12
+    },
+
+    {
+        name: "Scale 1e-50",
+        type: "scale",
+        n: 20,
+        scale: 1e-50
+    },
+
+    {
+        name: "Scale 1e-100",
+        type: "scale",
+        n: 20,
+        scale: 1e-100
+    },
+
+    {
+        name: "Scale 1e-200",
+        type: "scale",
+        n: 20,
+        scale: 1e-200
+    },
+
+    {
+        name: "Extreme outlier",
+        type: "extremeOutlier",
+        n: 20
+    },
+
+    {
+        name: "Duplicated values",
+        type: "duplicates",
+        n: 20
+    },
+
+    {
+        name: "Ties",
+        type: "ties",
+        n: 20
+    }
+
+];
+
+
+/* ===================================
+   SEEDED RANDOM NUMBER GENERATOR
+   =================================== */
+
+
+let seed = 20260903;
+
+
+function random() {
+
+    seed =
+        (
+            seed * 1664525 +
+            1013904223
+        ) >>> 0;
+
+    return seed / 4294967296;
+
+}
+
+
+/* ===================================
+   STANDARD NORMAL RANDOM
+   =================================== */
+
+
+function randomNormal() {
+
+    let u1 = 0;
+
+    let u2 = 0;
+
+
+    while (u1 === 0) {
+
+        u1 = random();
+
+    }
+
+
+    u2 = random();
+
+
+    return Math.sqrt(
+        -2 *
+        Math.log(u1)
+    ) *
+    Math.cos(
+        2 *
+        Math.PI *
+        u2
+    );
+
+}
+
+
+/* ===================================
+   DATASET GENERATOR
+   =================================== */
+
+
+function generateDataset(config) {
+
+    const data = [];
+
+
+    for (
+        let i = 0;
+        i < config.n;
+        i++
+    ) {
+
+        let value;
+
+
+        switch (config.type) {
+
+
+            case "normal":
+
+                value =
+                    randomNormal();
+
+                break;
+
+
+            case "uniform":
+
+                value =
+                    random();
+
+                break;
+
+
+            case "exponential":
+
+                value =
+                    -Math.log(
+                        1 - random()
+                    );
+
+                break;
+
+
+            case "lognormal":
+
+                value =
+                    Math.exp(
+                        randomNormal()
+                    );
+
+                break;
+
+
+            case "outlier":
+
+                value =
+                    randomNormal();
+
+                if (i === config.n - 1) {
+
+                    value = 8;
+
+                }
+
+                break;
+
+
+            case "extremeOutlier":
+
+                value =
+                    randomNormal();
+
+                if (i === config.n - 1) {
+
+                    value = 1e6;
+
+                }
+
+                break;
+
+
+            case "almostConstant":
+
+                value =
+                    1 +
+                    randomNormal() *
+                    1e-12;
+
+                break;
+
+
+            case "offset":
+
+                value =
+                    config.offset +
+                    randomNormal();
+
+                break;
+
+
+            case "scale":
+
+                value =
+                    randomNormal() *
+                    config.scale;
+
+                break;
+
+
+            case "duplicates":
+
+                value =
+                    Math.floor(
+                        random() * 5
+                    );
+
+                break;
+
+
+            case "ties":
+
+                value =
+                    Math.round(
+                        randomNormal() * 2
+                    );
+
+                break;
+
+
+            default:
+
+                value =
+                    randomNormal();
+
+        }
+
+
+        data.push(value);
+
+    }
+
+
+    return data;
+
+}
+
+
+/* ===================================
+   DATASET STORAGE
+   =================================== */
+
+
+let generatedDatasets = [];
+
+
+/* ===================================
+   RUN TESTS
+   =================================== */
+
+
+function runTests() {
+
+    seed = 20260903;
+
+    generatedDatasets = [];
+
+    const tbody =
+        document.getElementById(
+            "resultsBody"
+        );
+
+    const log =
+        document.getElementById(
+            "log"
+        );
+
+    tbody.innerHTML = "";
+
+    log.textContent =
+        "Running tests...\n";
+
+
+    let passed = 0;
+
+    let failed = 0;
+
+    let warnings = 0;
+
+
+    for (
+        const config of TEST_CONFIG
+    ) {
+
+        const data =
+            generateDataset(
+                config
+            );
+
+
+        const result =
+            calculateShapiroWilk(
+                data
+            );
+
+
+        generatedDatasets.push({
+
+            name:
+                config.name,
+
+            n:
+                data.length,
+
+            data:
+                data,
+
+            W:
+                result.W,
+
+            pValue:
+                result.pValue,
+
+            error:
+                result.error || null
+
+        });
+
+
+        const row =
+            document.createElement(
+                "tr"
+            );
+
+
+        const status =
+            classifyLabistryResult(
+                result,
+                data
+            );
+
+
+        if (status === "PASS") {
+
+            passed++;
+
+        }
+
+        else if (
+            status === "WARNING"
+        ) {
+
+            warnings++;
+
+        }
+
+        else {
+
+            failed++;
+
+        }
+
+
+        row.innerHTML = `
+
+            <td>
+                ${config.name}
+            </td>
+
+            <td>
+                ${data.length}
+            </td>
+
+            <td>
+                ${formatNumber(result.W)}
+            </td>
+
+            <td>
+                ${formatPValue(result.pValue)}
+            </td>
+
+            <td class="${status.toLowerCase()}">
+                ${status}
+            </td>
+
+        `;
+
+
+        tbody.appendChild(row);
+
+
+        log.textContent +=
+            `${config.name}\n` +
+            `  W = ${result.W}\n` +
+            `  p = ${result.pValue}\n` +
+            `  status = ${status}\n\n`;
+
+    }
+
+
+    renderSummary(
+        passed,
+        warnings,
+        failed
+    );
+
+}
+
+
+/* ===================================
+   RESULT CLASSIFICATION
+   =================================== */
+
+
+function classifyLabistryResult(
+    result,
+    data
+) {
+
+    if (
+        result.error
+    ) {
+
+        return "FAIL";
+
+    }
+
+
+    if (
+        !Number.isFinite(result.W) ||
+        !Number.isFinite(result.pValue)
+    ) {
+
+        return "FAIL";
+
+    }
+
+
+    if (
+        result.W < 0 ||
+        result.W > 1
+    ) {
+
+        return "FAIL";
+
+    }
+
+
+    if (
+        result.pValue < 0 ||
+        result.pValue > 1
+    ) {
+
+        return "FAIL";
+
+    }
+
+
+    /*
+        Constant datasets are expected
+        to be problematic.
+    */
+
+    const unique =
+        new Set(data).size;
+
+
+    if (
+        unique === 1
+    ) {
+
+        return "WARNING";
+
+    }
+
+
+    return "PASS";
+
+}
+
+
+/* ===================================
+   NUMBER FORMATTING
+   =================================== */
+
+
+function formatNumber(value) {
+
+    if (
+        !Number.isFinite(value)
+    ) {
+
+        return String(value);
+
+    }
+
+
+    return value.toPrecision(12);
+
+}
+
+
+function formatPValue(value) {
+
+    if (
+        !Number.isFinite(value)
+    ) {
+
+        return String(value);
+
+    }
+
+
+    if (
+        value === 0
+    ) {
+
+        return "0";
+
+    }
+
+
+    if (
+        value < 1e-6
+    ) {
+
+        return value.toExponential(8);
+
+    }
+
+
+    return value.toPrecision(12);
+
+}
+
+
+/* ===================================
+   SUMMARY
+   =================================== */
+
+
+function renderSummary(
+    passed,
+    warnings,
+    failed
+) {
+
+    const total =
+        TEST_CONFIG.length;
+
+
+    document.getElementById(
+        "summary"
+    ).innerHTML = `
+
+        <div class="summary-card">
+            Tests
+            <strong>${total}</strong>
+        </div>
+
+        <div class="summary-card">
+            Valid
+            <strong>${passed}</strong>
+        </div>
+
+        <div class="summary-card">
+            Warnings
+            <strong>${warnings}</strong>
+        </div>
+
+        <div class="summary-card">
+            Failures
+            <strong>${failed}</strong>
+        </div>
+
+    `;
+
+}
+
+
+/* ===================================
+   DOWNLOAD DATA
+   =================================== */
+
+
+function downloadDatasets() {
+
+    if (
+        generatedDatasets.length === 0
+    ) {
+
+        alert(
+            "Run the tests first."
+        );
+
+        return;
+
+    }
+
+
+    const payload = {
+
+        seed:
+            20260903,
+
+        generatedAt:
+            new Date().toISOString(),
+
+        tests:
+            generatedDatasets
+
+    };
+
+
+    const blob =
+        new Blob(
+            [
+                JSON.stringify(
+                    payload,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:
+                    "application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.href = url;
+
+    link.download =
+        "labistry-shapiro-stress-datasets.json";
+
+
+    link.click();
+
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+/* ===================================
+   EVENT LISTENERS
+   =================================== */
+
+
+document.getElementById(
+    "runTests"
+).addEventListener(
+    "click",
+    runTests
+);
+
+
+document.getElementById(
+    "downloadData"
+).addEventListener(
+    "click",
+    downloadDatasets
+);
+
+
+/* ===================================
+   INITIAL MESSAGE
+   =================================== */
+
+
+document.getElementById(
+    "log"
+).textContent =
+    "Ready.\n\n" +
+    "Click 'Run stress tests' to begin.";
+
+
+</script>
+
+</body>
+
+</html>
