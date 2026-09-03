@@ -14,699 +14,1888 @@
 
     <style>
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 1400px;
-            margin: 40px auto;
-            padding: 0 20px;
+
+            margin: 0;
+            padding: 24px;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f5f5f5;
             color: #222;
+
+        }
+
+        main {
+
+            max-width: 1400px;
+            margin: 0 auto;
+
         }
 
         h1 {
+
+            margin-top: 0;
             margin-bottom: 8px;
+
         }
 
         .subtitle {
+
             color: #666;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
+
         }
 
         .summary {
+
             display: grid;
+
             grid-template-columns:
-                repeat(4, minmax(120px, 1fr));
+                repeat(4, minmax(140px, 1fr));
+
             gap: 12px;
-            margin-bottom: 30px;
+
+            margin-bottom: 24px;
+
         }
 
         .summary-card {
+
+            background: white;
+
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+            padding: 16px;
+
+        }
+
+        .summary-label {
+
+            font-size: 13px;
+            color: #666;
+
+            margin-bottom: 6px;
+
+        }
+
+        .summary-value {
+
+            font-size: 24px;
+            font-weight: 700;
+
+        }
+
+        .test-section {
+
+            background: white;
+
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
             padding: 18px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            text-align: center;
-        }
 
-        .summary-card strong {
-            display: block;
-            font-size: 28px;
-            margin-top: 5px;
-        }
-
-        .test {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
             margin-bottom: 20px;
+
+            overflow-x: auto;
+
         }
 
-        .test.pass {
-            border-left: 5px solid #2e7d32;
-        }
+        .test-section h2 {
 
-        .test.warning {
-            border-left: 5px solid #f9a825;
-        }
+            margin-top: 0;
 
-        .test.fail {
-            border-left: 5px solid #c62828;
-        }
-
-        .test.error {
-            border-left: 5px solid #6a1b9a;
-        }
-
-        .status {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-
-        .pass .status {
-            color: #2e7d32;
-        }
-
-        .warning .status {
-            color: #f9a825;
-        }
-
-        .fail .status {
-            color: #c62828;
-        }
-
-        .error .status {
-            color: #6a1b9a;
         }
 
         table {
+
             width: 100%;
+
             border-collapse: collapse;
-            margin: 15px 0;
+
+            font-size: 14px;
+
         }
 
         th,
         td {
-            border: 1px solid #ddd;
-            padding: 8px;
+
+            padding: 9px 10px;
+
+            border-bottom:
+                1px solid #e5e5e5;
+
             text-align: left;
+
+            vertical-align: top;
+
         }
 
         th {
-            background: #f5f5f5;
+
+            background: #fafafa;
+            font-weight: 700;
+
         }
 
-        .data {
-            font-family: monospace;
-            background: #f7f7f7;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
+        .PASS {
+
+            color: #167534;
+            font-weight: 700;
+
         }
 
-        .reason {
+        .FAIL {
+
+            color: #b42318;
+            font-weight: 700;
+
+        }
+
+        .WARN {
+
+            color: #a15c00;
+            font-weight: 700;
+
+        }
+
+        .neutral {
+
+            color: #666;
+
+        }
+
+        code {
+
+            font-family:
+                Consolas,
+                Monaco,
+                monospace;
+
+            font-size: 12px;
+
+        }
+
+        .note {
+
+            padding: 12px 14px;
+
+            background: #fafafa;
+
+            border-left:
+                4px solid #999;
+
             margin-top: 12px;
-            color: #555;
+
         }
 
-        @media (max-width: 700px) {
+        @media (max-width: 800px) {
 
-            .summary {
-                grid-template-columns: repeat(2, 1fr);
+            body {
+                padding: 12px;
             }
 
-            table {
-                font-size: 13px;
+            .summary {
+
+                grid-template-columns:
+                    repeat(2, minmax(120px, 1fr));
+
             }
 
         }
 
     </style>
 
-    <!-- Labistry dependencies -->
-
-    <script src="../js/calculators/statistics/math.js"></script>
-    <script src="../js/calculators/statistics/descriptive.js"></script>
-    <script src="../js/calculators/statistics/two-groups.js"></script>
-
 </head>
+
 
 <body>
 
-    <h1>Labistry Mann–Whitney U Stress Test</h1>
+<main>
+
+    <h1>
+        Labistry Mann–Whitney U Stress Test
+    </h1>
 
     <div class="subtitle">
+
         Validation harness — does not modify Labistry statistical functions.
+
     </div>
+
 
     <div class="summary">
 
         <div class="summary-card">
-            Tests
-            <strong id="totalTests">0</strong>
+
+            <div class="summary-label">
+                Tests
+            </div>
+
+            <div
+                id="totalTests"
+                class="summary-value"
+            >
+                0
+            </div>
+
         </div>
 
-        <div class="summary-card">
-            Valid
-            <strong id="validTests">0</strong>
-        </div>
 
         <div class="summary-card">
-            Warnings
-            <strong id="warningTests">0</strong>
+
+            <div class="summary-label">
+                Valid
+            </div>
+
+            <div
+                id="validTests"
+                class="summary-value"
+            >
+                0
+            </div>
+
         </div>
 
+
         <div class="summary-card">
-            Failures
-            <strong id="failureTests">0</strong>
+
+            <div class="summary-label">
+                Warnings
+            </div>
+
+            <div
+                id="warningTests"
+                class="summary-value"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-label">
+                Failures
+            </div>
+
+            <div
+                id="failureTests"
+                class="summary-value"
+            >
+                0
+            </div>
+
         </div>
 
     </div>
 
-    <div id="results"></div>
+
+    <div
+        id="results"
+        class="test-section"
+    >
+
+        Running tests...
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     LABISTRY DEPENDENCIES
+     ========================================================= -->
+
+<script src="../js/calculators/statistics/math.js"></script>
+
+<script src="../js/calculators/statistics/descriptive.js"></script>
+
+<script src="../js/calculators/statistics/two-groups.js"></script>
 
 
 <script>
 
-const TESTS = [
+/* =========================================================
+   LABISTRY MANN–WHITNEY U STRESS TEST
+   ========================================================= */
 
-    {
-        name: "Normal n=5 vs n=5",
 
-        groupA: [1, 2, 3, 4, 5],
+/* =========================================================
+   TEST CONFIGURATION
+   ========================================================= */
 
-        groupB: [6, 7, 8, 9, 10],
+const ABS_TOL =
+    1e-10;
 
-        reference: {
-            U: 0,
-            pValue: 0.007936507936507936
-        }
-    },
+const REL_TOL =
+    1e-8;
 
 
-    {
-        name: "Small n=3 vs n=3",
+/* =========================================================
+   HELPERS
+   ========================================================= */
 
-        groupA: [1, 2, 3],
-
-        groupB: [4, 5, 6],
-
-        reference: {
-            U: 0,
-            pValue: 0.1
-        }
-    },
-
-
-    {
-        name: "Strongly unbalanced n=3 vs n=30",
-
-        groupA: [1, 2, 3],
-
-        groupB: [
-            10, 11, 12, 13, 14,
-            15, 16, 17, 18, 19,
-            20, 21, 22, 23, 24,
-            25, 26, 27, 28, 29,
-            30, 31, 32, 33, 34,
-            35, 36, 37, 38, 39
-        ],
-
-        reference: {
-            U: 0,
-            pValue: 0.001633132430455275
-        }
-    },
-
-
-    {
-        name: "Identical groups",
-
-        groupA: [1, 2, 3, 4, 5],
-
-        groupB: [1, 2, 3, 4, 5],
-
-        reference: {
-            U: 12.5,
-            pValue: 1
-        }
-    },
-
-
-    {
-        name: "No overlap",
-
-        groupA: [1, 1, 2, 2, 3],
-
-        groupB: [10, 11, 12, 13, 14],
-
-        reference: {
-            U: 0,
-            pValue: 0.007936507936507936
-        }
-    },
-
-
-    {
-        name: "Ties between groups",
-
-        groupA: [1, 2, 3, 4, 5],
-
-        groupB: [3, 4, 5, 6, 7],
-
-        reference: {
-            U: 5,
-            pValue: 0.11384629800665805
-        }
-    },
-
-
-    {
-        name: "Repeated values within groups",
-
-        groupA: [1, 1, 2, 2, 3],
-
-        groupB: [2, 2, 3, 3, 4],
-
-        reference: {
-            U: 5,
-            pValue: 0.1332570717660165
-        }
-    },
-
-
-    {
-        name: "Same median, different distribution",
-
-        groupA: [1, 2, 3, 3, 3, 4, 5],
-
-        groupB: [1, 1, 3, 5, 5, 5, 7],
-
-        reference: {
-            U: 21,
-            pValue: 0.604911522389397
-        }
-    },
-
-
-    {
-        name: "Negative values",
-
-        groupA: [-5, -4, -3, -2, -1],
-
-        groupB: [1, 2, 3, 4, 5],
-
-        reference: {
-            U: 0,
-            pValue: 0.009023438818080326
-        }
-    },
-
-
-    {
-        name: "Decimal values",
-
-        groupA: [
-            0.1,
-            0.2,
-            0.3,
-            0.4,
-            0.5
-        ],
-
-        groupB: [
-            0.6,
-            0.7,
-            0.8,
-            0.9,
-            1.0
-        ],
-
-        reference: {
-            U: 0,
-            pValue: 0.007936507936507936
-        }
-    },
-
-
-    {
-        name: "Scale = 1e-12",
-
-        groupA: [
-            1e-12,
-            2e-12,
-            3e-12,
-            4e-12,
-            5e-12
-        ],
-
-        groupB: [
-            6e-12,
-            7e-12,
-            8e-12,
-            9e-12,
-            10e-12
-        ],
-
-        reference: {
-            U: 0,
-            pValue: 0.007936507936507936
-        }
-    },
-
-
-    {
-        name: "Scale = 1e12",
-
-        groupA: [
-            1e12,
-            2e12,
-            3e12,
-            4e12,
-            5e12
-        ],
-
-        groupB: [
-            6e12,
-            7e12,
-            8e12,
-            9e12,
-            10e12
-        ],
-
-        reference: {
-            U: 0,
-            pValue: 0.007936507936507936
-        }
-    },
-
-
-    {
-        name: "Borderline p > 0.05",
-
-        groupA: [1, 2, 3, 4, 5],
-
-        groupB: [2.9, 3.9, 4.9, 5.9, 6.9],
-
-        reference: {
-            U: 5,
-            pValue: 0.07936507936507936
-        }
-    },
-
-
-    {
-        name: "Borderline p < 0.05",
-
-        groupA: [1, 2, 3, 4, 5],
-
-        groupB: [3.5, 4.5, 5.5, 6.5, 7.5],
-
-        reference: {
-            U: 0,
-            pValue: 0.007936507936507936
-        }
-    },
-
-
-    {
-        name: "Constant groups",
-
-        groupA: [5, 5, 5, 5, 5],
-
-        groupB: [5, 5, 5, 5, 5],
-
-        reference: {
-            U: 12.5,
-            pValue: 1
-        }
-    }
-
-];
-
-
-function numbersClose(
+function nearlyEqual(
     actual,
     expected,
-    relativeTolerance = 1e-9,
-    absoluteTolerance = 1e-14
+    absTol = ABS_TOL,
+    relTol = REL_TOL
 ) {
 
     if (
         Number.isNaN(actual) &&
         Number.isNaN(expected)
     ) {
+
         return true;
+
     }
 
     if (
         !Number.isFinite(actual) ||
         !Number.isFinite(expected)
     ) {
+
         return actual === expected;
+
     }
 
     const difference =
-        Math.abs(actual - expected);
+        Math.abs(
+            actual - expected
+        );
 
     const scale =
-        Math.max(Math.abs(expected), 1);
+        Math.max(
+            1,
+            Math.abs(expected)
+        );
 
-    return difference <= Math.max(
-        absoluteTolerance,
-        relativeTolerance * scale
+    return (
+        difference <= absTol ||
+        difference <= relTol * scale
     );
+
 }
 
 
-function formatNumber(value) {
+/* =========================================================
+   REFERENCE RANKING
+   ========================================================= */
 
-    if (!Number.isFinite(value)) {
-        return "NaN";
+function referenceRanks(
+    sampleA,
+    sampleB
+) {
+
+    const combined = [
+
+        ...sampleA.map(
+            value => ({
+                value,
+                group: "A"
+            })
+        ),
+
+        ...sampleB.map(
+            value => ({
+                value,
+                group: "B"
+            })
+        )
+
+    ];
+
+
+    combined.sort(
+        (a, b) =>
+            a.value - b.value
+    );
+
+
+    const ranks =
+        new Array(
+            combined.length
+        );
+
+
+    let i = 0;
+
+
+    while (
+        i < combined.length
+    ) {
+
+        let j =
+            i + 1;
+
+
+        while (
+            j < combined.length &&
+            combined[j].value ===
+                combined[i].value
+        ) {
+
+            j++;
+
+        }
+
+
+        const averageRank =
+            (
+                i + 1 +
+                j
+            ) / 2;
+
+
+        for (
+            let k = i;
+            k < j;
+            k++
+        ) {
+
+            ranks[k] =
+                averageRank;
+
+        }
+
+
+        i = j;
+
     }
 
-    return value.toExponential(8);
+
+    return {
+        combined,
+        ranks
+    };
+
 }
 
 
-function runTests() {
+/* =========================================================
+   REFERENCE U
+   ========================================================= */
 
-    let valid = 0;
-    let warnings = 0;
-    let failures = 0;
+function referenceMannWhitneyU(
+    sampleA,
+    sampleB
+) {
 
-    const container =
-        document.getElementById("results");
+    const nA =
+        sampleA.length;
 
-    container.innerHTML = "";
-
-
-    TESTS.forEach(test => {
-
-        let actual;
-
-        try {
-
-            actual =
-                calculateMannWhitneyU(
-                    test.groupA,
-                    test.groupB
-                );
-
-        }
-        catch (error) {
-
-            actual = {
-                U: NaN,
-                pValue: NaN,
-                error: error.message
-            };
-
-        }
+    const nB =
+        sampleB.length;
 
 
-        let status;
-        let reason;
+    if (
+        nA === 0 ||
+        nB === 0
+    ) {
+
+        return NaN;
+
+    }
 
 
-        if (actual.error) {
-
-            status = "FAIL";
-
-            failures++;
-
-            reason =
-                `JavaScript error: ${actual.error}`;
-
-        }
-        else {
-
-            const uMatch =
-                numbersClose(
-                    actual.U,
-                    test.reference.U
-                );
-
-            const pMatch =
-                numbersClose(
-                    actual.pValue,
-                    test.reference.pValue,
-                    1e-7,
-                    1e-16
-                );
+    const {
+        combined,
+        ranks
+    } =
+        referenceRanks(
+            sampleA,
+            sampleB
+        );
 
 
-            const decisionActual =
-                Number.isFinite(actual.pValue)
-                    ? actual.pValue < 0.05
-                    : null;
-
-            const decisionReference =
-                Number.isFinite(test.reference.pValue)
-                    ? test.reference.pValue < 0.05
-                    : null;
+    let rankSumA =
+        0;
 
 
-            if (uMatch && pMatch) {
+    let rankSumB =
+        0;
 
-                status = "PASS";
 
-                valid++;
+    for (
+        let i = 0;
+        i < combined.length;
+        i++
+    ) {
 
-                reason =
-                    "Numerically consistent with the reference.";
+        if (
+            combined[i].group === "A"
+        ) {
 
-            }
+            rankSumA +=
+                ranks[i];
 
-            else if (
-                uMatch &&
-                decisionActual === decisionReference
-            ) {
+        } else {
 
-                status = "WARNING";
-
-                warnings++;
-
-                reason =
-                    "Minor numerical difference; " +
-                    "statistical decision unchanged.";
-
-            }
-
-            else {
-
-                status = "FAIL";
-
-                failures++;
-
-                reason =
-                    "Result differs materially from " +
-                    "the reference.";
-
-            }
+            rankSumB +=
+                ranks[i];
 
         }
 
-
-        const article =
-            document.createElement("article");
-
-        article.className =
-            `test ${status.toLowerCase()}`;
+    }
 
 
-        article.innerHTML = `
+    const U1 =
+        rankSumA -
+        nA * (nA + 1) / 2;
 
-            <h2>${test.name}</h2>
 
-            <div class="status">
-                ${status}
-            </div>
+    const U2 =
+        rankSumB -
+        nB * (nB + 1) / 2;
 
-            <table>
 
-                <tr>
-                    <th>Statistic</th>
-                    <th>Labistry</th>
-                    <th>Reference</th>
-                </tr>
+    return {
 
-                <tr>
-                    <td>U statistic</td>
-                    <td>${formatNumber(actual.U)}</td>
-                    <td>${formatNumber(test.reference.U)}</td>
-                </tr>
+        U1,
+        U2,
 
-                <tr>
-                    <td>p-value</td>
-                    <td>${formatNumber(actual.pValue)}</td>
-                    <td>${formatNumber(test.reference.pValue)}</td>
-                </tr>
+        U:
+            Math.min(
+                U1,
+                U2
+            )
 
-                <tr>
-                    <td>α = 0.05</td>
+    };
 
-                    <td>
-                        ${
-                            Number.isFinite(actual.pValue)
-                                ? (
-                                    actual.pValue < 0.05
-                                        ? "Significant"
-                                        : "Not significant"
-                                )
-                                : "—"
-                        }
-                    </td>
+}
 
-                    <td>
-                        ${
-                            Number.isFinite(test.reference.pValue)
-                                ? (
-                                    test.reference.pValue < 0.05
-                                        ? "Significant"
-                                        : "Not significant"
-                                )
-                                : "—"
-                        }
-                    </td>
 
-                </tr>
+/* =========================================================
+   REFERENCE CURRENT LABISTRY Z
+   ========================================================= */
 
-            </table>
+function referenceCurrentZ(
+    sampleA,
+    sampleB
+) {
 
-            <div class="reason">
-                ${reason}
-            </div>
+    const nA =
+        sampleA.length;
 
-            <div class="data">
-                A: ${JSON.stringify(test.groupA)}
-                <br>
-                B: ${JSON.stringify(test.groupB)}
-            </div>
+    const nB =
+        sampleB.length;
 
-        `;
+    const result =
+        referenceMannWhitneyU(
+            sampleA,
+            sampleB
+        );
 
-        container.appendChild(article);
+
+    if (
+        !Number.isFinite(
+            result.U
+        )
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const meanU =
+        nA * nB / 2;
+
+
+    const variance =
+        nA *
+        nB *
+        (
+            nA +
+            nB +
+            1
+        ) /
+        12;
+
+
+    const sigma =
+        Math.sqrt(
+            variance
+        );
+
+
+    if (
+        sigma === 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    return (
+        result.U -
+        meanU
+    ) / sigma;
+
+}
+
+
+/* =========================================================
+   REFERENCE CURRENT LABISTRY P
+   ========================================================= */
+
+function referenceCurrentP(
+    z
+) {
+
+    if (
+        !Number.isFinite(z)
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const probability =
+        normalCDF(
+            Math.abs(z)
+        );
+
+
+    return 2 *
+        (
+            1 -
+            probability
+        );
+
+}
+
+
+/* =========================================================
+   REFERENCE TIE-CORRECTED VARIANCE
+   ========================================================= */
+
+function getTieGroups(
+    sampleA,
+    sampleB
+) {
+
+    const values = [
+
+        ...sampleA,
+        ...sampleB
+
+    ].sort(
+        (a, b) =>
+            a - b
+    );
+
+
+    const groups = [];
+
+
+    let i = 0;
+
+
+    while (
+        i < values.length
+    ) {
+
+        let j =
+            i + 1;
+
+
+        while (
+            j < values.length &&
+            values[j] === values[i]
+        ) {
+
+            j++;
+
+        }
+
+
+        const size =
+            j - i;
+
+
+        if (
+            size > 1
+        ) {
+
+            groups.push(
+                size
+            );
+
+        }
+
+
+        i = j;
+
+    }
+
+
+    return groups;
+
+}
+
+
+function tieCorrectedVariance(
+    sampleA,
+    sampleB
+) {
+
+    const nA =
+        sampleA.length;
+
+    const nB =
+        sampleB.length;
+
+    const n =
+        nA + nB;
+
+
+    if (
+        n < 2
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const tieGroups =
+        getTieGroups(
+            sampleA,
+            sampleB
+        );
+
+
+    let tieSum =
+        0;
+
+
+    for (
+        const t of tieGroups
+    ) {
+
+        tieSum +=
+            t * t * t -
+            t;
+
+    }
+
+
+    return (
+        nA *
+        nB /
+        12
+    ) *
+    (
+        n + 1 -
+        tieSum /
+        (
+            n *
+            (n - 1)
+        )
+    );
+
+}
+
+
+/* =========================================================
+   TIE-CORRECTED Z
+   ========================================================= */
+
+function referenceTieCorrectedZ(
+    sampleA,
+    sampleB
+) {
+
+    const result =
+        referenceMannWhitneyU(
+            sampleA,
+            sampleB
+        );
+
+
+    if (
+        !Number.isFinite(
+            result.U
+        )
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const nA =
+        sampleA.length;
+
+    const nB =
+        sampleB.length;
+
+
+    const meanU =
+        nA * nB / 2;
+
+
+    const variance =
+        tieCorrectedVariance(
+            sampleA,
+            sampleB
+        );
+
+
+    if (
+        !Number.isFinite(
+            variance
+        ) ||
+        variance <= 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    return (
+        result.U -
+        meanU
+    ) /
+    Math.sqrt(
+        variance
+    );
+
+}
+
+
+/* =========================================================
+   TEST RESULT OBJECT
+   ========================================================= */
+
+const tests = [];
+
+
+function addTest(
+    name,
+    category,
+    actual,
+    expected
+) {
+
+    const pass =
+        nearlyEqual(
+            actual,
+            expected
+        );
+
+
+    tests.push({
+
+        name,
+        category,
+
+        actual,
+        expected,
+
+        status:
+            pass
+                ? "PASS"
+                : "FAIL"
 
     });
 
+}
 
-    document.getElementById("totalTests").textContent =
-        TESTS.length;
 
-    document.getElementById("validTests").textContent =
-        valid;
+/* =========================================================
+   U TESTS
+   ========================================================= */
 
-    document.getElementById("warningTests").textContent =
-        warnings;
+function testU(
+    name,
+    sampleA,
+    sampleB
+) {
 
-    document.getElementById("failureTests").textContent =
-        failures;
+    const reference =
+        referenceMannWhitneyU(
+            sampleA,
+            sampleB
+        );
+
+
+    let actual;
+
+
+    try {
+
+        actual =
+            calculateMannWhitneyU(
+                sampleA,
+                sampleB
+            );
+
+    } catch (error) {
+
+        actual =
+            NaN;
+
+    }
+
+
+    addTest(
+        name,
+        "U statistic",
+        actual,
+        reference.U
+    );
 
 }
 
 
-window.addEventListener(
-    "load",
-    runTests
+/* =========================================================
+   Z TESTS
+   ========================================================= */
+
+function testZ(
+    name,
+    sampleA,
+    sampleB
+) {
+
+    const expected =
+        referenceCurrentZ(
+            sampleA,
+            sampleB
+        );
+
+
+    let actual;
+
+
+    try {
+
+        const U =
+            calculateMannWhitneyU(
+                sampleA,
+                sampleB
+            );
+
+
+        const nA =
+            sampleA.length;
+
+        const nB =
+            sampleB.length;
+
+
+        const variance =
+            nA *
+            nB *
+            (
+                nA +
+                nB +
+                1
+            ) /
+            12;
+
+
+        const sigma =
+            Math.sqrt(
+                variance
+            );
+
+
+        actual =
+            (
+                U -
+                nA * nB / 2
+            ) /
+            sigma;
+
+    } catch (error) {
+
+        actual =
+            NaN;
+
+    }
+
+
+    addTest(
+        name,
+        "Current z",
+        actual,
+        expected
+    );
+
+}
+
+
+/* =========================================================
+   P TESTS
+   ========================================================= */
+
+function testP(
+    name,
+    sampleA,
+    sampleB
+) {
+
+    const z =
+        referenceCurrentZ(
+            sampleA,
+            sampleB
+        );
+
+
+    const expected =
+        referenceCurrentP(
+            z
+        );
+
+
+    let actual;
+
+
+    try {
+
+        actual =
+            calculateMannWhitneyPValue(
+                z
+            );
+
+    } catch (error) {
+
+        actual =
+            NaN;
+
+    }
+
+
+    addTest(
+        name,
+        "Current p-value",
+        actual,
+        expected
+    );
+
+}
+
+
+/* =========================================================
+   BASIC DATASETS
+   ========================================================= */
+
+const datasets = [
+
+    {
+
+        name:
+            "n=3 vs n=3, complete separation",
+
+        A:
+            [1, 2, 3],
+
+        B:
+            [4, 5, 6]
+
+    },
+
+    {
+
+        name:
+            "n=5 vs n=5, complete separation",
+
+        A:
+            [1, 2, 3, 4, 5],
+
+        B:
+            [6, 7, 8, 9, 10]
+
+    },
+
+    {
+
+        name:
+            "n=3 vs n=30, complete separation",
+
+        A:
+            [1, 2, 3],
+
+        B:
+            Array.from(
+                { length: 30 },
+                (_, i) => i + 4
+            )
+
+    },
+
+    {
+
+        name:
+            "n=5 vs n=5, identical distributions",
+
+        A:
+            [1, 2, 3, 4, 5],
+
+        B:
+            [1, 2, 3, 4, 5]
+
+    },
+
+    {
+
+        name:
+            "overlapping samples",
+
+        A:
+            [1, 4, 5, 8, 10],
+
+        B:
+            [2, 3, 6, 7, 9]
+
+    },
+
+    {
+
+        name:
+            "reverse separation",
+
+        A:
+            [10, 11, 12, 13, 14],
+
+        B:
+            [1, 2, 3, 4, 5]
+
+    },
+
+    {
+
+        name:
+            "single observation per group",
+
+        A:
+            [1],
+
+        B:
+            [2]
+
+    },
+
+    {
+
+        name:
+            "n=2 vs n=2",
+
+        A:
+            [1, 2],
+
+        B:
+            [3, 4]
+
+    },
+
+    {
+
+        name:
+            "n=10 vs n=10",
+
+        A:
+            [1, 3, 5, 7, 9, 11, 13, 15, 17, 19],
+
+        B:
+            [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+
+    }
+
+];
+
+
+/* =========================================================
+   RUN BASIC TESTS
+   ========================================================= */
+
+for (
+    const dataset of datasets
+) {
+
+    testU(
+        dataset.name,
+        dataset.A,
+        dataset.B
+    );
+
+    testZ(
+        dataset.name,
+        dataset.A,
+        dataset.B
+    );
+
+    testP(
+        dataset.name,
+        dataset.A,
+        dataset.B
+    );
+
+}
+
+
+/* =========================================================
+   TIE DATASETS
+   ========================================================= */
+
+const tieDatasets = [
+
+    {
+
+        name:
+            "ties: one shared value",
+
+        A:
+            [1, 2, 3],
+
+        B:
+            [3, 4, 5]
+
+    },
+
+    {
+
+        name:
+            "ties: multiple shared values",
+
+        A:
+            [1, 2, 3, 4, 5],
+
+        B:
+            [3, 4, 5, 6, 7]
+
+    },
+
+    {
+
+        name:
+            "ties: large tie block",
+
+        A:
+            [1, 2, 2, 2, 3],
+
+        B:
+            [2, 2, 2, 4, 5]
+
+    },
+
+    {
+
+        name:
+            "ties: all observations identical",
+
+        A:
+            [1, 1, 1, 1],
+
+        B:
+            [1, 1, 1, 1]
+
+    }
+
+];
+
+
+for (
+    const dataset of tieDatasets
+) {
+
+    testU(
+        dataset.name,
+        dataset.A,
+        dataset.B
+    );
+
+    testZ(
+        dataset.name,
+        dataset.A,
+        dataset.B
+    );
+
+    testP(
+        dataset.name,
+        dataset.A,
+        dataset.B
+    );
+
+}
+
+
+/* =========================================================
+   RANKING-SPECIFIC TESTS
+   ========================================================= */
+
+const rankingCases = [
+
+    {
+
+        name:
+            "mid-rank: A/B split",
+
+        A:
+            [1, 2],
+
+        B:
+            [2, 3],
+
+        expectedU:
+            0.5
+
+    },
+
+    {
+
+        name:
+            "mid-rank: complete tie",
+
+        A:
+            [1, 1],
+
+        B:
+            [1, 1],
+
+        expectedU:
+            2
+
+    },
+
+    {
+
+        name:
+            "mid-rank: asymmetric tie",
+
+        A:
+            [1, 2, 2],
+
+        B:
+            [2, 3],
+
+        expectedU:
+            1
+
+    }
+
+];
+
+
+for (
+    const testCase of rankingCases
+) {
+
+    testU(
+        testCase.name,
+        testCase.A,
+        testCase.B
+    );
+
+}
+
+
+/* =========================================================
+   INVARIANCE TESTS
+   ========================================================= */
+
+function runInvarianceTest(
+    name,
+    sampleA,
+    sampleB,
+    transformedA,
+    transformedB
+) {
+
+    const originalU =
+        referenceMannWhitneyU(
+            sampleA,
+            sampleB
+        ).U;
+
+
+    const transformedU =
+        referenceMannWhitneyU(
+            transformedA,
+            transformedB
+        ).U;
+
+
+    let actualOriginal;
+
+    let actualTransformed;
+
+
+    try {
+
+        actualOriginal =
+            calculateMannWhitneyU(
+                sampleA,
+                sampleB
+            );
+
+        actualTransformed =
+            calculateMannWhitneyU(
+                transformedA,
+                transformedB
+            );
+
+    } catch (error) {
+
+        actualOriginal =
+            NaN;
+
+        actualTransformed =
+            NaN;
+
+    }
+
+
+    const pass =
+        nearlyEqual(
+            actualOriginal,
+            originalU
+        ) &&
+        nearlyEqual(
+            actualTransformed,
+            transformedU
+        ) &&
+        nearlyEqual(
+            actualOriginal,
+            actualTransformed
+        );
+
+
+    tests.push({
+
+        name,
+
+        category:
+            "Invariance",
+
+        actual:
+            actualTransformed,
+
+        expected:
+            originalU,
+
+        status:
+            pass
+                ? "PASS"
+                : "FAIL"
+
+    });
+
+}
+
+
+runInvarianceTest(
+
+    "translation +1000",
+
+    [1, 2, 3, 4],
+
+    [5, 6, 7, 8],
+
+    [1001, 1002, 1003, 1004],
+
+    [1005, 1006, 1007, 1008]
+
+);
+
+
+runInvarianceTest(
+
+    "positive scaling ×1000",
+
+    [1, 2, 3, 4],
+
+    [5, 6, 7, 8],
+
+    [1000, 2000, 3000, 4000],
+
+    [5000, 6000, 7000, 8000]
+
+);
+
+
+/* =========================================================
+   EXTREME SCALE TESTS
+   ========================================================= */
+
+runInvarianceTest(
+
+    "very small scale",
+
+    [1, 2, 3],
+
+    [4, 5, 6],
+
+    [1e-15, 2e-15, 3e-15],
+
+    [4e-15, 5e-15, 6e-15]
+
+);
+
+
+runInvarianceTest(
+
+    "very large scale",
+
+    [1, 2, 3],
+
+    [4, 5, 6],
+
+    [1e15, 2e15, 3e15],
+
+    [4e15, 5e15, 6e15]
+
+);
+
+
+/* =========================================================
+   INVALID / DEGENERATE TESTS
+   ========================================================= */
+
+function testDegenerate(
+    name,
+    sampleA,
+    sampleB
+) {
+
+    let actual;
+
+
+    try {
+
+        actual =
+            calculateMannWhitneyU(
+                sampleA,
+                sampleB
+            );
+
+    } catch (error) {
+
+        actual =
+            NaN;
+
+    }
+
+
+    const valid =
+        Number.isFinite(actual);
+
+
+    tests.push({
+
+        name,
+
+        category:
+            "Degenerate",
+
+        actual,
+
+        expected:
+            "implementation-defined",
+
+        status:
+            valid
+                ? "WARN"
+                : "PASS"
+
+    });
+
+}
+
+
+testDegenerate(
+    "empty A",
+    [],
+    [1, 2, 3]
+);
+
+
+testDegenerate(
+    "empty B",
+    [1, 2, 3],
+    []
+);
+
+
+testDegenerate(
+    "both empty",
+    [],
+    []
+);
+
+
+/* =========================================================
+   DISPLAY
+   ========================================================= */
+
+function formatValue(
+    value
+) {
+
+    if (
+        typeof value !== "number"
+    ) {
+
+        return String(value);
+
+    }
+
+
+    if (
+        Number.isNaN(value)
+    ) {
+
+        return "NaN";
+
+    }
+
+
+    if (
+        !Number.isFinite(value)
+    ) {
+
+        return String(value);
+
+    }
+
+
+    return value.toPrecision(10);
+
+}
+
+
+function renderResults() {
+
+    const results =
+        document.getElementById(
+            "results"
+        );
+
+
+    const total =
+        tests.length;
+
+
+    const failures =
+        tests.filter(
+            test =>
+                test.status ===
+                "FAIL"
+        ).length;
+
+
+    const warnings =
+        tests.filter(
+            test =>
+                test.status ===
+                "WARN"
+        ).length;
+
+
+    const valid =
+        total -
+        failures -
+        warnings;
+
+
+    document.getElementById(
+        "totalTests"
+    ).textContent =
+        total;
+
+
+    document.getElementById(
+        "validTests"
+    ).textContent =
+        valid;
+
+
+    document.getElementById(
+        "warningTests"
+    ).textContent =
+        warnings;
+
+
+    document.getElementById(
+        "failureTests"
+    ).textContent =
+        failures;
+
+
+    let html = "";
+
+
+    html += `
+
+        <h2>
+            Test Results
+        </h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Test</th>
+
+                    <th>Category</th>
+
+                    <th>Labistry</th>
+
+                    <th>Reference</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+    `;
+
+
+    for (
+        const test of tests
+    ) {
+
+        html += `
+
+            <tr>
+
+                <td>
+                    ${test.name}
+                </td>
+
+                <td>
+                    ${test.category}
+                </td>
+
+                <td>
+                    <code>
+                        ${formatValue(test.actual)}
+                    </code>
+                </td>
+
+                <td>
+                    <code>
+                        ${formatValue(test.expected)}
+                    </code>
+                </td>
+
+                <td
+                    class="${test.status}"
+                >
+                    ${test.status}
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    html += `
+
+            </tbody>
+
+        </table>
+
+        <div class="note">
+
+            <strong>
+                Interpretation:
+            </strong>
+
+            PASS means that Labistry agrees with the
+            explicitly defined reference algorithm.
+
+            WARN means that the behaviour is not considered
+            an automatic failure and requires methodological
+            review.
+
+            FAIL means that the implementation does not
+            reproduce the reference calculation.
+
+        </div>
+
+    `;
+
+
+    results.innerHTML =
+        html;
+
+}
+
+
+renderResults();
+
+
+/* =========================================================
+   METHODOLOGICAL REPORT
+   ========================================================= */
+
+console.log(
+    "================================================="
+);
+
+console.log(
+    "LABISTRY MANN–WHITNEY U STRESS TEST"
+);
+
+console.log(
+    "================================================="
+);
+
+console.log(
+    "Current implementation reference:"
+);
+
+console.log(
+    "mid-ranks"
+);
+
+console.log(
+    "U = min(U1,U2)"
+);
+
+console.log(
+    "normal approximation"
+);
+
+console.log(
+    "no continuity correction"
+);
+
+console.log(
+    "no tie correction"
+);
+
+console.log(
+    "two-sided p-value"
+);
+
+console.log(
+    "================================================="
 );
 
 </script>
