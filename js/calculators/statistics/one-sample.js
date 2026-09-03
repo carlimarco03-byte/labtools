@@ -63,20 +63,36 @@ function calculateOneSampleTTest() {
         );
 
 
-    /* =================================
-       NULL HYPOTHESIS
-       ================================= */
+   /* =================================
+   NULL HYPOTHESIS
+   ================================= */
 
-    /*
-     * H0: population mean = 0
-     *
-     * The current interface does not
-     * provide a hypothesized mean input,
-     * therefore μ0 = 0.
-     */
+/*
+ * H0: population mean = μ0
+ *
+ * The hypothesized mean is provided
+ * by the user through the interface.
+ */
 
-    const hypothesizedMean =
-        0;
+const hypothesizedMeanInput =
+    document.getElementById(
+        "hypothesizedMean"
+    );
+
+const hypothesizedMean =
+    Number(
+        hypothesizedMeanInput.value
+    );
+
+   if (
+    !Number.isFinite(
+        hypothesizedMean
+    )
+) {
+
+    return;
+
+}
 
 
     /* =================================
@@ -303,13 +319,13 @@ function calculateOneSampleTTest() {
 
                 <small>
 
-                    Two-tailed one-sample t-test
-                    against a hypothesized mean of 0.
-                    A p-value below 0.05 indicates
-                    a statistically significant difference
-                    from the hypothesized mean.
+    Two-tailed one-sample t-test
+    against the specified hypothesized mean.
+    A p-value below 0.05 indicates
+    a statistically significant difference
+    from the hypothesized mean.
 
-                </small>
+      </small>
 
             </div>
 
