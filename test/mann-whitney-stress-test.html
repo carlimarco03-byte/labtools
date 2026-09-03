@@ -10,7 +10,9 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Labistry Mann–Whitney U Stress Test</title>
+    <title>
+        Labistry Mann–Whitney U Stress Test
+    </title>
 
     <style>
 
@@ -35,15 +37,21 @@
 
         main {
 
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
 
         }
 
         h1 {
 
+            margin:
+                0 0 8px;
+
+        }
+
+        h2 {
+
             margin-top: 0;
-            margin-bottom: 8px;
 
         }
 
@@ -59,7 +67,7 @@
             display: grid;
 
             grid-template-columns:
-                repeat(4, minmax(140px, 1fr));
+                repeat(4, 1fr);
 
             gap: 12px;
 
@@ -71,7 +79,9 @@
 
             background: white;
 
-            border: 1px solid #ddd;
+            border:
+                1px solid #ddd;
+
             border-radius: 8px;
 
             padding: 16px;
@@ -94,11 +104,13 @@
 
         }
 
-        .test-section {
+        .section {
 
             background: white;
 
-            border: 1px solid #ddd;
+            border:
+                1px solid #ddd;
+
             border-radius: 8px;
 
             padding: 18px;
@@ -109,67 +121,65 @@
 
         }
 
-        .test-section h2 {
-
-            margin-top: 0;
-
-        }
-
         table {
 
             width: 100%;
 
-            border-collapse: collapse;
+            border-collapse:
+                collapse;
 
-            font-size: 14px;
+            font-size: 13px;
 
         }
 
         th,
         td {
 
-            padding: 9px 10px;
+            padding: 8px 10px;
 
             border-bottom:
                 1px solid #e5e5e5;
 
             text-align: left;
 
-            vertical-align: top;
+            white-space: nowrap;
 
         }
 
         th {
 
-            background: #fafafa;
-            font-weight: 700;
+            background:
+                #fafafa;
 
         }
 
         .PASS {
 
-            color: #167534;
-            font-weight: 700;
+            color:
+                #167534;
+
+            font-weight:
+                700;
 
         }
 
         .FAIL {
 
-            color: #b42318;
-            font-weight: 700;
+            color:
+                #b42318;
+
+            font-weight:
+                700;
 
         }
 
         .WARN {
 
-            color: #a15c00;
-            font-weight: 700;
+            color:
+                #a15c00;
 
-        }
-
-        .neutral {
-
-            color: #666;
+            font-weight:
+                700;
 
         }
 
@@ -180,33 +190,37 @@
                 Monaco,
                 monospace;
 
-            font-size: 12px;
-
         }
 
         .note {
 
-            padding: 12px 14px;
+            padding:
+                12px 14px;
 
-            background: #fafafa;
+            background:
+                #fafafa;
 
             border-left:
                 4px solid #999;
 
-            margin-top: 12px;
+            margin-top:
+                16px;
 
         }
 
         @media (max-width: 800px) {
 
             body {
-                padding: 12px;
+
+                padding:
+                    12px;
+
             }
 
             .summary {
 
                 grid-template-columns:
-                    repeat(2, minmax(120px, 1fr));
+                    repeat(2, 1fr);
 
             }
 
@@ -227,7 +241,8 @@
 
     <div class="subtitle">
 
-        Validation harness — does not modify Labistry statistical functions.
+        Validation harness —
+        does not modify Labistry statistical functions.
 
     </div>
 
@@ -302,19 +317,37 @@
 
     <div
         id="results"
-        class="test-section"
+        class="section"
     >
 
         Running tests...
 
     </div>
 
+
+    <div
+        id="methodology"
+        class="section"
+    >
+
+        <h2>
+            Methodological comparison
+        </h2>
+
+        <div id="methodologyResults">
+
+            Calculating...
+
+        </div>
+
+    </div>
+
 </main>
 
 
-<!-- =========================================================
+<!-- ==========================================
      LABISTRY DEPENDENCIES
-     ========================================================= -->
+     ========================================== -->
 
 <script src="../js/calculators/statistics/math.js"></script>
 
@@ -326,12 +359,7 @@
 <script>
 
 /* =========================================================
-   LABISTRY MANN–WHITNEY U STRESS TEST
-   ========================================================= */
-
-
-/* =========================================================
-   TEST CONFIGURATION
+   CONFIGURATION
    ========================================================= */
 
 const ABS_TOL =
@@ -342,14 +370,12 @@ const REL_TOL =
 
 
 /* =========================================================
-   HELPERS
+   NUMERICAL COMPARISON
    ========================================================= */
 
 function nearlyEqual(
     actual,
-    expected,
-    absTol = ABS_TOL,
-    relTol = REL_TOL
+    expected
 ) {
 
     if (
@@ -361,6 +387,7 @@ function nearlyEqual(
 
     }
 
+
     if (
         !Number.isFinite(actual) ||
         !Number.isFinite(expected)
@@ -370,10 +397,13 @@ function nearlyEqual(
 
     }
 
+
     const difference =
         Math.abs(
-            actual - expected
+            actual -
+            expected
         );
+
 
     const scale =
         Math.max(
@@ -381,9 +411,18 @@ function nearlyEqual(
             Math.abs(expected)
         );
 
+
     return (
-        difference <= absTol ||
-        difference <= relTol * scale
+
+        difference <=
+            ABS_TOL
+
+        ||
+
+        difference <=
+            REL_TOL *
+            scale
+
     );
 
 }
@@ -393,21 +432,44 @@ function nearlyEqual(
    REFERENCE RANKING
    ========================================================= */
 
-function referenceRanks(
-    sampleA,
-    sampleB
+function referenceMannWhitney(
+    groupA,
+    groupB
 ) {
+
+    const nA =
+        groupA.length;
+
+    const nB =
+        groupB.length;
+
+
+    if (
+        nA === 0 ||
+        nB === 0
+    ) {
+
+        return {
+
+            U1: NaN,
+            U2: NaN,
+            U: NaN
+
+        };
+
+    }
+
 
     const combined = [
 
-        ...sampleA.map(
+        ...groupA.map(
             value => ({
                 value,
                 group: "A"
             })
         ),
 
-        ...sampleB.map(
+        ...groupB.map(
             value => ({
                 value,
                 group: "B"
@@ -419,17 +481,21 @@ function referenceRanks(
 
     combined.sort(
         (a, b) =>
-            a.value - b.value
+            a.value -
+            b.value
     );
 
 
-    const ranks =
-        new Array(
-            combined.length
-        );
+    let rankSumA =
+        0;
 
 
-    let i = 0;
+    let rank =
+        1;
+
+
+    let i =
+        0;
 
 
     while (
@@ -441,9 +507,15 @@ function referenceRanks(
 
 
         while (
-            j < combined.length &&
+
+            j <
+                combined.length
+
+            &&
+
             combined[j].value ===
                 combined[i].value
+
         ) {
 
             j++;
@@ -453,8 +525,11 @@ function referenceRanks(
 
         const averageRank =
             (
-                i + 1 +
-                j
+                rank +
+                rank +
+                j -
+                i -
+                1
             ) / 2;
 
 
@@ -464,105 +539,46 @@ function referenceRanks(
             k++
         ) {
 
-            ranks[k] =
-                averageRank;
+            if (
+                combined[k].group ===
+                "A"
+            ) {
+
+                rankSumA +=
+                    averageRank;
+
+            }
 
         }
 
 
-        i = j;
-
-    }
-
-
-    return {
-        combined,
-        ranks
-    };
-
-}
+        rank +=
+            j - i;
 
 
-/* =========================================================
-   REFERENCE U
-   ========================================================= */
-
-function referenceMannWhitneyU(
-    sampleA,
-    sampleB
-) {
-
-    const nA =
-        sampleA.length;
-
-    const nB =
-        sampleB.length;
-
-
-    if (
-        nA === 0 ||
-        nB === 0
-    ) {
-
-        return NaN;
-
-    }
-
-
-    const {
-        combined,
-        ranks
-    } =
-        referenceRanks(
-            sampleA,
-            sampleB
-        );
-
-
-    let rankSumA =
-        0;
-
-
-    let rankSumB =
-        0;
-
-
-    for (
-        let i = 0;
-        i < combined.length;
-        i++
-    ) {
-
-        if (
-            combined[i].group === "A"
-        ) {
-
-            rankSumA +=
-                ranks[i];
-
-        } else {
-
-            rankSumB +=
-                ranks[i];
-
-        }
+        i =
+            j;
 
     }
 
 
     const U1 =
         rankSumA -
-        nA * (nA + 1) / 2;
+        nA *
+        (nA + 1) /
+        2;
 
 
     const U2 =
-        rankSumB -
-        nB * (nB + 1) / 2;
+        nA *
+        nB -
+        U1;
 
 
     return {
 
         U1,
+
         U2,
 
         U:
@@ -577,40 +593,32 @@ function referenceMannWhitneyU(
 
 
 /* =========================================================
-   REFERENCE CURRENT LABISTRY Z
+   CURRENT LABISTRY REFERENCE
    ========================================================= */
 
-function referenceCurrentZ(
-    sampleA,
-    sampleB
+function currentReference(
+    groupA,
+    groupB
 ) {
 
     const nA =
-        sampleA.length;
+        groupA.length;
 
     const nB =
-        sampleB.length;
+        groupB.length;
 
-    const result =
-        referenceMannWhitneyU(
-            sampleA,
-            sampleB
+
+    const reference =
+        referenceMannWhitney(
+            groupA,
+            groupB
         );
 
 
-    if (
-        !Number.isFinite(
-            result.U
-        )
-    ) {
-
-        return NaN;
-
-    }
-
-
     const meanU =
-        nA * nB / 2;
+        nA *
+        nB /
+        2;
 
 
     const variance =
@@ -624,263 +632,50 @@ function referenceCurrentZ(
         12;
 
 
-    const sigma =
+    const sd =
         Math.sqrt(
             variance
         );
 
 
-    if (
-        sigma === 0
-    ) {
+    const z =
+        sd > 0
+            ? (
+                reference.U -
+                meanU
+            ) /
+            sd
+            : NaN;
 
-        return NaN;
 
-    }
+    const pValue =
+        calculateMannWhitneyPValue(
+            z
+        );
 
 
-    return (
-        result.U -
-        meanU
-    ) / sigma;
+    return {
+
+        U1:
+            reference.U1,
+
+        U2:
+            reference.U2,
+
+        U:
+            reference.U,
+
+        z,
+
+        pValue
+
+    };
 
 }
 
 
 /* =========================================================
-   REFERENCE CURRENT LABISTRY P
-   ========================================================= */
-
-function referenceCurrentP(
-    z
-) {
-
-    if (
-        !Number.isFinite(z)
-    ) {
-
-        return NaN;
-
-    }
-
-
-    const probability =
-        normalCDF(
-            Math.abs(z)
-        );
-
-
-    return 2 *
-        (
-            1 -
-            probability
-        );
-
-}
-
-
-/* =========================================================
-   REFERENCE TIE-CORRECTED VARIANCE
-   ========================================================= */
-
-function getTieGroups(
-    sampleA,
-    sampleB
-) {
-
-    const values = [
-
-        ...sampleA,
-        ...sampleB
-
-    ].sort(
-        (a, b) =>
-            a - b
-    );
-
-
-    const groups = [];
-
-
-    let i = 0;
-
-
-    while (
-        i < values.length
-    ) {
-
-        let j =
-            i + 1;
-
-
-        while (
-            j < values.length &&
-            values[j] === values[i]
-        ) {
-
-            j++;
-
-        }
-
-
-        const size =
-            j - i;
-
-
-        if (
-            size > 1
-        ) {
-
-            groups.push(
-                size
-            );
-
-        }
-
-
-        i = j;
-
-    }
-
-
-    return groups;
-
-}
-
-
-function tieCorrectedVariance(
-    sampleA,
-    sampleB
-) {
-
-    const nA =
-        sampleA.length;
-
-    const nB =
-        sampleB.length;
-
-    const n =
-        nA + nB;
-
-
-    if (
-        n < 2
-    ) {
-
-        return NaN;
-
-    }
-
-
-    const tieGroups =
-        getTieGroups(
-            sampleA,
-            sampleB
-        );
-
-
-    let tieSum =
-        0;
-
-
-    for (
-        const t of tieGroups
-    ) {
-
-        tieSum +=
-            t * t * t -
-            t;
-
-    }
-
-
-    return (
-        nA *
-        nB /
-        12
-    ) *
-    (
-        n + 1 -
-        tieSum /
-        (
-            n *
-            (n - 1)
-        )
-    );
-
-}
-
-
-/* =========================================================
-   TIE-CORRECTED Z
-   ========================================================= */
-
-function referenceTieCorrectedZ(
-    sampleA,
-    sampleB
-) {
-
-    const result =
-        referenceMannWhitneyU(
-            sampleA,
-            sampleB
-        );
-
-
-    if (
-        !Number.isFinite(
-            result.U
-        )
-    ) {
-
-        return NaN;
-
-    }
-
-
-    const nA =
-        sampleA.length;
-
-    const nB =
-        sampleB.length;
-
-
-    const meanU =
-        nA * nB / 2;
-
-
-    const variance =
-        tieCorrectedVariance(
-            sampleA,
-            sampleB
-        );
-
-
-    if (
-        !Number.isFinite(
-            variance
-        ) ||
-        variance <= 0
-    ) {
-
-        return NaN;
-
-    }
-
-
-    return (
-        result.U -
-        meanU
-    ) /
-    Math.sqrt(
-        variance
-    );
-
-}
-
-
-/* =========================================================
-   TEST RESULT OBJECT
+   TEST STORAGE
    ========================================================= */
 
 const tests = [];
@@ -904,7 +699,6 @@ function addTest(
 
         name,
         category,
-
         actual,
         expected,
 
@@ -919,21 +713,14 @@ function addTest(
 
 
 /* =========================================================
-   U TESTS
+   FULL LABISTRY TEST
    ========================================================= */
 
-function testU(
+function testDataset(
     name,
-    sampleA,
-    sampleB
+    groupA,
+    groupB
 ) {
-
-    const reference =
-        referenceMannWhitneyU(
-            sampleA,
-            sampleB
-        );
-
 
     let actual;
 
@@ -942,152 +729,75 @@ function testU(
 
         actual =
             calculateMannWhitneyU(
-                sampleA,
-                sampleB
+                groupA,
+                groupB
             );
 
     } catch (error) {
 
-        actual =
-            NaN;
-
-    }
-
-
-    addTest(
-        name,
-        "U statistic",
-        actual,
-        reference.U
-    );
-
-}
-
-
-/* =========================================================
-   Z TESTS
-   ========================================================= */
-
-function testZ(
-    name,
-    sampleA,
-    sampleB
-) {
-
-    const expected =
-        referenceCurrentZ(
-            sampleA,
-            sampleB
+        console.error(
+            name,
+            error
         );
 
 
-    let actual;
+        actual = {
 
+            U1: NaN,
+            U2: NaN,
+            U: NaN,
+            z: NaN,
+            pValue: NaN
 
-    try {
-
-        const U =
-            calculateMannWhitneyU(
-                sampleA,
-                sampleB
-            );
-
-
-        const nA =
-            sampleA.length;
-
-        const nB =
-            sampleB.length;
-
-
-        const variance =
-            nA *
-            nB *
-            (
-                nA +
-                nB +
-                1
-            ) /
-            12;
-
-
-        const sigma =
-            Math.sqrt(
-                variance
-            );
-
-
-        actual =
-            (
-                U -
-                nA * nB / 2
-            ) /
-            sigma;
-
-    } catch (error) {
-
-        actual =
-            NaN;
+        };
 
     }
-
-
-    addTest(
-        name,
-        "Current z",
-        actual,
-        expected
-    );
-
-}
-
-
-/* =========================================================
-   P TESTS
-   ========================================================= */
-
-function testP(
-    name,
-    sampleA,
-    sampleB
-) {
-
-    const z =
-        referenceCurrentZ(
-            sampleA,
-            sampleB
-        );
 
 
     const expected =
-        referenceCurrentP(
-            z
+        currentReference(
+            groupA,
+            groupB
         );
-
-
-    let actual;
-
-
-    try {
-
-        actual =
-            calculateMannWhitneyPValue(
-                z
-            );
-
-    } catch (error) {
-
-        actual =
-            NaN;
-
-    }
 
 
     addTest(
         name,
-        "Current p-value",
-        actual,
-        expected
+        "U1",
+        actual.U1,
+        expected.U1
+    );
+
+
+    addTest(
+        name,
+        "U2",
+        actual.U2,
+        expected.U2
+    );
+
+
+    addTest(
+        name,
+        "U",
+        actual.U,
+        expected.U
+    );
+
+
+    addTest(
+        name,
+        "z",
+        actual.z,
+        expected.z
+    );
+
+
+    addTest(
+        name,
+        "p-value",
+        actual.pValue,
+        expected.pValue
     );
 
 }
@@ -1102,7 +812,7 @@ const datasets = [
     {
 
         name:
-            "n=3 vs n=3, complete separation",
+            "n=3 vs n=3 complete separation",
 
         A:
             [1, 2, 3],
@@ -1115,7 +825,7 @@ const datasets = [
     {
 
         name:
-            "n=5 vs n=5, complete separation",
+            "n=5 vs n=5 complete separation",
 
         A:
             [1, 2, 3, 4, 5],
@@ -1128,15 +838,18 @@ const datasets = [
     {
 
         name:
-            "n=3 vs n=30, complete separation",
+            "n=3 vs n=30 complete separation",
 
         A:
             [1, 2, 3],
 
         B:
             Array.from(
-                { length: 30 },
-                (_, i) => i + 4
+                {
+                    length: 30
+                },
+                (_, i) =>
+                    i + 4
             )
 
     },
@@ -1144,7 +857,7 @@ const datasets = [
     {
 
         name:
-            "n=5 vs n=5, identical distributions",
+            "identical distributions",
 
         A:
             [1, 2, 3, 4, 5],
@@ -1183,7 +896,7 @@ const datasets = [
     {
 
         name:
-            "single observation per group",
+            "n=1 vs n=1",
 
         A:
             [1],
@@ -1212,37 +925,23 @@ const datasets = [
             "n=10 vs n=10",
 
         A:
-            [1, 3, 5, 7, 9, 11, 13, 15, 17, 19],
+            [1, 3, 5, 7, 9,
+             11, 13, 15, 17, 19],
 
         B:
-            [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+            [2, 4, 6, 8, 10,
+             12, 14, 16, 18, 20]
 
     }
 
 ];
 
 
-/* =========================================================
-   RUN BASIC TESTS
-   ========================================================= */
-
 for (
     const dataset of datasets
 ) {
 
-    testU(
-        dataset.name,
-        dataset.A,
-        dataset.B
-    );
-
-    testZ(
-        dataset.name,
-        dataset.A,
-        dataset.B
-    );
-
-    testP(
+    testDataset(
         dataset.name,
         dataset.A,
         dataset.B
@@ -1260,7 +959,7 @@ const tieDatasets = [
     {
 
         name:
-            "ties: one shared value",
+            "one shared value",
 
         A:
             [1, 2, 3],
@@ -1273,7 +972,7 @@ const tieDatasets = [
     {
 
         name:
-            "ties: multiple shared values",
+            "multiple shared values",
 
         A:
             [1, 2, 3, 4, 5],
@@ -1286,7 +985,7 @@ const tieDatasets = [
     {
 
         name:
-            "ties: large tie block",
+            "large tie block",
 
         A:
             [1, 2, 2, 2, 3],
@@ -1299,7 +998,7 @@ const tieDatasets = [
     {
 
         name:
-            "ties: all observations identical",
+            "all observations identical",
 
         A:
             [1, 1, 1, 1],
@@ -1316,19 +1015,8 @@ for (
     const dataset of tieDatasets
 ) {
 
-    testU(
-        dataset.name,
-        dataset.A,
-        dataset.B
-    );
-
-    testZ(
-        dataset.name,
-        dataset.A,
-        dataset.B
-    );
-
-    testP(
+    testDataset(
+        "ties: " +
         dataset.name,
         dataset.A,
         dataset.B
@@ -1338,115 +1026,31 @@ for (
 
 
 /* =========================================================
-   RANKING-SPECIFIC TESTS
+   INVARIANCE TEST
    ========================================================= */
 
-const rankingCases = [
-
-    {
-
-        name:
-            "mid-rank: A/B split",
-
-        A:
-            [1, 2],
-
-        B:
-            [2, 3],
-
-        expectedU:
-            0.5
-
-    },
-
-    {
-
-        name:
-            "mid-rank: complete tie",
-
-        A:
-            [1, 1],
-
-        B:
-            [1, 1],
-
-        expectedU:
-            2
-
-    },
-
-    {
-
-        name:
-            "mid-rank: asymmetric tie",
-
-        A:
-            [1, 2, 2],
-
-        B:
-            [2, 3],
-
-        expectedU:
-            1
-
-    }
-
-];
-
-
-for (
-    const testCase of rankingCases
-) {
-
-    testU(
-        testCase.name,
-        testCase.A,
-        testCase.B
-    );
-
-}
-
-
-/* =========================================================
-   INVARIANCE TESTS
-   ========================================================= */
-
-function runInvarianceTest(
+function testInvariance(
     name,
-    sampleA,
-    sampleB,
+    originalA,
+    originalB,
     transformedA,
     transformedB
 ) {
 
-    const originalU =
-        referenceMannWhitneyU(
-            sampleA,
-            sampleB
-        ).U;
-
-
-    const transformedU =
-        referenceMannWhitneyU(
-            transformedA,
-            transformedB
-        ).U;
-
-
-    let actualOriginal;
-
-    let actualTransformed;
+    let original;
+    let transformed;
 
 
     try {
 
-        actualOriginal =
+        original =
             calculateMannWhitneyU(
-                sampleA,
-                sampleB
+                originalA,
+                originalB
             );
 
-        actualTransformed =
+
+        transformed =
             calculateMannWhitneyU(
                 transformedA,
                 transformedB
@@ -1454,27 +1058,30 @@ function runInvarianceTest(
 
     } catch (error) {
 
-        actualOriginal =
-            NaN;
-
-        actualTransformed =
-            NaN;
+        original = null;
+        transformed = null;
 
     }
 
 
     const pass =
+
+        original &&
+        transformed &&
+
         nearlyEqual(
-            actualOriginal,
-            originalU
+            original.U,
+            transformed.U
         ) &&
+
         nearlyEqual(
-            actualTransformed,
-            transformedU
+            original.z,
+            transformed.z
         ) &&
+
         nearlyEqual(
-            actualOriginal,
-            actualTransformed
+            original.pValue,
+            transformed.pValue
         );
 
 
@@ -1483,13 +1090,17 @@ function runInvarianceTest(
         name,
 
         category:
-            "Invariance",
+            "invariance",
 
         actual:
-            actualTransformed,
+            transformed
+                ? transformed.U
+                : NaN,
 
         expected:
-            originalU,
+            original
+                ? original.U
+                : NaN,
 
         status:
             pass
@@ -1501,7 +1112,7 @@ function runInvarianceTest(
 }
 
 
-runInvarianceTest(
+testInvariance(
 
     "translation +1000",
 
@@ -1516,7 +1127,7 @@ runInvarianceTest(
 );
 
 
-runInvarianceTest(
+testInvariance(
 
     "positive scaling ×1000",
 
@@ -1531,11 +1142,7 @@ runInvarianceTest(
 );
 
 
-/* =========================================================
-   EXTREME SCALE TESTS
-   ========================================================= */
-
-runInvarianceTest(
+testInvariance(
 
     "very small scale",
 
@@ -1550,7 +1157,7 @@ runInvarianceTest(
 );
 
 
-runInvarianceTest(
+testInvariance(
 
     "very large scale",
 
@@ -1566,36 +1173,56 @@ runInvarianceTest(
 
 
 /* =========================================================
-   INVALID / DEGENERATE TESTS
+   DEGENERATE INPUTS
    ========================================================= */
 
 function testDegenerate(
     name,
-    sampleA,
-    sampleB
+    groupA,
+    groupB
 ) {
 
-    let actual;
+    let result;
 
 
     try {
 
-        actual =
+        result =
             calculateMannWhitneyU(
-                sampleA,
-                sampleB
+                groupA,
+                groupB
             );
 
     } catch (error) {
 
-        actual =
-            NaN;
+        result = null;
 
     }
 
 
-    const valid =
-        Number.isFinite(actual);
+    const pass =
+
+        result &&
+
+        Number.isNaN(
+            result.U1
+        ) &&
+
+        Number.isNaN(
+            result.U2
+        ) &&
+
+        Number.isNaN(
+            result.U
+        ) &&
+
+        Number.isNaN(
+            result.z
+        ) &&
+
+        Number.isNaN(
+            result.pValue
+        );
 
 
     tests.push({
@@ -1603,17 +1230,20 @@ function testDegenerate(
         name,
 
         category:
-            "Degenerate",
+            "degenerate",
 
-        actual,
+        actual:
+            result
+                ? result.U
+                : NaN,
 
         expected:
-            "implementation-defined",
+            "NaN",
 
         status:
-            valid
-                ? "WARN"
-                : "PASS"
+            pass
+                ? "PASS"
+                : "FAIL"
 
     });
 
@@ -1635,14 +1265,379 @@ testDegenerate(
 
 
 testDegenerate(
-    "both empty",
+    "both groups empty",
     [],
     []
 );
 
 
 /* =========================================================
-   DISPLAY
+   TIE-CORRECTED COMPARISON
+   ========================================================= */
+
+function getTieGroups(
+    groupA,
+    groupB
+) {
+
+    const values = [
+
+        ...groupA,
+        ...groupB
+
+    ].sort(
+        (a, b) =>
+            a - b
+    );
+
+
+    const groups = [];
+
+
+    let i = 0;
+
+
+    while (
+        i < values.length
+    ) {
+
+        let j =
+            i + 1;
+
+
+        while (
+
+            j < values.length &&
+
+            values[j] ===
+                values[i]
+
+        ) {
+
+            j++;
+
+        }
+
+
+        const size =
+            j - i;
+
+
+        if (
+            size > 1
+        ) {
+
+            groups.push(
+                size
+            );
+
+        }
+
+
+        i =
+            j;
+
+    }
+
+
+    return groups;
+
+}
+
+
+function tieCorrectedZ(
+    groupA,
+    groupB
+) {
+
+    const result =
+        referenceMannWhitney(
+            groupA,
+            groupB
+        );
+
+
+    if (
+        !Number.isFinite(
+            result.U
+        )
+    ) {
+
+        return NaN;
+
+    }
+
+
+    const nA =
+        groupA.length;
+
+    const nB =
+        groupB.length;
+
+    const n =
+        nA +
+        nB;
+
+
+    const ties =
+        getTieGroups(
+            groupA,
+            groupB
+        );
+
+
+    let tieSum =
+        0;
+
+
+    for (
+        const t of ties
+    ) {
+
+        tieSum +=
+            t * t * t -
+            t;
+
+    }
+
+
+    const variance =
+        (
+            nA *
+            nB
+        ) /
+        12 *
+        (
+            n +
+            1 -
+            tieSum /
+            (
+                n *
+                (n - 1)
+            )
+        );
+
+
+    if (
+        variance <= 0
+    ) {
+
+        return NaN;
+
+    }
+
+
+    return (
+
+        result.U -
+        nA * nB / 2
+
+    ) /
+    Math.sqrt(
+        variance
+    );
+
+}
+
+
+/* =========================================================
+   METHODOLOGICAL REPORT
+   ========================================================= */
+
+const methodologyDatasets = [
+
+    {
+
+        name:
+            "No ties",
+
+        A:
+            [1, 2, 3, 4, 5],
+
+        B:
+            [6, 7, 8, 9, 10]
+
+    },
+
+    {
+
+        name:
+            "One tie",
+
+        A:
+            [1, 2, 3, 4, 5],
+
+        B:
+            [3, 6, 7, 8, 9]
+
+    },
+
+    {
+
+        name:
+            "Multiple ties",
+
+        A:
+            [1, 2, 3, 4, 5],
+
+        B:
+            [3, 4, 5, 6, 7]
+
+    },
+
+    {
+
+        name:
+            "Large tie block",
+
+        A:
+            [1, 2, 2, 2, 3],
+
+        B:
+            [2, 2, 2, 4, 5]
+
+    },
+
+    {
+
+        name:
+            "All tied",
+
+        A:
+            [1, 1, 1, 1],
+
+        B:
+            [1, 1, 1, 1]
+
+    }
+
+];
+
+
+let methodologyHTML = `
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Dataset</th>
+
+<th>Labistry z</th>
+
+<th>Tie-corrected z</th>
+
+<th>Difference</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`;
+
+
+for (
+    const dataset of methodologyDatasets
+) {
+
+    const result =
+        calculateMannWhitneyU(
+            dataset.A,
+            dataset.B
+        );
+
+
+    const corrected =
+        tieCorrectedZ(
+            dataset.A,
+            dataset.B
+        );
+
+
+    const difference =
+
+        Number.isFinite(
+            result.z
+        ) &&
+        Number.isFinite(
+            corrected
+        )
+
+            ? result.z -
+              corrected
+
+            : NaN;
+
+
+    methodologyHTML += `
+
+<tr>
+
+<td>
+    ${dataset.name}
+</td>
+
+<td>
+    <code>
+        ${formatValue(result.z)}
+    </code>
+</td>
+
+<td>
+    <code>
+        ${formatValue(corrected)}
+    </code>
+</td>
+
+<td>
+    <code>
+        ${formatValue(difference)}
+    </code>
+</td>
+
+</tr>
+
+`;
+
+}
+
+
+methodologyHTML += `
+
+</tbody>
+
+</table>
+
+<div class="note">
+
+<strong>
+Important:
+</strong>
+
+This section is not a pass/fail validation.
+
+It shows how the current Labistry
+normal approximation differs from a
+tie-corrected variance.
+
+No modification to Labistry is performed.
+
+</div>
+
+`;
+
+
+document.getElementById(
+    "methodologyResults"
+).innerHTML =
+    methodologyHTML;
+
+
+/* =========================================================
+   FORMATTING
    ========================================================= */
 
 function formatValue(
@@ -1650,7 +1645,8 @@ function formatValue(
 ) {
 
     if (
-        typeof value !== "number"
+        typeof value !==
+        "number"
     ) {
 
         return String(value);
@@ -1676,18 +1672,18 @@ function formatValue(
     }
 
 
-    return value.toPrecision(10);
+    return value.toPrecision(
+        10
+    );
 
 }
 
 
+/* =========================================================
+   RENDER RESULTS
+   ========================================================= */
+
 function renderResults() {
-
-    const results =
-        document.getElementById(
-            "results"
-        );
-
 
     const total =
         tests.length;
@@ -1739,38 +1735,35 @@ function renderResults() {
         failures;
 
 
-    let html = "";
+    let html = `
 
+<h2>
+    Test Results
+</h2>
 
-    html += `
+<table>
 
-        <h2>
-            Test Results
-        </h2>
+<thead>
 
-        <table>
+<tr>
 
-            <thead>
+<th>Test</th>
 
-                <tr>
+<th>Category</th>
 
-                    <th>Test</th>
+<th>Labistry</th>
 
-                    <th>Category</th>
+<th>Reference</th>
 
-                    <th>Labistry</th>
+<th>Status</th>
 
-                    <th>Reference</th>
+</tr>
 
-                    <th>Status</th>
+</thead>
 
-                </tr>
+<tbody>
 
-            </thead>
-
-            <tbody>
-
-    `;
+`;
 
 
     for (
@@ -1779,69 +1772,66 @@ function renderResults() {
 
         html += `
 
-            <tr>
+<tr>
 
-                <td>
-                    ${test.name}
-                </td>
+<td>
+    ${test.name}
+</td>
 
-                <td>
-                    ${test.category}
-                </td>
+<td>
+    ${test.category}
+</td>
 
-                <td>
-                    <code>
-                        ${formatValue(test.actual)}
-                    </code>
-                </td>
+<td>
+    <code>
+        ${formatValue(test.actual)}
+    </code>
+</td>
 
-                <td>
-                    <code>
-                        ${formatValue(test.expected)}
-                    </code>
-                </td>
+<td>
+    <code>
+        ${formatValue(test.expected)}
+    </code>
+</td>
 
-                <td
-                    class="${test.status}"
-                >
-                    ${test.status}
-                </td>
+<td class="${test.status}">
+    ${test.status}
+</td>
 
-            </tr>
+</tr>
 
-        `;
+`;
 
     }
 
 
     html += `
 
-            </tbody>
+</tbody>
 
-        </table>
+</table>
 
-        <div class="note">
+<div class="note">
 
-            <strong>
-                Interpretation:
-            </strong>
+<strong>
+Interpretation:
+</strong>
 
-            PASS means that Labistry agrees with the
-            explicitly defined reference algorithm.
+PASS means that the current Labistry
+implementation reproduces the explicitly
+defined algorithm.
 
-            WARN means that the behaviour is not considered
-            an automatic failure and requires methodological
-            review.
+The methodological comparison below
+is intentionally separate from validation.
 
-            FAIL means that the implementation does not
-            reproduce the reference calculation.
+</div>
 
-        </div>
-
-    `;
+`;
 
 
-    results.innerHTML =
+    document.getElementById(
+        "results"
+    ).innerHTML =
         html;
 
 }
@@ -1851,31 +1841,19 @@ renderResults();
 
 
 /* =========================================================
-   METHODOLOGICAL REPORT
+   CONSOLE SUMMARY
    ========================================================= */
 
 console.log(
-    "================================================="
+    "Labistry Mann–Whitney stress test completed."
 );
 
 console.log(
-    "LABISTRY MANN–WHITNEY U STRESS TEST"
+    "Current implementation:"
 );
 
 console.log(
-    "================================================="
-);
-
-console.log(
-    "Current implementation reference:"
-);
-
-console.log(
-    "mid-ranks"
-);
-
-console.log(
-    "U = min(U1,U2)"
+    "mid-ranks + U=min(U1,U2)"
 );
 
 console.log(
@@ -1888,14 +1866,6 @@ console.log(
 
 console.log(
     "no tie correction"
-);
-
-console.log(
-    "two-sided p-value"
-);
-
-console.log(
-    "================================================="
 );
 
 </script>
