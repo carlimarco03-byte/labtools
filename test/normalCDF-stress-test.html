@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    Labistry normalCDF Stress Test
+</title>
+
+
+<style>
+
+    body {
+
+        font-family:
+            Arial,
+            sans-serif;
+
+        margin:
+            30px;
+
+        background:
+            #f5f5f5;
+
+        color:
+            #222;
+
+    }
+
+
+    h1 {
+
+        margin-bottom:
+            5px;
+
+    }
+
+
+    .subtitle {
+
+        color:
+            #666;
+
+        margin-bottom:
+            25px;
+
+    }
+
+
+    .summary {
+
+        display:
+            flex;
+
+        gap:
+            30px;
+
+        margin-bottom:
+            25px;
+
+        flex-wrap:
+            wrap;
+
+    }
+
+
+    .summary-box {
+
+        background:
+            white;
+
+        padding:
+            15px 20px;
+
+        border-radius:
+            8px;
+
+        min-width:
+            100px;
+
+        box-shadow:
+            0 1px 4px
+            rgba(0,0,0,0.08);
+
+    }
+
+
+    .summary-label {
+
+        font-size:
+            13px;
+
+        color:
+            #666;
+
+    }
+
+
+    .summary-value {
+
+        font-size:
+            24px;
+
+        font-weight:
+            bold;
+
+        margin-top:
+            4px;
+
+    }
+
+
+    table {
+
+        width:
+            100%;
+
+        border-collapse:
+            collapse;
+
+        background:
+            white;
+
+    }
+
+
+    th,
+    td {
+
+        padding:
+            9px 10px;
+
+        border:
+            1px solid #ddd;
+
+        text-align:
+            left;
+
+        font-size:
+            14px;
+
+    }
+
+
+    th {
+
+        background:
+            #eee;
+
+    }
+
+
+    .pass {
+
+        color:
+            #16803c;
+
+        font-weight:
+            bold;
+
+    }
+
+
+    .fail {
+
+        color:
+            #c62828;
+
+        font-weight:
+            bold;
+
+    }
+
+
+    .warning {
+
+        color:
+            #b26a00;
+
+        font-weight:
+            bold;
+
+    }
+
+
+    .section {
+
+        margin-top:
+            35px;
+
+    }
+
+
+    .methodology {
+
+        background:
+            white;
+
+        padding:
+            20px;
+
+        border-radius:
+            8px;
+
+        line-height:
+            1.6;
+
+    }
+
+
+    code {
+
+        background:
+            #eee;
+
+        padding:
+            2px 5px;
+
+        border-radius:
+            4px;
+
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+```
+<h1>
+    Labistry normalCDF Stress Test
+</h1>
+
+
+<div class="subtitle">
+
+    Validation harness — Labistry implementation
+    vs independent numerical reference
+
+</div>
+
+
+<div class="summary">
+
+
+    <div class="summary-box">
+
+        <div class="summary-label">
+            Tests
+        </div>
+
+        <div
+            class="summary-value"
+            id="totalTests"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <div class="summary-box">
+
+        <div class="summary-label">
+            Valid
+        </div>
+
+        <div
+            class="summary-value"
+            id="validTests"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <div class="summary-box">
+
+        <div class="summary-label">
+            Warnings
+        </div>
+
+        <div
+            class="summary-value"
+            id="warningTests"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <div class="summary-box">
+
+        <div class="summary-label">
+            Failures
+        </div>
+
+        <div
+            class="summary-value"
+            id="failedTests"
+        >
+            0
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Results
+    </h2>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Test
+                </th>
+
+                <th>
+                    Metric
+                </th>
+
+                <th>
+                    Labistry
+                </th>
+
+                <th>
+                    Reference
+                </th>
+
+                <th>
+                    Difference
+                </th>
+
+                <th>
+                    Status
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody id="resultsBody">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Worst Cases
+    </h2>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    x
+                </th>
+
+                <th>
+                    Labistry
+                </th>
+
+                <th>
+                    Reference
+                </th>
+
+                <th>
+                    Absolute Error
+                </th>
+
+                <th>
+                    Relative Error
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody id="worstBody">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Symmetry Test
+    </h2>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    x
+                </th>
+
+                <th>
+                    Φ(-x)
+                </th>
+
+                <th>
+                    1 − Φ(x)
+                </th>
+
+                <th>
+                    Difference
+                </th>
+
+                <th>
+                    Status
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody id="symmetryBody">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Invalid Inputs
+    </h2>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Test
+                </th>
+
+                <th>
+                    Input
+                </th>
+
+                <th>
+                    Labistry
+                </th>
+
+                <th>
+                    Expected
+                </th>
+
+                <th>
+                    Status
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody id="invalidBody">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Methodology
+    </h2>
+
+
+    <div class="methodology">
+
+        <p>
+
+            The Labistry implementation of
+            <code>normalCDF(x)</code> is tested
+            against independently pre-computed
+            standard normal CDF reference values.
+
+        </p>
+
+
+        <p>
+
+            Reference values were calculated using
+            SciPy's high-precision numerical
+            implementation of the standard normal
+            distribution.
+
+        </p>
+
+
+        <p>
+
+            The test covers:
+
+        </p>
+
+
+        <ul>
+
+            <li>
+                central region: x ≈ 0;
+            </li>
+
+            <li>
+                ordinary values: |x| = 0.1 to 5;
+            </li>
+
+            <li>
+                distribution tails: |x| = 6 to 10;
+            </li>
+
+            <li>
+                symmetry:
+                Φ(-x) = 1 − Φ(x);
+            </li>
+
+            <li>
+                NaN and infinite inputs;
+            </li>
+
+            <li>
+                absolute error;
+            </li>
+
+            <li>
+                relative error;
+            </li>
+
+            <li>
+                automatic identification of the
+                worst numerical cases.
+            </li>
+
+        </ul>
+
+
+        <p>
+
+            Numerical tolerance:
+
+            <code>ABS_TOL = 1e-10</code>
+
+        </p>
+
+
+        <p>
+
+            Relative tolerance:
+
+            <code>REL_TOL = 1e-8</code>
+
+        </p>
+
+
+        <p>
+
+            Warning threshold:
+
+            <code>ABS_WARN = 1e-7</code>
+
+        </p>
+
+
+        <p>
+
+            Failure threshold:
+
+            <code>ABS_FAIL = 1e-5</code>
+
+        </p>
+
+
+        <p>
+
+            Relative error is considered
+            supplementary information in the
+            extreme tails because Φ(x) approaches
+            0 or 1 and therefore relative error can
+            become numerically misleading.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     LABISTRY MATHEMATICAL FUNCTIONS
+     ========================================= -->
+
+
+<script src="../js/calculators/statistics/math.js"></script>
+
+
+<script>
+
+
+    /* =========================================
+       NUMERICAL TOLERANCES
+       ========================================= */
+
+
+    const ABS_TOL =
+        1e-10;
+
+
+    const REL_TOL =
+        1e-8;
+
+
+    const ABS_WARN =
+        1e-7;
+
+
+    const ABS_FAIL =
+        1e-5;
+
+
+    const SYMMETRY_TOL =
+        1e-14;
+
+
+    const SYMMETRY_WARN =
+        1e-12;
+
+
+    /* =========================================
+       TEST COUNTERS
+       ========================================= */
+
+
+    let totalTests =
+        0;
+
+
+    let validTests =
+        0;
+
+
+    let warningTests =
+        0;
+
+
+    let failedTests =
+        0;
+
+
+    /* =========================================
+       REFERENCE VALUES
+       
+       Generated independently with SciPy:
+
+       scipy.stats.norm.cdf(x)
+       ========================================= */
+
+
+    const referenceValues = {
+
+        "-10":
+            7.61985302416047e-24,
+
+        "-9":
+            1.12858840595384e-19,
+
+        "-8":
+            6.22096057427174e-16,
+
+        "-7":
+            1.279812543885835e-12,
+
+        "-6":
+            9.865876450376946e-10,
+
+        "-5":
+            2.866515718791933e-7,
+
+        "-4":
+            3.167124183311986e-5,
+
+        "-3":
+            0.0013498980316300945,
+
+        "-2.5":
+            0.006209665325776159,
+
+        "-2":
+            0.02275013194817921,
+
+        "-1.5":
+            0.06680720126885809,
+
+        "-1":
+            0.15865525393145707,
+
+        "-0.5":
+            0.3085375387259869,
+
+        "-0.2":
+            0.42074029056089696,
+
+        "-0.1":
+            0.460172162722971,
+
+        "0":
+            0.5,
+
+        "0.1":
+            0.539827837277029,
+
+        "0.2":
+            0.579259709439103,
+
+        "0.5":
+            0.6914624612740131,
+
+        "1":
+            0.8413447460685429,
+
+        "1.5":
+            0.9331927987311419,
+
+        "2":
+            0.9772498680518208,
+
+        "2.5":
+            0.9937903346742238,
+
+        "3":
+            0.9986501019683699,
+
+        "4":
+            0.9999683287581669,
+
+        "5":
+            0.9999997133484281,
+
+        "6":
+            0.9999999990134123,
+
+        "7":
+            0.9999999999987201,
+
+        "8":
+            0.9999999999999993,
+
+        "9":
+            1,
+
+        "10":
+            1
+
+    };
+
+
+    /* =========================================
+       TEST VALUES
+       ========================================= */
+
+
+    const testValues = [
+
+        -10,
+        -9,
+        -8,
+        -7,
+        -6,
+        -5,
+        -4,
+        -3,
+        -2.5,
+        -2,
+        -1.5,
+        -1,
+        -0.5,
+        -0.2,
+        -0.1,
+        0,
+        0.1,
+        0.2,
+        0.5,
+        1,
+        1.5,
+        2,
+        2.5,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+
+    ];
+
+
+    /* =========================================
+       NUMERICAL COMPARISON
+       ========================================= */
+
+
+    function nearlyEqual(
+        actual,
+        expected
+    ) {
+
+
+        if (
+            Number.isNaN(actual) &&
+            Number.isNaN(expected)
+        ) {
+
+            return true;
+
+        }
+
+
+        if (
+            !Number.isFinite(actual) ||
+            !Number.isFinite(expected)
+        ) {
+
+            return (
+                actual === expected
+            );
+
+        }
+
+
+        const difference =
+            Math.abs(
+                actual -
+                expected
+            );
+
+
+        const scale =
+            Math.max(
+                Math.abs(actual),
+                Math.abs(expected),
+                1
+            );
+
+
+        return (
+            difference <=
+            Math.max(
+                ABS_TOL,
+                REL_TOL * scale
+            )
+        );
+
+    }
+
+
+    /* =========================================
+       STATUS CLASSIFICATION
+       ========================================= */
+
+
+    function getStatus(
+        actual,
+        expected
+    ) {
+
+
+        if (
+            Number.isNaN(actual) &&
+            Number.isNaN(expected)
+        ) {
+
+            return "PASS";
+
+        }
+
+
+        if (
+            !Number.isFinite(actual) ||
+            !Number.isFinite(expected)
+        ) {
+
+            return (
+                actual === expected
+                    ? "PASS"
+                    : "FAIL"
+            );
+
+        }
+
+
+        const difference =
+            Math.abs(
+                actual -
+                expected
+            );
+
+
+        const scale =
+            Math.max(
+                Math.abs(actual),
+                Math.abs(expected),
+                1
+            );
+
+
+        const tolerance =
+            Math.max(
+                ABS_TOL,
+                REL_TOL * scale
+            );
+
+
+        if (
+            difference <=
+            tolerance
+        ) {
+
+            return "PASS";
+
+        }
+
+
+        if (
+            difference <=
+            ABS_WARN
+        ) {
+
+            return "WARNING";
+
+        }
+
+
+        return "FAIL";
+
+    }
+
+
+    /* =========================================
+       FORMAT VALUES
+       ========================================= */
+
+
+    function formatValue(
+        value
+    ) {
+
+
+        if (
+            Number.isNaN(value)
+        ) {
+
+            return "NaN";
+
+        }
+
+
+        if (
+            value === Infinity
+        ) {
+
+            return "Infinity";
+
+        }
+
+
+        if (
+            value === -Infinity
+        ) {
+
+            return "-Infinity";
+
+        }
+
+
+        if (
+            typeof value !== "number"
+        ) {
+
+            return String(value);
+
+        }
+
+
+        return value.toPrecision(12);
+
+    }
+
+
+    /* =========================================
+       ADD TEST RESULT
+       ========================================= */
+
+
+    function addTest(
+        name,
+        metric,
+        actual,
+        expected
+    ) {
+
+
+        totalTests++;
+
+
+        const status =
+            getStatus(
+                actual,
+                expected
+            );
+
+
+        if (
+            status === "PASS"
+        ) {
+
+            validTests++;
+
+        }
+        else if (
+            status === "WARNING"
+        ) {
+
+            warningTests++;
+
+        }
+        else {
+
+            failedTests++;
+
+        }
+
+
+        let difference =
+            NaN;
+
+
+        if (
+            Number.isFinite(actual) &&
+            Number.isFinite(expected)
+        ) {
+
+            difference =
+                actual -
+                expected;
+
+        }
+
+
+        const row =
+            document.createElement(
+                "tr"
+            );
+
+
+        row.innerHTML = `
+
+            <td>
+                ${name}
+            </td>
+
+            <td>
+                ${metric}
+            </td>
+
+            <td>
+                ${formatValue(actual)}
+            </td>
+
+            <td>
+                ${formatValue(expected)}
+            </td>
+
+            <td>
+                ${formatValue(difference)}
+            </td>
+
+            <td class="${
+                status === "PASS"
+                    ? "pass"
+                    : status === "WARNING"
+                        ? "warning"
+                        : "fail"
+            }">
+
+                ${status}
+
+            </td>
+
+        `;
+
+
+        document
+            .getElementById(
+                "resultsBody"
+            )
+            .appendChild(row);
+
+    }
+
+
+    /* =========================================
+       CDF ACCURACY TEST
+       ========================================= */
+
+
+    const accuracyResults = [];
+
+
+    testValues.forEach(
+        x => {
+
+
+            const actual =
+                normalCDF(x);
+
+
+            const expected =
+                referenceValues[
+                    String(x)
+                ];
+
+
+            addTest(
+                `CDF x=${x}`,
+                "normalCDF",
+                actual,
+                expected
+            );
+
+
+            let absoluteError =
+                NaN;
+
+
+            let relativeError =
+                NaN;
+
+
+            if (
+                Number.isFinite(actual) &&
+                Number.isFinite(expected)
+            ) {
+
+                absoluteError =
+                    Math.abs(
+                        actual -
+                        expected
+                    );
+
+
+                if (
+                    expected !== 0
+                ) {
+
+                    relativeError =
+                        absoluteError /
+                        Math.abs(
+                            expected
+                        );
+
+                }
+
+            }
+
+
+            accuracyResults.push({
+
+                x:
+                    x,
+
+                actual:
+                    actual,
+
+                expected:
+                    expected,
+
+                absoluteError:
+                    absoluteError,
+
+                relativeError:
+                    relativeError
+
+            });
+
+        }
+    );
+
+
+    /* =========================================
+       WORST CASES
+       ========================================= */
+
+
+    const worstCases =
+        [...accuracyResults]
+            .sort(
+                (
+                    a,
+                    b
+                ) =>
+                    b.absoluteError -
+                    a.absoluteError
+            )
+            .slice(
+                0,
+                5
+            );
+
+
+    worstCases.forEach(
+        result => {
+
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${result.x}
+                </td>
+
+                <td>
+                    ${formatValue(
+                        result.actual
+                    )}
+                </td>
+
+                <td>
+                    ${formatValue(
+                        result.expected
+                    )}
+                </td>
+
+                <td>
+                    ${formatValue(
+                        result.absoluteError
+                    )}
+                </td>
+
+                <td>
+                    ${formatValue(
+                        result.relativeError
+                    )}
+                </td>
+
+            `;
+
+
+            document
+                .getElementById(
+                    "worstBody"
+                )
+                .appendChild(row);
+
+        }
+    );
+
+
+    /* =========================================
+       SYMMETRY TEST
+       
+       Φ(-x) = 1 − Φ(x)
+       ========================================= */
+
+
+    const symmetryValues = [
+
+        0.1,
+        0.2,
+        0.5,
+        1,
+        1.5,
+        2,
+        2.5,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+
+    ];
+
+
+    symmetryValues.forEach(
+        x => {
+
+
+            const negative =
+                normalCDF(
+                    -x
+                );
+
+
+            const positive =
+                normalCDF(
+                    x
+                );
+
+
+            const expected =
+                1 -
+                positive;
+
+
+            const difference =
+                Math.abs(
+                    negative -
+                    expected
+                );
+
+
+            let status;
+
+
+            if (
+                difference <=
+                SYMMETRY_TOL
+            ) {
+
+                status =
+                    "PASS";
+
+            }
+            else if (
+                difference <=
+                SYMMETRY_WARN
+            ) {
+
+                status =
+                    "WARNING";
+
+            }
+            else {
+
+                status =
+                    "FAIL";
+
+            }
+
+
+            totalTests++;
+
+
+            if (
+                status === "PASS"
+            ) {
+
+                validTests++;
+
+            }
+            else if (
+                status === "WARNING"
+            ) {
+
+                warningTests++;
+
+            }
+            else {
+
+                failedTests++;
+
+            }
+
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${x}
+                </td>
+
+                <td>
+                    ${formatValue(
+                        negative
+                    )}
+                </td>
+
+                <td>
+                    ${formatValue(
+                        expected
+                    )}
+                </td>
+
+                <td>
+                    ${formatValue(
+                        difference
+                    )}
+                </td>
+
+                <td class="${
+                    status === "PASS"
+                        ? "pass"
+                        : status === "WARNING"
+                            ? "warning"
+                            : "fail"
+                }">
+
+                    ${status}
+
+                </td>
+
+            `;
+
+
+            document
+                .getElementById(
+                    "symmetryBody"
+                )
+                .appendChild(row);
+
+        }
+    );
+
+
+    /* =========================================
+       INVALID INPUT TESTS
+       ========================================= */
+
+
+    const invalidTests = [
+
+        {
+            name:
+                "NaN input",
+
+            input:
+                NaN,
+
+            expected:
+                NaN
+        },
+
+        {
+            name:
+                "Positive infinity",
+
+            input:
+                Infinity,
+
+            expected:
+                NaN
+        },
+
+        {
+            name:
+                "Negative infinity",
+
+            input:
+                -Infinity,
+
+            expected:
+                NaN
+        }
+
+    ];
+
+
+    invalidTests.forEach(
+        test => {
+
+
+            const actual =
+                normalCDF(
+                    test.input
+                );
+
+
+            const passed =
+                Number.isNaN(
+                    actual
+                ) &&
+                Number.isNaN(
+                    test.expected
+                );
+
+
+            totalTests++;
+
+
+            if (
+                passed
+            ) {
+
+                validTests++;
+
+            }
+            else {
+
+                failedTests++;
+
+            }
+
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${test.name}
+                </td>
+
+                <td>
+                    ${formatValue(
+                        test.input
+                    )}
+                </td>
+
+                <td>
+                    ${formatValue(
+                        actual
+                    )}
+                </td>
+
+                <td>
+                    NaN
+                </td>
+
+                <td class="${
+                    passed
+                        ? "pass"
+                        : "fail"
+                }">
+
+                    ${
+                        passed
+                            ? "PASS"
+                            : "FAIL"
+                    }
+
+                </td>
+
+            `;
+
+
+            document
+                .getElementById(
+                    "invalidBody"
+                )
+                .appendChild(row);
+
+        }
+    );
+
+
+    /* =========================================
+       FIND GLOBAL WORST CASE
+       ========================================= */
+
+
+    const maximumAbsoluteError =
+        Math.max(
+            ...accuracyResults.map(
+                result =>
+                    result.absoluteError
+            )
+        );
+
+
+    const maximumAbsoluteCase =
+        accuracyResults.find(
+            result =>
+                result.absoluteError ===
+                maximumAbsoluteError
+        );
+
+
+    const finiteRelativeErrors =
+        accuracyResults
+            .filter(
+                result =>
+                    Number.isFinite(
+                        result.relativeError
+                    )
+            );
+
+
+    const maximumRelativeError =
+        Math.max(
+            ...finiteRelativeErrors.map(
+                result =>
+                    result.relativeError
+            )
+        );
+
+
+    const maximumRelativeCase =
+        finiteRelativeErrors.find(
+            result =>
+                result.relativeError ===
+                maximumRelativeError
+        );
+
+
+    /* =========================================
+       UPDATE SUMMARY
+       ========================================= */
+
+
+    document
+        .getElementById(
+            "totalTests"
+        )
+        .textContent =
+            totalTests;
+
+
+    document
+        .getElementById(
+            "validTests"
+        )
+        .textContent =
+            validTests;
+
+
+    document
+        .getElementById(
+            "warningTests"
+        )
+        .textContent =
+            warningTests;
+
+
+    document
+        .getElementById(
+            "failedTests"
+        )
+        .textContent =
+            failedTests;
+
+
+    /* =========================================
+       CONSOLE SUMMARY
+       ========================================= */
+
+
+    console.log(
+        "==================================="
+    );
+
+
+    console.log(
+        "LABISTRY normalCDF STRESS TEST"
+    );
+
+
+    console.log(
+        "==================================="
+    );
+
+
+    console.log(
+        "Tests:",
+        totalTests
+    );
+
+
+    console.log(
+        "Valid:",
+        validTests
+    );
+
+
+    console.log(
+        "Warnings:",
+        warningTests
+    );
+
+
+    console.log(
+        "Failures:",
+        failedTests
+    );
+
+
+    console.log(
+        "Maximum absolute error:",
+        maximumAbsoluteError
+    );
+
+
+    console.log(
+        "Maximum absolute error at x:",
+        maximumAbsoluteCase.x
+    );
+
+
+    console.log(
+        "Maximum relative error:",
+        maximumRelativeError
+    );
+
+
+    console.log(
+        "Maximum relative error at x:",
+        maximumRelativeCase.x
+    );
+
+
+    console.log(
+        "==================================="
+    );
+
+</script>
+```
+
+</body>
+
+</html>
