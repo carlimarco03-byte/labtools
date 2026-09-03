@@ -432,10 +432,68 @@ function nearlyEqual(
    REFERENCE RANKING
    ========================================================= */
 
+/* ===================================
+   REFERENCE MANN–WHITNEY U
+   TIE CORRECTION + CONTINUITY CORRECTION
+   =================================== */
+
 function referenceMannWhitney(
     groupA,
     groupB
 ) {
+
+    if (
+        !Array.isArray(groupA) ||
+        !Array.isArray(groupB) ||
+        groupA.length === 0 ||
+        groupB.length === 0
+    ) {
+
+        return {
+
+            U1: NaN,
+            U2: NaN,
+            U: NaN,
+            z: NaN,
+            pValue: NaN
+
+        };
+
+    }
+
+
+    const combined = [];
+
+
+    groupA.forEach(
+        value => {
+
+            combined.push({
+                value,
+                group: "A"
+            });
+
+        }
+    );
+
+
+    groupB.forEach(
+        value => {
+
+            combined.push({
+                value,
+                group: "B"
+            });
+
+        }
+    );
+
+
+    combined.sort(
+        (a, b) =>
+            a.value - b.value
+    );
+
 
     const nA =
         groupA.length;
@@ -443,63 +501,25 @@ function referenceMannWhitney(
     const nB =
         groupB.length;
 
-
-    if (
-        nA === 0 ||
-        nB === 0
-    ) {
-
-        return {
-
-            U1: NaN,
-            U2: NaN,
-            U: NaN
-
-        };
-
-    }
+    const n =
+        nA + nB;
 
 
-    const combined = [
+    let rank = 1;
 
-        ...groupA.map(
-            value => ({
-                value,
-                group: "A"
-            })
-        ),
+    let rankSumA = 0;
 
-        ...groupB.map(
-            value => ({
-                value,
-                group: "B"
-            })
-        )
+    let i = 0;
 
-    ];
+    const tieGroupSizes = [];
 
 
-    combined.sort(
-        (a, b) =>
-            a.value -
-            b.value
-    );
-
-
-    let rankSumA =
-        0;
-
-
-    let rank =
-        1;
-
-
-    let i =
-        0;
-
+    /* =================================
+       RANKING
+       ================================= */
 
     while (
-        i < combined.length
+        i < n
     ) {
 
         let j =
@@ -507,15 +527,9 @@ function referenceMannWhitney(
 
 
         while (
-
-            j <
-                combined.length
-
-            &&
-
+            j < n &&
             combined[j].value ===
-                combined[i].value
-
+            combined[i].value
         ) {
 
             j++;
@@ -523,13 +537,19 @@ function referenceMannWhitney(
         }
 
 
+        const tieSize =
+            j - i;
+
+
+        tieGroupSizes.push(
+            tieSize
+        );
+
+
         const averageRank =
             (
                 rank +
-                rank +
-                j -
-                i -
-                1
+                rank + tieSize - 1
             ) / 2;
 
 
@@ -553,7 +573,7 @@ function referenceMannWhitney(
 
 
         rank +=
-            j - i;
+            tieSize;
 
 
         i =
@@ -562,155 +582,265 @@ function referenceMannWhitney(
     }
 
 
+    /* =================================
+       U
+       ================================= */
+
     const U1 =
         rankSumA -
-        nA *
-        (nA + 1) /
-        2;
+        nA * (nA + 1) / 2;
 
 
     const U2 =
-        nA *
-        nB -
+        nA * nB -
         U1;
+
+
+    const U =
+        Math.min(
+            U1,
+            U2
+        );
+
+
+    /* =================================
+       MEAN
+       ================================= */
+
+    const meanU =
+        nA * nB / 2;
+
+
+    /* =================================
+       TIE CORRECTION
+       ================================= */
+
+    let tieCorrectionTerm = 0;
+
+
+    tieGroupSizes.forEach(
+        t => {
+
+            if (
+                t > 1
+            ) {
+
+                tieCorrectionTerm +=
+                    t * t * t - t;
+
+            }
+
+        }
+    );
+
+
+    let varianceU;
+
+
+    if (
+        n > 1
+    ) {
+
+        varianceU =
+            (
+                nA * nB
+            ) / 12 *
+            (
+                n + 1 -
+                tieCorrectionTerm /
+                (
+                    n * (n - 1)
+                )
+            );
+
+    }
+    else {
+
+        varianceU =
+            NaN;
+
+    }
+
+
+    const sdU =
+        Math.sqrt(
+            varianceU
+        );
+
+
+    /* =================================
+       Z + CONTINUITY CORRECTION
+       ================================= */
+
+    let z =
+        NaN;
+
+
+    if (
+        sdU > 0
+    ) {
+
+        let correction = 0;
+
+
+        if (
+            U < meanU
+        ) {
+
+            correction =
+                0.5;
+
+        }
+        else if (
+            U > meanU
+        ) {
+
+            correction =
+                -0.5;
+
+        }
+
+
+        z =
+            (
+                U -
+                meanU +
+                correction
+            ) /
+            sdU;
+
+    }
+
+
+    /* =================================
+       TWO-TAILED P
+       ================================= */
+
+    let pValue =
+        NaN;
+
+
+    if (
+        Number.isFinite(z)
+    ) {
+
+        const probability =
+            normalCDF(
+                Math.abs(z)
+            );
+
+
+        pValue =
+            2 *
+            (
+                1 -
+                probability
+            );
+
+    }
 
 
     return {
 
         U1,
-
         U2,
-
-        U:
-            Math.min(
-                U1,
-                U2
-            )
-
-    };
-
-}
-
-
-/* =========================================================
-   CURRENT LABISTRY REFERENCE
-   ========================================================= */
-
-function currentReference(
-    groupA,
-    groupB
-) {
-
-    const nA =
-        groupA.length;
-
-    const nB =
-        groupB.length;
-
-
-    const reference =
-        referenceMannWhitney(
-            groupA,
-            groupB
-        );
-
-
-    const meanU =
-        nA *
-        nB /
-        2;
-
-
-    const variance =
-        nA *
-        nB *
-        (
-            nA +
-            nB +
-            1
-        ) /
-        12;
-
-
-    const sd =
-        Math.sqrt(
-            variance
-        );
-
-
-    const z =
-        sd > 0
-            ? (
-                reference.U -
-                meanU
-            ) /
-            sd
-            : NaN;
-
-
-    const pValue =
-        calculateMannWhitneyPValue(
-            z
-        );
-
-
-    return {
-
-        U1:
-            reference.U1,
-
-        U2:
-            reference.U2,
-
-        U:
-            reference.U,
-
+        U,
         z,
-
         pValue
 
     };
 
 }
 
-
 /* =========================================================
-   TEST STORAGE
+   COMPARE MANN–WHITNEY RESULTS
    ========================================================= */
 
-const tests = [];
-
-
-function addTest(
-    name,
-    category,
-    actual,
-    expected
+function compareMannWhitneyResult(
+    labistry,
+    reference
 ) {
 
-    const pass =
-        nearlyEqual(
-            actual,
-            expected
-        );
+    const fields = [
+        "U1",
+        "U2",
+        "U",
+        "z",
+        "pValue"
+    ];
 
 
-    tests.push({
+    for (
+        const field of fields
+    ) {
 
-        name,
-        category,
-        actual,
-        expected,
+        const actual =
+            labistry[field];
 
-        status:
-            pass
-                ? "PASS"
-                : "FAIL"
+        const expected =
+            reference[field];
 
-    });
+
+        if (
+            Number.isNaN(actual) &&
+            Number.isNaN(expected)
+        ) {
+
+            continue;
+
+        }
+
+
+        if (
+            Number.isNaN(actual) !==
+            Number.isNaN(expected)
+        ) {
+
+            return {
+
+                pass: false,
+                field,
+                actual,
+                expected
+
+            };
+
+        }
+
+
+        if (
+            !nearlyEqual(
+                actual,
+                expected
+            )
+        ) {
+
+            return {
+
+                pass: false,
+                field,
+                actual,
+                expected
+
+            };
+
+        }
+
+    }
+
+
+    return {
+
+        pass: true
+
+    };
 
 }
 
+
+/* =========================================================
+   FULL LABISTRY TEST
+   ========================================================= */
 
 /* =========================================================
    FULL LABISTRY TEST
@@ -755,7 +885,7 @@ function testDataset(
 
 
     const expected =
-        currentReference(
+        referenceMannWhitney(
             groupA,
             groupB
         );
@@ -801,7 +931,6 @@ function testDataset(
     );
 
 }
-
 
 /* =========================================================
    BASIC DATASETS
@@ -1861,11 +1990,11 @@ console.log(
 );
 
 console.log(
-    "no continuity correction"
+    "continuity correction: enabled"
 );
 
 console.log(
-    "no tie correction"
+    "tie correction: enabled"
 );
 
 </script>
