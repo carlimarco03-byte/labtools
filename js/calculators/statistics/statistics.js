@@ -130,6 +130,19 @@ function resetStatistics() {
 
     }
 
+   const hypothesizedMean =
+    document.getElementById(
+        "hypothesizedMean"
+    );
+
+
+if (hypothesizedMean) {
+
+    hypothesizedMean.value =
+        "0";
+
+}
+
 
     /* Reset results */
 
@@ -169,6 +182,11 @@ document.addEventListener(
                 "twoGroupInputs"
             );
 
+       const oneSampleInputs =
+           document.getElementById(
+               "oneSampleInputs"
+           );
+
 
         /*
          * If the current HTML does not yet
@@ -193,40 +211,68 @@ document.addEventListener(
            UPDATE ANALYSIS INTERFACE
            ================================= */
 
-        function updateAnalysisInterface() {
+       function updateAnalysisInterface() {
 
-            if (
-                analysisType.value ===
-                "two-group"
-            ) {
+    /* ================================
+       TWO-GROUP INPUTS
+       ================================ */
 
-                twoGroupInputs.style.display =
-                    "block";
+    if (
+        analysisType.value ===
+        "two-group"
+    ) {
 
-
-                if (input) {
-
-                    input.parentElement.style.display =
-                        "none";
-
-                }
-
-            } else {
-
-                twoGroupInputs.style.display =
-                    "none";
+        twoGroupInputs.style.display =
+            "block";
 
 
-                if (input) {
+        if (input) {
 
-                    input.parentElement.style.display =
-                        "block";
-
-                }
-
-            }
+            input.parentElement.style.display =
+                "none";
 
         }
+
+    } else {
+
+        twoGroupInputs.style.display =
+            "none";
+
+
+        if (input) {
+
+            input.parentElement.style.display =
+                "block";
+
+        }
+
+    }
+
+
+    /* ================================
+       ONE-SAMPLE INPUTS
+       ================================ */
+
+    if (oneSampleInputs) {
+
+        if (
+            analysisType.value ===
+            "one-sample"
+        ) {
+
+            oneSampleInputs.style.display =
+                "block";
+
+        } else {
+
+            oneSampleInputs.style.display =
+                "none";
+
+        }
+
+    }
+
+}
 
 
         /* =================================
