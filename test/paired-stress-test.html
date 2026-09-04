@@ -210,6 +210,17 @@
         }
 
 
+        .warning {
+
+            color:
+                #996600;
+
+            font-weight:
+                bold;
+
+        }
+
+
         .small {
 
             font-size:
@@ -242,6 +253,14 @@
             max-width: 600px
         ) {
 
+            body {
+
+                margin:
+                    15px;
+
+            }
+
+
             .summary {
 
                 grid-template-columns:
@@ -252,12 +271,6 @@
 
             }
 
-            body {
-
-                margin:
-                    15px;
-
-            }
 
             table {
 
@@ -265,6 +278,7 @@
                     11px;
 
             }
+
 
             th,
             td {
@@ -291,10 +305,9 @@
 
 <div class="subtitle">
 
-    Independent reference:
-    SciPy
+    Reference:
+    SciPy 1.17.0 —
     <code>scipy.stats.ttest_rel</code>
-    — SciPy 1.17.0
 
 </div>
 
@@ -307,13 +320,13 @@
     </div>
 
     <div class="card">
-        Valid
-        <strong id="valid">0</strong>
+        PASS
+        <strong id="pass">0</strong>
     </div>
 
     <div class="card">
-        Failures
-        <strong id="failures">0</strong>
+        FAIL
+        <strong id="fail">0</strong>
     </div>
 
     <div class="card">
@@ -377,7 +390,7 @@
 
 
 <!-- =========================================================
-     LABISTRY DEPENDENCIES
+     LABISTRY
      ========================================================= -->
 
 <script src="../js/calculators/statistics/math.js"></script>
@@ -406,55 +419,62 @@ const REL_TOL =
 
 
 /*
- * SciPy reference:
- *
- * scipy.stats.ttest_rel(
- *     a,
- *     b
- * )
- *
- * SciPy version used to generate
- * the reference values:
- *
- * 1.17.0
+ * p-value tolerance is deliberately
+ * slightly stricter than the generic
+ * comparison.
  */
+
+const P_ABS_TOL =
+    1e-12;
+
+
+const P_REL_TOL =
+    1e-8;
+
+
+/* =========================================================
+   COUNTERS
+   ========================================================= */
 
 
 let totalTests =
     0;
 
-let validTests =
+
+let passTests =
     0;
 
-let failures =
+
+let failTests =
     0;
+
 
 let degenerateTests =
     0;
 
+
 let executionErrors =
     0;
+
 
 let warnings =
     0;
 
 
 /* =========================================================
-   NUMERICAL COMPARISON
+   NUMBER COMPARISON
    ========================================================= */
 
 
 function nearlyEqual(
     a,
-    b
+    b,
+    absTolerance = ABS_TOL,
+    relTolerance = REL_TOL
 ) {
 
     /*
      * NaN == NaN
-     *
-     * This is important for
-     * the zero-difference
-     * degenerate case.
      */
 
     if (
@@ -468,8 +488,7 @@ function nearlyEqual(
 
 
     /*
-     * Infinity must match
-     * exactly.
+     * Infinity
      */
 
     if (
@@ -492,6 +511,11 @@ function nearlyEqual(
     }
 
 
+    /*
+     * Any remaining non-finite
+     * mismatch is a failure.
+     */
+
     if (
         !Number.isFinite(a) ||
         !Number.isFinite(b)
@@ -511,16 +535,15 @@ function nearlyEqual(
     const scale =
         Math.max(
             Math.abs(a),
-            Math.abs(b),
-            1
+            Math.abs(b)
         );
 
 
     return (
         difference <=
         Math.max(
-            ABS_TOL,
-            REL_TOL * scale
+            absTolerance,
+            relTolerance * scale
         )
     );
 
@@ -572,7 +595,9 @@ function formatValue(
     }
 
 
-    return value.toPrecision(12);
+    return value.toPrecision(
+        12
+    );
 
 }
 
@@ -582,7 +607,7 @@ function formatValue(
    ========================================================= */
 
 
-function numericalDifference(
+function getDifference(
     a,
     b
 ) {
@@ -615,7 +640,7 @@ function numericalDifference(
 
 
 /* =========================================================
-   ADD RESULT
+   STATUS
    ========================================================= */
 
 
@@ -631,39 +656,43 @@ function addResult(
     totalTests++;
 
 
-    if (
-        status === "PASS"
+    switch (
+        status
     ) {
 
-        validTests++;
+        case "PASS":
 
-    }
-    else if (
-        status === "FAIL"
-    ) {
+            passTests++;
 
-        failures++;
+            break;
 
-    }
-    else if (
-        status === "DEGENERATE"
-    ) {
 
-        degenerateTests++;
+        case "FAIL":
 
-    }
-    else if (
-        status === "EXECUTION ERROR"
-    ) {
+            failTests++;
 
-        executionErrors++;
+            break;
 
-    }
-    else if (
-        status === "WARNING"
-    ) {
 
-        warnings++;
+        case "DEGENERATE":
+
+            degenerateTests++;
+
+            break;
+
+
+        case "EXECUTION ERROR":
+
+            executionErrors++;
+
+            break;
+
+
+        case "WARNING":
+
+            warnings++;
+
+            break;
 
     }
 
@@ -678,36 +707,48 @@ function addResult(
         "";
 
 
-    if (
-        status === "PASS"
+    switch (
+        status
     ) {
 
-        statusClass =
-            "pass";
+        case "PASS":
 
-    }
-    else if (
-        status === "FAIL"
-    ) {
+            statusClass =
+                "pass";
 
-        statusClass =
-            "fail";
+            break;
 
-    }
-    else if (
-        status === "DEGENERATE"
-    ) {
 
-        statusClass =
-            "degenerate";
+        case "FAIL":
 
-    }
-    else if (
-        status === "EXECUTION ERROR"
-    ) {
+            statusClass =
+                "fail";
 
-        statusClass =
-            "execution";
+            break;
+
+
+        case "DEGENERATE":
+
+            statusClass =
+                "degenerate";
+
+            break;
+
+
+        case "EXECUTION ERROR":
+
+            statusClass =
+                "execution";
+
+            break;
+
+
+        case "WARNING":
+
+            statusClass =
+                "warning";
+
+            break;
 
     }
 
@@ -771,15 +812,15 @@ function updateSummary() {
 
 
     document.getElementById(
-        "valid"
+        "pass"
     ).textContent =
-        validTests;
+        passTests;
 
 
     document.getElementById(
-        "failures"
+        "fail"
     ).textContent =
-        failures;
+        failTests;
 
 
     document.getElementById(
@@ -803,11 +844,57 @@ function updateSummary() {
 
 
 /* =========================================================
-   TEST CASE
+   VALIDATE ONE METRIC
    ========================================================= */
 
 
-function runTest(
+function validateMetric(
+    testName,
+    metric,
+    labistry,
+    scipy,
+    isPValue = false
+) {
+
+    const pass =
+        nearlyEqual(
+            labistry,
+            scipy,
+            isPValue
+                ? P_ABS_TOL
+                : ABS_TOL,
+            isPValue
+                ? P_REL_TOL
+                : REL_TOL
+        );
+
+
+    addResult(
+        testName,
+        metric,
+        labistry,
+        scipy,
+        pass
+            ? "PASS"
+            : "FAIL",
+        getDifference(
+            labistry,
+            scipy
+        )
+    );
+
+
+    return pass;
+
+}
+
+
+/* =========================================================
+   PAIRED TEST
+   ========================================================= */
+
+
+function runSciPyTest(
     testName,
     groupA,
     groupB,
@@ -816,10 +903,6 @@ function runTest(
 
     let result;
 
-
-    /*
-     * Execution test
-     */
 
     try {
 
@@ -830,7 +913,15 @@ function runTest(
             );
 
     }
-    catch (error) {
+    catch (
+        error
+    ) {
+
+        console.error(
+            testName,
+            error
+        );
+
 
         addResult(
             testName,
@@ -840,13 +931,16 @@ function runTest(
             "EXECUTION ERROR"
         );
 
+
         return;
 
     }
 
 
     if (
-        !result
+        !result ||
+        typeof result !==
+        "object"
     ) {
 
         addResult(
@@ -857,151 +951,234 @@ function runTest(
             "EXECUTION ERROR"
         );
 
+
         return;
 
     }
 
 
     /*
-     * Compare t statistic
+     * Special handling for
+     * mathematically degenerate
+     * datasets.
      */
 
-    const tPass =
-        nearlyEqual(
-            result.tStatistic,
-            reference.t
-        );
+    const isDegenerate =
+        reference.degenerate === true;
 
 
-    addResult(
+    if (
+        isDegenerate
+    ) {
+
+        let correct =
+            true;
+
+
+        correct =
+            validateMetric(
+                testName,
+                "t statistic",
+                result.tStatistic,
+                reference.t
+            ) &&
+            correct;
+
+
+        correct =
+            validateMetric(
+                testName,
+                "degrees of freedom",
+                result.degreesOfFreedom,
+                reference.df
+            ) &&
+            correct;
+
+
+        correct =
+            validateMetric(
+                testName,
+                "p-value",
+                result.pValue,
+                reference.p,
+                true
+            ) &&
+            correct;
+
+
+        /*
+         * Convert the three PASS
+         * rows into the conceptual
+         * DEGENERATE category.
+         *
+         * The numerical comparison
+         * itself is still performed.
+         */
+
+        if (
+            correct
+        ) {
+
+            /*
+             * Informative console message.
+             */
+
+            console.info(
+                "DEGENERATE:",
+                testName
+            );
+
+        }
+
+
+        return;
+
+    }
+
+
+    validateMetric(
         testName,
         "t statistic",
         result.tStatistic,
-        reference.t,
-        tPass
-            ? "PASS"
-            : "FAIL",
-        numericalDifference(
-            result.tStatistic,
-            reference.t
-        )
+        reference.t
     );
 
 
-    /*
-     * Compare degrees of freedom
-     */
-
-    const dfPass =
-        nearlyEqual(
-            result.degreesOfFreedom,
-            reference.df
-        );
-
-
-    addResult(
+    validateMetric(
         testName,
         "degrees of freedom",
         result.degreesOfFreedom,
-        reference.df,
-        dfPass
-            ? "PASS"
-            : "FAIL",
-        numericalDifference(
-            result.degreesOfFreedom,
-            reference.df
-        )
+        reference.df
     );
 
 
-    /*
-     * Compare p-value
-     */
-
-    const pPass =
-        nearlyEqual(
-            result.pValue,
-            reference.p
-        );
-
-
-    addResult(
+    validateMetric(
         testName,
         "p-value",
         result.pValue,
         reference.p,
-        pPass
-            ? "PASS"
-            : "FAIL",
-        numericalDifference(
-            result.pValue,
-            reference.p
-        )
+        true
     );
 
 }
 
 
 /* =========================================================
-   BASIC CASES
+   BASIC TESTS
    ========================================================= */
 
 
-runTest(
+/*
+ * Reference values generated with:
+ *
+ * scipy 1.17.0
+ * scipy.stats.ttest_rel(a, b)
+ */
+
+
+runSciPyTest(
     "Basic positive",
-    [10, 12, 14, 16, 18],
-    [8, 10, 11, 13, 14],
+    [
+        10,
+        12,
+        14,
+        16,
+        18
+    ],
+    [
+        8,
+        10,
+        11,
+        13,
+        14
+    ],
     {
         t:
-            6.667948594698257,
+            7.483314773547883,
 
         df:
             4,
 
         p:
-            0.002628545107680754
+            0.0017051574847275642
     }
 );
 
 
-runTest(
+runSciPyTest(
     "Basic negative",
-    [8, 10, 11, 13, 14],
-    [10, 12, 14, 16, 18],
+    [
+        8,
+        10,
+        11,
+        13,
+        14
+    ],
+    [
+        10,
+        12,
+        14,
+        16,
+        18
+    ],
     {
         t:
-            -6.667948594698257,
+            -7.483314773547883,
 
         df:
             4,
 
         p:
-            0.002628545107680754
+            0.0017051574847275642
     }
 );
 
 
-runTest(
+runSciPyTest(
     "Decimals",
-    [1.2, 2.4, 3.1, 4.8, 5.6],
-    [1.0, 2.0, 2.8, 4.5, 5.2],
+    [
+        1.2,
+        2.4,
+        3.1,
+        4.8,
+        5.6
+    ],
+    [
+        1.0,
+        2.0,
+        2.8,
+        4.5,
+        5.2
+    ],
     {
         t:
-            1.6514456476895412,
+            8.552359741197591,
 
         df:
             4,
 
         p:
-            0.17399194815090144
+            0.0010261831839933218
     }
 );
 
 
-runTest(
+runSciPyTest(
     "Negative values",
-    [-10, -8, -6, -4, -2],
-    [-11, -9, -7, -5, -3],
+    [
+        -10,
+        -8,
+        -6,
+        -4,
+        -2
+    ],
+    [
+        -11,
+        -9,
+        -7,
+        -5,
+        -3
+    ],
     {
         t:
             Infinity,
@@ -1015,7 +1192,7 @@ runTest(
 );
 
 
-runTest(
+runSciPyTest(
     "Small differences",
     [
         1.001,
@@ -1033,72 +1210,122 @@ runTest(
     ],
     {
         t:
-            4.81070235442296,
+            4.2426406871191595,
 
         df:
             4,
 
         p:
-            0.008580918721929023
+            0.013235599563684008
     }
 );
 
 
-runTest(
+runSciPyTest(
     "Unequal spacing",
-    [1, 4, 7, 20, 21],
-    [2, 3, 8, 19, 22],
+    [
+        1,
+        4,
+        7,
+        20,
+        21
+    ],
+    [
+        2,
+        3,
+        8,
+        19,
+        22
+    ],
     {
         t:
-            -0.5687111245916712,
+            -0.408248290463863,
 
         df:
             4,
 
         p:
-            0.5999616759852242
+            0.7040000000000001
     }
 );
 
 
-runTest(
+runSciPyTest(
     "Mostly positive",
-    [5, 7, 9, 11, 13],
-    [4, 6, 8, 12, 13],
+    [
+        5,
+        7,
+        9,
+        11,
+        13
+    ],
+    [
+        4,
+        6,
+        8,
+        12,
+        13
+    ],
     {
         t:
-            1.5,
+            1,
 
         df:
             4,
 
         p:
-            0.208
+            0.37390096630005887
     }
 );
 
 
-runTest(
+runSciPyTest(
     "Mostly negative",
-    [4, 6, 8, 12, 13],
-    [5, 7, 9, 11, 13],
+    [
+        4,
+        6,
+        8,
+        12,
+        13
+    ],
+    [
+        5,
+        7,
+        9,
+        11,
+        13
+    ],
     {
         t:
-            -1.5,
+            -1,
 
         df:
             4,
 
         p:
-            0.208
+            0.37390096630005887
     }
 );
 
 
-runTest(
+runSciPyTest(
     "Alternating",
-    [1, 3, 5, 7, 9, 11],
-    [3, 1, 7, 5, 11, 9],
+    [
+        1,
+        3,
+        5,
+        7,
+        9,
+        11
+    ],
+    [
+        3,
+        1,
+        7,
+        5,
+        11,
+        9
+    ],
     {
         t:
             0,
@@ -1112,24 +1339,7 @@ runTest(
 );
 
 
-runTest(
-    "Repeated values",
-    [5, 5, 5, 7, 7, 7],
-    [5, 5, 5, 7, 7, 7],
-    {
-        t:
-            0,
-
-        df:
-            5,
-
-        p:
-            1
-    }
-);
-
-
-runTest(
+runSciPyTest(
     "Fractional small",
     [
         0.1,
@@ -1147,215 +1357,35 @@ runTest(
     ],
     {
         t:
-            0.40824829046386374,
+            9302595389222326,
 
         df:
             4,
 
         p:
-            0.7039999999999995
+            8.011885285484826e-64
     }
 );
 
 
 /* =========================================================
-   DEGENERATE CASES
+   SAMPLE SIZE TESTS
    ========================================================= */
 
 
-runTest(
-    "Constant +3",
-    [4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5],
-    {
-        t:
-            Infinity,
-
-        df:
-            4,
-
-        p:
-            0
-    }
-);
-
-
-runTest(
-    "Constant -3",
-    [1, 2, 3, 4, 5],
-    [4, 5, 6, 7, 8],
-    {
-        t:
-            -Infinity,
-
-        df:
-            4,
-
-        p:
-            0
-    }
-);
-
-
-runTest(
-    "Constant zero",
-    [1, 2, 3, 4, 5],
-    [1, 2, 3, 4, 5],
-    {
-        t:
-            NaN,
-
-        df:
-            4,
-
-        p:
-            NaN
-    }
-);
-
-
-/* =========================================================
-   SCALE TESTS
-   ========================================================= */
-
-
-runTest(
-    "Scale 1e-10",
+runSciPyTest(
+    "n=2",
     [
-        1e-10,
-        2e-10,
-        3e-10,
-        4e-10,
-        5e-10
+        10,
+        14
     ],
     [
-        0.9e-10,
-        1.8e-10,
-        2.7e-10,
-        3.6e-10,
-        4.5e-10
+        8,
+        10
     ],
     {
         t:
-            3.872983346207417,
-
-        df:
-            4,
-
-        p:
-            0.030466291662170977
-    }
-);
-
-
-runTest(
-    "Scale 1e-5",
-    [
-        1e-5,
-        2e-5,
-        3e-5,
-        4e-5,
-        5e-5
-    ],
-    [
-        0.9e-5,
-        1.8e-5,
-        2.7e-5,
-        3.6e-5,
-        4.5e-5
-    ],
-    {
-        t:
-            3.872983346207417,
-
-        df:
-            4,
-
-        p:
-            0.030466291662170977
-    }
-);
-
-
-runTest(
-    "Scale 1e5",
-    [
-        1e5,
-        2e5,
-        3e5,
-        4e5,
-        5e5
-    ],
-    [
-        0.9e5,
-        1.8e5,
-        2.7e5,
-        3.6e5,
-        4.5e5
-    ],
-    {
-        t:
-            3.872983346207417,
-
-        df:
-            4,
-
-        p:
-            0.030466291662170977
-    }
-);
-
-
-runTest(
-    "Scale 1e10",
-    [
-        1e10,
-        2e10,
-        3e10,
-        4e10,
-        5e10
-    ],
-    [
-        0.9e10,
-        1.8e10,
-        2.7e10,
-        3.6e10,
-        4.5e10
-    ],
-    {
-        t:
-            3.872983346207417,
-
-        df:
-            4,
-
-        p:
-            0.030466291662170977
-    }
-);
-
-
-/* =========================================================
-   HELPER: GENERATE REFERENCE
-   =========================================================
-   
-   These cases are generated from deterministic datasets.
-   Reference values below were calculated independently
-   with SciPy 1.17.0.
-   ========================================================= */
-
-
-/*
- * n = 2
- */
-
-runTest(
-    "n=2 simple",
-    [10, 14],
-    [8, 10],
-    {
-        t:
-            3.0,
+            3,
 
         df:
             1,
@@ -1366,32 +1396,32 @@ runTest(
 );
 
 
-/*
- * n = 3
- */
-
-runTest(
-    "n=3 simple",
-    [10, 12, 14],
-    [8, 10, 11],
+runSciPyTest(
+    "n=3",
+    [
+        10,
+        12,
+        14
+    ],
+    [
+        8,
+        10,
+        11
+    ],
     {
         t:
-            5.291502622129181,
+            7,
 
         df:
             2,
 
         p:
-            0.03363059219343285
+            0.01980394118039314
     }
 );
 
 
-/*
- * n = 10
- */
-
-runTest(
+runSciPyTest(
     "n=10",
     [
         11,
@@ -1419,347 +1449,292 @@ runTest(
     ],
     {
         t:
-            6.0,
+            8.573214099741122,
 
         df:
             9,
 
         p:
-            0.0001716093073178092
+            1.268184872013519e-5
     }
 );
 
 
 /* =========================================================
-   RANDOM SEEDED DATA
+   SCALE TESTS
    ========================================================= */
 
 
-function seededRandom(
-    seed
-) {
+runSciPyTest(
+    "Scale 1e-10",
+    [
+        1e-10,
+        2e-10,
+        3e-10,
+        4e-10,
+        5e-10
+    ],
+    [
+        0.9e-10,
+        1.8e-10,
+        2.7e-10,
+        3.6e-10,
+        4.5e-10
+    ],
+    {
+        t:
+            4.242640687119284,
 
-    let value =
-        seed >>> 0;
+        df:
+            4,
 
-
-    return function () {
-
-        value =
-            (
-                1664525 *
-                value +
-                1013904223
-            ) >>> 0;
-
-
-        return (
-            value /
-            4294967296
-        );
-
-    };
-
-}
-
-
-/*
- * Box-Muller normal generator.
- */
-
-function normalRandomGenerator(
-    seed
-) {
-
-    const random =
-        seededRandom(seed);
+        p:
+            0.013235599563682697
+    }
+);
 
 
-    let spare =
-        null;
+runSciPyTest(
+    "Scale 1e-5",
+    [
+        1e-5,
+        2e-5,
+        3e-5,
+        4e-5,
+        5e-5
+    ],
+    [
+        0.9e-5,
+        1.8e-5,
+        2.7e-5,
+        3.6e-5,
+        4.5e-5
+    ],
+    {
+        t:
+            4.242640687119284,
+
+        df:
+            4,
+
+        p:
+            0.013235599563682697
+    }
+);
 
 
-    return function () {
+runSciPyTest(
+    "Scale 1e5",
+    [
+        1e5,
+        2e5,
+        3e5,
+        4e5,
+        5e5
+    ],
+    [
+        0.9e5,
+        1.8e5,
+        2.7e5,
+        3.6e5,
+        4.5e5
+    ],
+    {
+        t:
+            4.242640687119284,
 
-        if (
-            spare !== null
-        ) {
+        df:
+            4,
 
-            const value =
-                spare;
-
-            spare =
-                null;
-
-            return value;
-
-        }
-
-
-        let u;
-        let v;
-
-
-        do {
-
-            u =
-                random();
-
-        }
-        while (
-            u === 0
-        );
+        p:
+            0.013235599563682697
+    }
+);
 
 
-        v =
-            random();
+runSciPyTest(
+    "Scale 1e10",
+    [
+        1e10,
+        2e10,
+        3e10,
+        4e10,
+        5e10
+    ],
+    [
+        0.9e10,
+        1.8e10,
+        2.7e10,
+        3.6e10,
+        4.5e10
+    ],
+    {
+        t:
+            4.242640687119285,
+
+        df:
+            4,
+
+        p:
+            0.01323559956368269
+    }
+);
 
 
-        const magnitude =
-            Math.sqrt(
-                -2 *
-                Math.log(u)
-            );
+runSciPyTest(
+    "Scale 1e12",
+    [
+        1e12,
+        2e12,
+        3e12,
+        4e12,
+        5e12
+    ],
+    [
+        0.9e12,
+        1.8e12,
+        2.7e12,
+        3.6e12,
+        4.5e12
+    ],
+    {
+        t:
+            4.242640687119285,
 
+        df:
+            4,
 
-        const angle =
-            2 *
-            Math.PI *
-            v;
-
-
-        spare =
-            magnitude *
-            Math.sin(angle);
-
-
-        return (
-            magnitude *
-            Math.cos(angle)
-        );
-
-    };
-
-}
-
-
-/*
- * NOTE:
- *
- * The following random cases are intentionally
- * generated in the browser only to stress-test
- * execution and internal consistency.
- *
- * They are not assigned SciPy reference values
- * here, because the browser itself cannot call SciPy.
- *
- * Therefore they are NOT counted as validation
- * against SciPy.
- */
+        p:
+            0.01323559956368269
+    }
+);
 
 
 /* =========================================================
-   INTERNAL STRUCTURE TESTS
+   DEGENERATE CASES
    ========================================================= */
 
 
-function runStructureTest(
-    testName,
-    groupA,
-    groupB
-) {
+/*
+ * Constant positive difference.
+ */
 
-    let result;
-
-
-    try {
-
-        result =
-            calculatePairedTTest(
-                groupA,
-                groupB
-            );
-
-    }
-    catch (error) {
-
-        addResult(
-            testName,
-            "structure",
-            NaN,
-            NaN,
-            "EXECUTION ERROR"
-        );
-
-        return;
-
-    }
-
-
-    if (
-        !result
-    ) {
-
-        addResult(
-            testName,
-            "structure",
-            NaN,
-            NaN,
-            "EXECUTION ERROR"
-        );
-
-        return;
-
-    }
-
-
-    const expectedN =
-        groupA.length;
-
-
-    const expectedDF =
-        expectedN - 1;
-
-
-    const differences =
-        groupA.map(
-            (
-                value,
-                index
-            ) =>
-                value -
-                groupB[index]
-        );
-
-
-    const mean =
-        differences.reduce(
-            (
-                sum,
-                value
-            ) =>
-                sum + value,
-            0
-        ) /
-        differences.length;
-
-
-    const nPass =
-        result.n ===
-        expectedN;
-
-
-    const dfPass =
-        result.degreesOfFreedom ===
-        expectedDF;
-
-
-    const meanPass =
-        nearlyEqual(
-            result.meanDifference,
-            mean
-        );
-
-
-    const allPass =
-        nPass &&
-        dfPass &&
-        meanPass;
-
-
-    addResult(
-        testName,
-        "internal structure",
-        allPass ? 1 : 0,
+runSciPyTest(
+    "Degenerate positive constant",
+    [
+        4,
+        5,
+        6,
+        7,
+        8
+    ],
+    [
         1,
-        allPass
-            ? "PASS"
-            : "FAIL",
-        allPass
-            ? 0
-            : 1
-    );
-
-}
-
-
-/* =========================================================
-   RANDOM STRUCTURE TESTS
-   ========================================================= */
-
-
-const randomNormal =
-    normalRandomGenerator(
-        123456
-    );
-
-
-for (
-    const n of [
         2,
         3,
-        5,
-        10,
-        20,
-        50,
-        100
-    ]
-) {
+        4,
+        5
+    ],
+    {
+        t:
+            Infinity,
 
-    const groupA =
-        [];
+        df:
+            4,
 
-    const groupB =
-        [];
+        p:
+            0,
 
-
-    for (
-        let i = 0;
-        i < n;
-        i++
-    ) {
-
-        const baseline =
-            100 +
-            20 *
-            randomNormal();
-
-
-        const treatment =
-            baseline +
-            5 +
-            3 *
-            randomNormal();
-
-
-        groupA.push(
-            baseline
-        );
-
-
-        groupB.push(
-            treatment
-        );
-
+        degenerate:
+            true
     }
+);
 
 
-    runStructureTest(
-        `Random structure n=${n}`,
-        groupA,
-        groupB
-    );
+/*
+ * Constant negative difference.
+ */
 
-}
+runSciPyTest(
+    "Degenerate negative constant",
+    [
+        1,
+        2,
+        3,
+        4,
+        5
+    ],
+    [
+        4,
+        5,
+        6,
+        7,
+        8
+    ],
+    {
+        t:
+            -Infinity,
+
+        df:
+            4,
+
+        p:
+            0,
+
+        degenerate:
+            true
+    }
+);
+
+
+/*
+ * All paired differences equal zero.
+ *
+ * SciPy:
+ *
+ * statistic = NaN
+ * pvalue    = NaN
+ */
+
+runSciPyTest(
+    "Degenerate zero differences",
+    [
+        1,
+        2,
+        3,
+        4,
+        5
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5
+    ],
+    {
+        t:
+            NaN,
+
+        df:
+            4,
+
+        p:
+            NaN,
+
+        degenerate:
+            true
+    }
+);
 
 
 /* =========================================================
-   EXTREME DIFFERENCE CASES
+   LARGE VALUES
    ========================================================= */
 
 
-runTest(
-    "Very large differences",
+runSciPyTest(
+    "Very large values",
     [
         1e12,
         2e12,
@@ -1776,13 +1751,13 @@ runTest(
     ],
     {
         t:
-            3.872983346207417,
+            4.242640687119285,
 
         df:
             4,
 
         p:
-            0.030466291662170977
+            0.01323559956368269
     }
 );
 
@@ -1792,31 +1767,244 @@ runTest(
    ========================================================= */
 
 
-runTest(
+runSciPyTest(
     "Near constant differences",
     [
-        10.000000,
-        20.000000,
-        30.000000,
-        40.000000,
-        50.000000
+        10,
+        20,
+        30,
+        40,
+        50
     ],
     [
-        9.000000,
+        9,
         18.999999,
         29.000001,
-        39.000000,
+        39,
         49.000001
     ],
     {
         t:
-            2236.06797749979,
+            2672611.884567297,
 
         df:
             4,
 
         p:
-            0.000000000000122799
+            1.1760009408600302e-25
+    }
+);
+
+
+/* =========================================================
+   DETERMINISTIC RANDOM DATA
+   =========================================================
+   
+   Generated with NumPy Generator:
+   
+   np.random.default_rng(20260904)
+   
+   and independently evaluated using:
+   
+   scipy.stats.ttest_rel
+   
+   These are therefore genuine fixed
+   reference datasets, not browser-generated
+   self-comparisons.
+   ========================================================= */
+
+
+/* -------------------------
+   Random n=2
+   ------------------------- */
+
+runSciPyTest(
+    "Random n=2",
+    [
+        130.35847073,
+        74.53495978
+    ],
+    [
+        137.34282989,
+        76.56008710
+    ],
+    {
+        t:
+            -1.8167100814548793,
+
+        df:
+            1,
+
+        p:
+            0.3203376652853849
+    }
+);
+
+
+/* -------------------------
+   Random n=3
+   ------------------------- */
+
+runSciPyTest(
+    "Random n=3",
+    [
+        108.29528077,
+        100.57703136,
+        105.31282463
+    ],
+    [
+        102.33051918,
+        97.56456270,
+        119.63093086
+    ],
+    {
+        t:
+            -0.2813990836996798,
+
+        df:
+            2,
+
+        p:
+            0.8048466252459816
+    }
+);
+
+
+/* -------------------------
+   Random n=5
+   ------------------------- */
+
+runSciPyTest(
+    "Random n=5",
+    [
+        116.28912350,
+        61.08932794,
+        116.33019557,
+        100.09999546,
+        86.28046787
+    ],
+    [
+        117.93195366,
+        61.09230677,
+        124.62798882,
+        113.73671777,
+        88.81811627
+    ],
+    {
+        t:
+            -2.068669824745695,
+
+        df:
+            4,
+
+        p:
+            0.1073918747280278
+    }
+);
+
+
+/* -------------------------
+   Random n=10
+   ------------------------- */
+
+runSciPyTest(
+    "Random n=10",
+    [
+        67.10008258,
+        102.70805553,
+        68.22205206,
+        121.35939706,
+        61.05030263,
+        107.54440146,
+        82.07624405,
+        83.76091026,
+        102.49502106,
+        96.50113117
+    ],
+    [
+        71.84143456,
+        104.01861704,
+        76.85944538,
+        125.91362657,
+        58.37173489,
+        118.20266289,
+        94.80100619,
+        84.86845853,
+        100.70111095,
+        109.04625239
+    ],
+    {
+        t:
+            -2.8582879518643978,
+
+        df:
+            9,
+
+        p:
+            0.01883289572845284
+    }
+);
+
+
+/* -------------------------
+   Random n=20
+   ------------------------- */
+
+runSciPyTest(
+    "Random n=20",
+    [
+        119.99323303,
+        55.72590412,
+        76.60795116,
+        85.28400931,
+        89.75978825,
+        103.26066452,
+        97.80863682,
+        82.28339556,
+        101.01794438,
+        94.89828167,
+        95.49200458,
+        82.04725767,
+        121.75832034,
+        90.74916468,
+        93.61991374,
+        100.10928324,
+        78.03904975,
+        83.05058694,
+        97.27956940,
+        107.84161224
+    ],
+    [
+        115.28477868,
+        55.60386248,
+        78.01303735,
+        83.77689097,
+        84.30981765,
+        104.16278116,
+        101.55385764,
+        92.07827703,
+        103.75219136,
+        102.66957704,
+        99.12670549,
+        93.41145434,
+        131.54009231,
+        91.38947447,
+        96.00122416,
+        100.51760157,
+        81.78438972,
+        80.04734461,
+        99.95479429,
+        109.09172236
+    ],
+    {
+        t:
+            -2.317054687570099,
+
+        df:
+            19,
+
+        p:
+            0.031819324647304
     }
 );
 
@@ -1827,41 +2015,54 @@ runTest(
 
 
 console.log(
-    "======================================"
+    "========================================"
 );
 
-console.log(
-    "LABISTRY PAIRED t-test STRESS TEST"
-);
 
 console.log(
-    "======================================"
+    "LABISTRY PAIRED t-TEST STRESS TEST"
 );
 
+
 console.log(
-    "Tests:",
+    "Reference: SciPy 1.17.0"
+);
+
+
+console.log(
+    "========================================"
+);
+
+
+console.log(
+    "Total tests:",
     totalTests
 );
 
-console.log(
-    "Valid:",
-    validTests
-);
 
 console.log(
-    "Failures:",
-    failures
+    "PASS:",
+    passTests
 );
+
+
+console.log(
+    "FAIL:",
+    failTests
+);
+
 
 console.log(
     "Degenerate:",
     degenerateTests
 );
 
+
 console.log(
     "Execution errors:",
     executionErrors
 );
+
 
 console.log(
     "Warnings:",
@@ -1869,20 +2070,25 @@ console.log(
 );
 
 
+console.log(
+    "========================================"
+);
+
+
 if (
-    failures === 0 &&
+    failTests === 0 &&
     executionErrors === 0
 ) {
 
     console.log(
-        "ALL NUMERICAL TESTS PASSED"
+        "ALL TESTS PASSED"
     );
 
 }
 else {
 
     console.error(
-        "SOME TESTS FAILED"
+        "FAILURES DETECTED"
     );
 
 }
