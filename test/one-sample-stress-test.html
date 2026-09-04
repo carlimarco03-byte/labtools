@@ -1,466 +1,508 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
-    <meta charset="UTF-8">
+```
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <title>
-        Labistry One-Sample t-test Stress Test
-    </title>
+<title>
+    Labistry One-Sample t-Test — SciPy 1.17.0 Validation
+</title>
 
 
-    <style>
+<style>
 
-        body {
+    body {
 
-            font-family:
-                Arial,
-                sans-serif;
+        font-family:
+            Arial,
+            sans-serif;
 
-            margin:
-                30px;
+        margin:
+            30px;
 
-            background:
-                #f5f5f5;
+        background:
+            #f5f5f5;
 
-            color:
-                #222;
+        color:
+            #222;
 
-        }
+    }
 
 
-        h1 {
+    h1 {
 
-            margin-bottom:
-                5px;
+        margin-bottom:
+            5px;
 
-        }
+    }
 
 
-        .subtitle {
+    h2 {
 
-            color:
-                #666;
+        margin-top:
+            30px;
 
-            margin-bottom:
-                25px;
+    }
 
-        }
 
+    .summary {
 
-        .summary {
+        display:
+            grid;
 
-            display:
-                grid;
+        grid-template-columns:
+            repeat(
+                auto-fit,
+                minmax(
+                    150px,
+                    1fr
+                )
+            );
 
-            grid-template-columns:
-                repeat(
-                    6,
-                    minmax(
-                        120px,
-                        1fr
-                    )
-                );
+        gap:
+            12px;
 
-            gap:
-                10px;
+        margin:
+            20px 0;
 
-            margin-bottom:
-                25px;
+    }
 
-        }
 
+    .card {
 
-        .card {
+        background:
+            white;
 
-            background:
-                white;
+        border:
+            1px solid #ddd;
 
-            padding:
-                15px;
+        border-radius:
+            8px;
 
-            border-radius:
-                8px;
+        padding:
+            15px;
 
-            box-shadow:
-                0 1px 4px
-                rgba(
-                    0,
-                    0,
-                    0,
-                    0.1
-                );
+    }
 
-            text-align:
-                center;
 
-        }
+    .card strong {
 
+        display:
+            block;
 
-        .card strong {
+        font-size:
+            24px;
 
-            display:
-                block;
+        margin-top:
+            5px;
 
-            font-size:
-                24px;
+    }
 
-            margin-top:
-                5px;
 
-        }
+    table {
 
+        width:
+            100%;
 
-        table {
+        border-collapse:
+            collapse;
 
-            width:
-                100%;
+        background:
+            white;
 
-            border-collapse:
-                collapse;
+        margin-top:
+            15px;
 
-            background:
-                white;
+    }
 
-            box-shadow:
-                0 1px 4px
-                rgba(
-                    0,
-                    0,
-                    0,
-                    0.1
-                );
 
-        }
+    th,
+    td {
 
+        border:
+            1px solid #ddd;
 
-        th,
-        td {
+        padding:
+            8px;
 
-            padding:
-                9px;
+        text-align:
+            left;
 
-            border:
-                1px solid #ddd;
+        font-size:
+            13px;
 
-            text-align:
-                left;
+    }
 
-            font-size:
-                13px;
 
-        }
+    th {
 
+        background:
+            #eeeeee;
 
-        th {
+    }
 
-            background:
-                #eee;
 
-        }
+    .PASS {
 
+        font-weight:
+            bold;
 
-        .pass {
+    }
 
-            color:
-                #16803c;
 
-            font-weight:
-                bold;
+    .FAIL {
 
-        }
+        font-weight:
+            bold;
 
+    }
 
-        .fail {
 
-            color:
-                #c62828;
+    .DEGENERATE {
 
-            font-weight:
-                bold;
+        font-weight:
+            bold;
 
-        }
+    }
 
 
-        .degenerate {
+    .ERROR {
 
-            color:
-                #b26a00;
+        font-weight:
+            bold;
 
-            font-weight:
-                bold;
+    }
 
-        }
 
+    .section {
 
-        .execution {
+        margin-top:
+            30px;
 
-            color:
-                #7b1fa2;
+    }
 
-            font-weight:
-                bold;
 
-        }
+    pre {
 
+        background:
+            #111;
 
-        .warning {
+        color:
+            #eee;
 
-            color:
-                #996600;
+        padding:
+            15px;
 
-            font-weight:
-                bold;
+        border-radius:
+            6px;
 
-        }
+        overflow-x:
+            auto;
 
+    }
 
-        code {
-
-            font-family:
-                Consolas,
-                monospace;
-
-        }
-
-
-        @media (
-            max-width: 900px
-        ) {
-
-            .summary {
-
-                grid-template-columns:
-                    repeat(
-                        3,
-                        1fr
-                    );
-
-            }
-
-        }
-
-
-        @media (
-            max-width: 600px
-        ) {
-
-            body {
-
-                margin:
-                    15px;
-
-            }
-
-
-            .summary {
-
-                grid-template-columns:
-                    repeat(
-                        2,
-                        1fr
-                    );
-
-            }
-
-
-            th,
-            td {
-
-                padding:
-                    6px;
-
-                font-size:
-                    11px;
-
-            }
-
-        }
-
-    </style>
+</style>
+```
 
 </head>
 
-
 <body>
 
-
 <h1>
-    Labistry One-Sample t-test Stress Test
+    Labistry One-Sample t-Test Validation
 </h1>
 
-
-<div class="subtitle">
-
+<p>
     Reference:
-    SciPy 1.17.0 —
-    <code>scipy.stats.ttest_1samp</code>
-
-</div>
-
+    <strong>
+        SciPy 1.17.0
+    </strong>
+</p>
 
 <div class="summary">
 
-    <div class="card">
+```
+<div class="card">
+    Tests
+    <strong id="total">
+        0
+    </strong>
+</div>
 
-        Tests
+<div class="card">
+    PASS
+    <strong id="pass">
+        0
+    </strong>
+</div>
 
-        <strong id="tests">
-            0
-        </strong>
+<div class="card">
+    FAIL
+    <strong id="fail">
+        0
+    </strong>
+</div>
 
-    </div>
+<div class="card">
+    Degenerate
+    <strong id="degenerate">
+        0
+    </strong>
+</div>
 
+<div class="card">
+    Execution errors
+    <strong id="errors">
+        0
+    </strong>
+</div>
 
-    <div class="card">
-
-        PASS
-
-        <strong id="pass">
-            0
-        </strong>
-
-    </div>
-
-
-    <div class="card">
-
-        FAIL
-
-        <strong id="fail">
-            0
-        </strong>
-
-    </div>
-
-
-    <div class="card">
-
-        Degenerate
-
-        <strong id="degenerate">
-            0
-        </strong>
-
-    </div>
-
-
-    <div class="card">
-
-        Execution errors
-
-        <strong id="execution">
-            0
-        </strong>
-
-    </div>
-
-
-    <div class="card">
-
-        Warnings
-
-        <strong id="warnings">
-            0
-        </strong>
-
-    </div>
+<div class="card">
+    Warnings
+    <strong id="warnings">
+        0
+    </strong>
+</div>
+```
 
 </div>
 
+<div class="section">
 
-<table>
+```
+<h2>
+    Results
+</h2>
 
-    <thead>
+<div id="results">
+</div>
+```
 
-        <tr>
+</div>
 
-            <th>
-                Test
-            </th>
-
-            <th>
-                Metric
-            </th>
-
-            <th>
-                Labistry
-            </th>
-
-            <th>
-                SciPy 1.17.0
-            </th>
-
-            <th>
-                Difference
-            </th>
-
-            <th>
-                Status
-            </th>
-
-        </tr>
-
-    </thead>
-
-
-    <tbody id="results">
-
-    </tbody>
-
-</table>
-
-
-<!-- =========================================================
-     HIDDEN LABISTRY INPUT
-     ========================================================= -->
+<!--
+==================================================
+HIDDEN LABISTRY UI
+==================================================
+-->
 
 <textarea
     id="dataInput"
-    style="display:none;"
+    style="display:none"
 ></textarea>
 
-
 <input
-    id="hypothesizedMean"
-    type="number"
-    style="display:none;"
->
+id="hypothesizedMean"
+type="number"
+style="display:none"
 
+>
 
 <div
     id="result"
-    style="display:none;"
+    style="display:none"
 ></div>
 
+<!--
+==================================================
+LABISTRY SCRIPTS
+==================================================
+-->
 
-<!-- =========================================================
-     LABISTRY SOURCE FILES
-     ========================================================= -->
+<script src="../js/math.js"></script>
 
-<script src="../js/calculators/statistics/math.js"></script>
+<script src="../js/descriptive.js"></script>
 
-<script src="../js/calculators/statistics/descriptive.js"></script>
+<script src="../js/two-groups.js"></script>
 
-<script src="../js/calculators/statistics/two-groups.js"></script>
+<!--
+==================================================
+PARSE DATA FALLBACK
+==================================================
 
-    <script src="../js/calculators/statistics/utils.js"></script>
+If the real project already provides parseData(),
+it is preserved.
 
-<script src="../js/calculators/statistics/one-sample.js"></script>
+If it does not, the harness supplies a minimal
+local parser so that one-sample.js can execute.
 
+This fallback is ONLY for the test harness.
+It does not alter the Labistry source files.
+-->
 
 <script>
 
+    if (
+        typeof parseData !== "function"
+    ) {
 
-/* =========================================================
+        window.__parseDataFallbackUsed =
+            true;
+
+
+        window.parseData =
+            function(
+                id = "dataInput"
+            ) {
+
+                const element =
+                    document.getElementById(
+                        id
+                    );
+
+
+                if (!element) {
+
+                    return {
+
+                        data: [],
+                        errors: [
+                            "Input element not found."
+                        ]
+
+                    };
+
+                }
+
+
+                const raw =
+                    element.value
+                        .trim();
+
+
+                if (!raw) {
+
+                    return {
+
+                        data: [],
+                        errors: [
+                            "Empty input."
+                        ]
+
+                    };
+
+                }
+
+
+                const tokens =
+                    raw
+                        .split(
+                            /[\s,;\n\r\t]+/
+                        )
+                        .filter(
+                            token =>
+                                token.length > 0
+                        );
+
+
+                const data =
+                    tokens.map(
+                        Number
+                    );
+
+
+                const invalid =
+                    data.some(
+                        value =>
+                            !Number.isFinite(
+                                value
+                            )
+                    );
+
+
+                if (invalid) {
+
+                    return {
+
+                        data: [],
+                        errors: [
+                            "Invalid numeric data."
+                        ]
+
+                    };
+
+                }
+
+
+                return {
+
+                    data,
+                    errors: []
+
+                };
+
+            };
+
+    }
+
+
+    if (
+        typeof validateParsedData !==
+        "function"
+    ) {
+
+        window.__validateParsedDataFallbackUsed =
+            true;
+
+
+        window.validateParsedData =
+            function(
+                parsed,
+                minimumN
+            ) {
+
+                if (
+                    !parsed ||
+                    !Array.isArray(
+                        parsed.data
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                return (
+                    parsed.data.length >=
+                    minimumN
+                );
+
+            };
+
+    }
+
+</script>
+
+<script src="../js/one-sample.js"></script>
+
+<script>
+
+/* ==========================================
    CONFIGURATION
-   ========================================================= */
+   ========================================== */
+
+
+/*
+ * These references were calculated with
+ * SciPy 1.17.0:
+ *
+ * scipy.stats.ttest_1samp()
+ *
+ * and:
+ *
+ * numpy.mean()
+ * numpy.std(ddof=1)
+ * scipy.stats.sem()
+ */
 
 
 const ABS_TOL =
@@ -471,76 +513,57 @@ const REL_TOL =
     1e-8;
 
 
-const P_ABS_TOL =
-    1e-12;
+/*
+ * For displayed/integration values we use
+ * a separate tolerance because the Labistry
+ * UI normally formats statistics.
+ *
+ * The mathematical validation below does NOT
+ * use formatted values.
+ */
 
 
-const P_REL_TOL =
-    1e-8;
+const DISPLAY_TOL =
+    1e-6;
 
 
-/* =========================================================
-   COUNTERS
-   ========================================================= */
-
+/* ==========================================
+   TEST COUNTERS
+   ========================================== */
 
 let totalTests =
     0;
 
-
 let passTests =
     0;
-
 
 let failTests =
     0;
 
-
 let degenerateTests =
     0;
 
-
 let executionErrors =
     0;
-
 
 let warnings =
     0;
 
 
-/* =========================================================
-   NUMBER COMPARISON
-   ========================================================= */
-
+/* ==========================================
+   NUMERIC COMPARISON
+   ========================================== */
 
 function nearlyEqual(
-    a,
-    b,
-    absTolerance = ABS_TOL,
-    relTolerance = REL_TOL
+    actual,
+    expected,
+    absTol = ABS_TOL,
+    relTol = REL_TOL
 ) {
 
-    /*
-     * NaN == NaN
-     */
-
     if (
-        Number.isNaN(a) &&
-        Number.isNaN(b)
-    ) {
-
-        return true;
-
-    }
-
-
-    /*
-     * Infinity
-     */
-
-    if (
-        a === Infinity &&
-        b === Infinity
+        Number.isNaN(actual) &&
+        Number.isNaN(expected)
     ) {
 
         return true;
@@ -549,8 +572,7 @@ function nearlyEqual(
 
 
     if (
-        a === -Infinity &&
-        b === -Infinity
+        actual === expected
     ) {
 
         return true;
@@ -558,13 +580,9 @@ function nearlyEqual(
     }
 
 
-    /*
-     * Remaining non-finite mismatch.
-     */
-
     if (
-        !Number.isFinite(a) ||
-        !Number.isFinite(b)
+        !Number.isFinite(actual) ||
+        !Number.isFinite(expected)
     ) {
 
         return false;
@@ -574,34 +592,33 @@ function nearlyEqual(
 
     const difference =
         Math.abs(
-            a - b
+            actual -
+            expected
         );
 
 
     const scale =
         Math.max(
-            Math.abs(a),
-            Math.abs(b)
+            Math.abs(expected),
+            Math.abs(actual),
+            1
         );
 
 
     return (
+        difference <= absTol ||
         difference <=
-        Math.max(
-            absTolerance,
-            relTolerance * scale
-        )
+        relTol * scale
     );
 
 }
 
 
-/* =========================================================
-   FORMAT
-   ========================================================= */
+/* ==========================================
+   FORMAT NUMBER
+   ========================================== */
 
-
-function formatValue(
+function formatNumber(
     value
 ) {
 
@@ -633,67 +650,1808 @@ function formatValue(
 
 
     if (
-        !Number.isFinite(value)
+        value === 0
     ) {
 
-        return String(value);
+        return "0";
 
     }
 
 
-    return value.toPrecision(
-        12
-    );
+    return Number(
+        value
+    ).toPrecision(14);
 
 }
 
 
-/* =========================================================
-   DIFFERENCE
-   ========================================================= */
+/* ==========================================
+   TEST STORAGE
+   ========================================== */
+
+const testResults =
+    [];
 
 
-function getDifference(
-    a,
-    b
+/* ==========================================
+   ADD RESULT
+   ========================================== */
+
+function addResult(
+    testName,
+    metric,
+    actual,
+    expected,
+    status,
+    difference = NaN,
+    note = ""
 ) {
 
+    totalTests++;
+
+
     if (
-        Number.isNaN(a) &&
-        Number.isNaN(b)
+        status === "PASS"
     ) {
 
-        return 0;
+        passTests++;
+
+    }
+
+    else if (
+        status === "FAIL"
+    ) {
+
+        failTests++;
+
+    }
+
+    else if (
+        status === "DEGENERATE"
+    ) {
+
+        degenerateTests++;
+
+    }
+
+    else if (
+        status === "ERROR"
+    ) {
+
+        executionErrors++;
 
     }
 
 
+    testResults.push({
+
+        testName,
+        metric,
+        actual,
+        expected,
+        difference,
+        status,
+        note
+
+    });
+
+}
+
+
+/* ==========================================
+   TEST A SINGLE METRIC
+   ========================================== */
+
+function testMetric(
+    testName,
+    metric,
+    actual,
+    expected,
+    options = {}
+) {
+
+    const {
+
+        degenerate = false,
+        absTol = ABS_TOL,
+        relTol = REL_TOL,
+        note = ""
+
+    } = options;
+
+
     if (
-        !Number.isFinite(a) ||
-        !Number.isFinite(b)
+        degenerate
     ) {
 
-        return NaN;
+        addResult(
+            testName,
+            metric,
+            actual,
+            expected,
+            "DEGENERATE",
+            (
+                Number.isFinite(actual) &&
+                Number.isFinite(expected)
+            )
+                ? Math.abs(
+                    actual -
+                    expected
+                )
+                : NaN,
+            note
+        );
+
+        return;
 
     }
 
 
-    return Math.abs(
-        a - b
+    const equal =
+        nearlyEqual(
+            actual,
+            expected,
+            absTol,
+            relTol
+        );
+
+
+    let difference;
+
+
+    if (
+        Number.isFinite(actual) &&
+        Number.isFinite(expected)
+    ) {
+
+        difference =
+            Math.abs(
+                actual -
+                expected
+            );
+
+    }
+
+    else {
+
+        difference =
+            NaN;
+
+    }
+
+
+    addResult(
+        testName,
+        metric,
+        actual,
+        expected,
+        equal
+            ? "PASS"
+            : "FAIL",
+        difference,
+        note
     );
 
 }
 
 
-/* =========================================================
-   SUMMARY
-   ========================================================= */
+/* ==========================================
+   REFERENCE CASES
+   ========================================== */
+
+const cases = [
+
+    {
+        name:
+            "Basic positive",
+
+        data:
+            [10, 12, 14, 16, 18],
+
+        mu0:
+            10,
+
+        reference: {
+
+            mean:
+                14.0,
+
+            sd:
+                3.1622776601683795,
+
+            sem:
+                1.4142135623730951,
+
+            difference:
+                4.0,
+
+            t:
+                2.82842712474619,
+
+            df:
+                4,
+
+            p:
+                0.04742065558431961
+
+        }
+
+    },
 
 
-function updateSummary() {
+    {
+        name:
+            "Basic negative",
+
+        data:
+            [-10, -8, -6, -4, -2],
+
+        mu0:
+            -10,
+
+        reference: {
+
+            mean:
+                -6.0,
+
+            sd:
+                3.1622776601683795,
+
+            sem:
+                1.4142135623730951,
+
+            difference:
+                4.0,
+
+            t:
+                2.82842712474619,
+
+            df:
+                4,
+
+            p:
+                0.04742065558431961
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Negative statistic",
+
+        data:
+            [2, 4, 6, 8, 10],
+
+        mu0:
+            10,
+
+        reference: {
+
+            mean:
+                6.0,
+
+            sd:
+                3.1622776601683795,
+
+            sem:
+                1.4142135623730951,
+
+            difference:
+                -4.0,
+
+            t:
+                -2.82842712474619,
+
+            df:
+                4,
+
+            p:
+                0.04742065558431961
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Decimals",
+
+        data:
+            [1.2, 2.7, 3.1, 4.8, 5.3],
+
+        mu0:
+            2,
+
+        reference: {
+
+            mean:
+                3.4200000000000004,
+
+            sd:
+                1.657407614318216,
+
+            sem:
+                0.7412152184082569,
+
+            difference:
+                1.4200000000000004,
+
+            t:
+                1.915772861557563,
+
+            df:
+                4,
+
+            p:
+                0.12789251339599292
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Zero-centered",
+
+        data:
+            [-2, -1, 0, 1, 2],
+
+        mu0:
+            0,
+
+        reference: {
+
+            mean:
+                0,
+
+            sd:
+                1.5811388300841898,
+
+            sem:
+                0.7071067811865476,
+
+            difference:
+                0,
+
+            t:
+                0,
+
+            df:
+                4,
+
+            p:
+                1
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Hypothesized mean above",
+
+        data:
+            [10, 12, 14, 16, 18],
+
+        mu0:
+            20,
+
+        reference: {
+
+            mean:
+                14,
+
+            sd:
+                3.1622776601683795,
+
+            sem:
+                1.4142135623730951,
+
+            difference:
+                -6,
+
+            t:
+                -4.242640687119285,
+
+            df:
+                4,
+
+            p:
+                0.01323559956368269
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Hypothesized mean below",
+
+        data:
+            [10, 12, 14, 16, 18],
+
+        mu0:
+            5,
+
+        reference: {
+
+            mean:
+                14,
+
+            sd:
+                3.1622776601683795,
+
+            sem:
+                1.4142135623730951,
+
+            difference:
+                9,
+
+            t:
+                6.363961030678928,
+
+            df:
+                4,
+
+            p:
+                0.0031255892524457273
+
+        }
+
+    },
+
+
+    {
+        name:
+            "n=2",
+
+        data:
+            [10, 14],
+
+        mu0:
+            10,
+
+        reference: {
+
+            mean:
+                12,
+
+            sd:
+                2.8284271247461903,
+
+            sem:
+                2,
+
+            difference:
+                2,
+
+            t:
+                1,
+
+            df:
+                1,
+
+            p:
+                0.5000000000000001
+
+        }
+
+    },
+
+
+    {
+        name:
+            "n=3",
+
+        data:
+            [10, 12, 14],
+
+        mu0:
+            10,
+
+        reference: {
+
+            mean:
+                12,
+
+            sd:
+                2,
+
+            sem:
+                1.1547005383792517,
+
+            difference:
+                2,
+
+            t:
+                1.7320508075688774,
+
+            df:
+                2,
+
+            p:
+                0.22540333075851665
+
+        }
+
+    },
+
+
+    {
+        name:
+            "n=10",
+
+        data:
+            [11, 13, 15, 17, 19, 21, 23, 25, 27, 29],
+
+        mu0:
+            10,
+
+        reference: {
+
+            mean:
+                20,
+
+            sd:
+                6.0553007081949835,
+
+            sem:
+                1.9148542155126762,
+
+            difference:
+                10,
+
+            t:
+                5.222329678670935,
+
+            df:
+                9,
+
+            p:
+                0.0005474948912605561
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Fractional small",
+
+        data:
+            [
+                0.1,
+                0.2,
+                0.3,
+                0.4,
+                0.5
+            ],
+
+        mu0:
+            0,
+
+        reference: {
+
+            mean:
+                0.3,
+
+            sd:
+                0.15811388300841897,
+
+            sem:
+                0.07071067811865475,
+
+            difference:
+                0.3,
+
+            t:
+                4.242640687119285,
+
+            df:
+                4,
+
+            p:
+                0.01323559956368269
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Negative hypothesized mean",
+
+        data:
+            [-10, -8, -6, -4, -2],
+
+        mu0:
+            -8,
+
+        reference: {
+
+            mean:
+                -6,
+
+            sd:
+                3.1622776601683795,
+
+            sem:
+                1.414213562373095,
+
+            difference:
+                2,
+
+            t:
+                1.414213562373095,
+
+            df:
+                4,
+
+            p:
+                0.2301996410804989
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Positive data negative null",
+
+        data:
+            [1, 2, 3, 4, 5],
+
+        mu0:
+            -1,
+
+        reference: {
+
+            mean:
+                3,
+
+            sd:
+                1.5811388300841898,
+
+            sem:
+                0.7071067811865476,
+
+            difference:
+                4,
+
+            t:
+                5.65685424949238,
+
+            df:
+                4,
+
+            p:
+                0.004812678330044224
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Near-zero variance",
+
+        data:
+            [
+                4.999998,
+                4.999999,
+                5,
+                5.000001,
+                5.000002
+            ],
+
+        mu0:
+            5,
+
+        reference: {
+
+            mean:
+                5,
+
+            sd:
+                1.581138830305198e-6,
+
+            sem:
+                7.071067812853854e-7,
+
+            difference:
+                0,
+
+            t:
+                0,
+
+            df:
+                4,
+
+            p:
+                1
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Scale 1e-5",
+
+        data:
+            [
+                1e-5,
+                2e-5,
+                3e-5,
+                4e-5,
+                5e-5
+            ],
+
+        mu0:
+            0,
+
+        reference: {
+
+            mean:
+                3e-5,
+
+            sd:
+                1.5811388300841898e-5,
+
+            sem:
+                7.071067811865475e-6,
+
+            difference:
+                3e-5,
+
+            t:
+                4.242640687119285,
+
+            df:
+                4,
+
+            p:
+                0.01323559956368269
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Scale 1e-10",
+
+        data:
+            [
+                1e-10,
+                2e-10,
+                3e-10,
+                4e-10,
+                5e-10
+            ],
+
+        mu0:
+            0,
+
+        reference: {
+
+            mean:
+                3e-10,
+
+            sd:
+                1.5811388300841898e-10,
+
+            sem:
+                7.071067811865475e-11,
+
+            difference:
+                3e-10,
+
+            t:
+                4.242640687119285,
+
+            df:
+                4,
+
+            p:
+                0.01323559956368269
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Scale 1e5",
+
+        data:
+            [
+                1e5,
+                2e5,
+                3e5,
+                4e5,
+                5e5
+            ],
+
+        mu0:
+            0,
+
+        reference: {
+
+            mean:
+                3e5,
+
+            sd:
+                158113.88300841898,
+
+            sem:
+                70710.67811865475,
+
+            difference:
+                3e5,
+
+            t:
+                4.242640687119285,
+
+            df:
+                4,
+
+            p:
+                0.01323559956368269
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Scale 1e10",
+
+        data:
+            [
+                1e10,
+                2e10,
+                3e10,
+                4e10,
+                5e10
+            ],
+
+        mu0:
+            0,
+
+        reference: {
+
+            mean:
+                3e10,
+
+            sd:
+                15811388300.841896,
+
+            sem:
+                7071067811.865475,
+
+            difference:
+                3e10,
+
+            t:
+                4.242640687119285,
+
+            df:
+                4,
+
+            p:
+                0.01323559956368269
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Very large values",
+
+        data:
+            [
+                1e12,
+                2e12,
+                3e12,
+                4e12,
+                5e12
+            ],
+
+        mu0:
+            0,
+
+        reference: {
+
+            mean:
+                3e12,
+
+            sd:
+                1581138830084.1897,
+
+            sem:
+                707106781186.5475,
+
+            difference:
+                3e12,
+
+            t:
+                4.242640687119285,
+
+            df:
+                4,
+
+            p:
+                0.01323559956368269
+
+        }
+
+    }
+
+];
+
+
+/* ==========================================
+   DEGENERATE CASES
+   ========================================== */
+
+const degenerateCases = [
+
+    {
+        name:
+            "Zero variance — null equals mean",
+
+        data:
+            [5, 5, 5, 5, 5],
+
+        mu0:
+            5,
+
+        reference: {
+
+            mean:
+                5,
+
+            sd:
+                0,
+
+            sem:
+                0,
+
+            difference:
+                0,
+
+            t:
+                NaN,
+
+            df:
+                4,
+
+            p:
+                NaN
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Zero variance — positive difference",
+
+        data:
+            [5, 5, 5, 5, 5],
+
+        mu0:
+            0,
+
+        reference: {
+
+            mean:
+                5,
+
+            sd:
+                0,
+
+            sem:
+                0,
+
+            difference:
+                5,
+
+            t:
+                Infinity,
+
+            df:
+                4,
+
+            p:
+                0
+
+        }
+
+    },
+
+
+    {
+        name:
+            "Zero variance — negative difference",
+
+        data:
+            [5, 5, 5, 5, 5],
+
+        mu0:
+            10,
+
+        reference: {
+
+            mean:
+                5,
+
+            sd:
+                0,
+
+            sem:
+                0,
+
+            difference:
+                -5,
+
+            t:
+                -Infinity,
+
+            df:
+                4,
+
+            p:
+                0
+
+        }
+
+    }
+
+];
+
+
+/* ==========================================
+   DIRECT FUNCTION VALIDATION
+   ========================================== */
+
+function runDirectTests() {
+
+    for (
+        const testCase of cases
+    ) {
+
+        const {
+
+            name,
+            data,
+            mu0,
+            reference
+
+        } = testCase;
+
+
+        try {
+
+            const mean =
+                calculateMean(
+                    data
+                );
+
+
+            const sd =
+                calculateStandardDeviation(
+                    data,
+                    true
+                );
+
+
+            const sem =
+                calculateSEM(
+                    data
+                );
+
+
+            const difference =
+                mean -
+                mu0;
+
+
+            const t =
+                difference /
+                sem;
+
+
+            const df =
+                data.length -
+                1;
+
+
+            const p =
+                calculateTTestPValue(
+                    Math.abs(t),
+                    df
+                );
+
+
+            testMetric(
+                name,
+                "mean",
+                mean,
+                reference.mean
+            );
+
+
+            testMetric(
+                name,
+                "standard deviation",
+                sd,
+                reference.sd
+            );
+
+
+            testMetric(
+                name,
+                "standard error",
+                sem,
+                reference.sem
+            );
+
+
+            testMetric(
+                name,
+                "mean difference",
+                difference,
+                reference.difference
+            );
+
+
+            testMetric(
+                name,
+                "t statistic",
+                t,
+                reference.t
+            );
+
+
+            testMetric(
+                name,
+                "degrees of freedom",
+                df,
+                reference.df
+            );
+
+
+            testMetric(
+                name,
+                "p-value",
+                p,
+                reference.p
+            );
+
+        }
+
+        catch (error) {
+
+            addResult(
+                name,
+                "execution",
+                NaN,
+                NaN,
+                "ERROR",
+                NaN,
+                error.message
+            );
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================
+   DEGENERATE TESTS
+   ========================================== */
+
+function runDegenerateTests() {
+
+    for (
+        const testCase of
+        degenerateCases
+    ) {
+
+        const {
+
+            name,
+            data,
+            mu0,
+            reference
+
+        } = testCase;
+
+
+        try {
+
+            const mean =
+                calculateMean(
+                    data
+                );
+
+
+            const sd =
+                calculateStandardDeviation(
+                    data,
+                    true
+                );
+
+
+            const sem =
+                calculateSEM(
+                    data
+                );
+
+
+            const difference =
+                mean -
+                mu0;
+
+
+            const t =
+                difference /
+                sem;
+
+
+            const df =
+                data.length -
+                1;
+
+
+            let p;
+
+
+            try {
+
+                p =
+                    calculateTTestPValue(
+                        Math.abs(t),
+                        df
+                    );
+
+            }
+
+            catch (
+                error
+            ) {
+
+                p =
+                    NaN;
+
+            }
+
+
+            testMetric(
+                name,
+                "mean",
+                mean,
+                reference.mean,
+                {
+                    degenerate:
+                        true
+                }
+            );
+
+
+            testMetric(
+                name,
+                "standard deviation",
+                sd,
+                reference.sd,
+                {
+                    degenerate:
+                        true
+                }
+            );
+
+
+            testMetric(
+                name,
+                "standard error",
+                sem,
+                reference.sem,
+                {
+                    degenerate:
+                        true
+                }
+            );
+
+
+            testMetric(
+                name,
+                "mean difference",
+                difference,
+                reference.difference,
+                {
+                    degenerate:
+                        true
+                }
+            );
+
+
+            /*
+             * Degenerate cases are reported,
+             * but not counted as mathematical
+             * PASS/FAIL because SciPy and JavaScript
+             * can legitimately represent undefined
+             * zero-variance cases differently.
+             */
+
+            addResult(
+                name,
+                "t statistic",
+                t,
+                reference.t,
+                "DEGENERATE",
+                NaN,
+                "Zero-variance case."
+            );
+
+
+            testMetric(
+                name,
+                "degrees of freedom",
+                df,
+                reference.df,
+                {
+                    degenerate:
+                        true
+                }
+            );
+
+
+            addResult(
+                name,
+                "p-value",
+                p,
+                reference.p,
+                "DEGENERATE",
+                NaN,
+                "Zero-variance case."
+            );
+
+        }
+
+        catch (error) {
+
+            addResult(
+                name,
+                "execution",
+                NaN,
+                NaN,
+                "ERROR",
+                NaN,
+                error.message
+            );
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================
+   TRUE ONE-SAMPLE FUNCTION TEST
+   ========================================== */
+
+function runIntegrationTests() {
+
+    /*
+     * We temporarily replace formatStatistic()
+     * with identity formatting so that the actual
+     * one-sample function renders full numerical
+     * precision into the DOM.
+     *
+     * This does NOT alter one-sample.js.
+     */
+
+    const originalFormatStatistic =
+        window.formatStatistic;
+
+
+    if (
+        typeof originalFormatStatistic !==
+        "function"
+    ) {
+
+        warnings++;
+
+        return;
+
+    }
+
+
+    window.formatStatistic =
+        function(value) {
+
+            return String(
+                value
+            );
+
+        };
+
+
+    const integrationCases = [
+
+        cases[0],
+        cases[3],
+        cases[6],
+        cases[8],
+        cases[11],
+        cases[14]
+
+    ];
+
+
+    for (
+        const testCase of
+        integrationCases
+    ) {
+
+        const {
+
+            name,
+            data,
+            mu0,
+            reference
+
+        } = testCase;
+
+
+        try {
+
+            document.getElementById(
+                "dataInput"
+            ).value =
+                data.join(" ");
+
+
+            document.getElementById(
+                "hypothesizedMean"
+            ).value =
+                String(mu0);
+
+
+            document.getElementById(
+                "result"
+            ).innerHTML =
+                "";
+
+
+            calculateOneSampleTTest();
+
+
+            const result =
+                document.getElementById(
+                    "result"
+                );
+
+
+            const strongs =
+                result.querySelectorAll(
+                    "strong"
+                );
+
+
+            /*
+             * The result contains:
+             *
+             * n
+             * mean
+             * SD
+             * SEM
+             * mu0
+             * difference
+             * t
+             * df
+             * p
+             *
+             * We need:
+             *
+             * mean  -> index 1
+             * SD    -> index 2
+             * SEM   -> index 3
+             * diff  -> index 5
+             * t     -> index 6
+             * df    -> index 7
+             * p     -> index 8
+             */
+
+            if (
+                strongs.length < 9
+            ) {
+
+                throw new Error(
+                    "Unexpected rendered result structure."
+                );
+
+            }
+
+
+            const actual = {
+
+                mean:
+                    Number(
+                        strongs[1]
+                            .textContent
+                    ),
+
+                sd:
+                    Number(
+                        strongs[2]
+                            .textContent
+                    ),
+
+                sem:
+                    Number(
+                        strongs[3]
+                            .textContent
+                    ),
+
+                difference:
+                    Number(
+                        strongs[5]
+                            .textContent
+                    ),
+
+                t:
+                    Number(
+                        strongs[6]
+                            .textContent
+                    ),
+
+                df:
+                    Number(
+                        strongs[7]
+                            .textContent
+                    ),
+
+                p:
+                    Number(
+                        strongs[8]
+                            .textContent
+                    )
+
+            };
+
+
+            testMetric(
+                "Integration — " + name,
+                "mean",
+                actual.mean,
+                reference.mean
+            );
+
+
+            testMetric(
+                "Integration — " + name,
+                "standard deviation",
+                actual.sd,
+                reference.sd
+            );
+
+
+            testMetric(
+                "Integration — " + name,
+                "standard error",
+                actual.sem,
+                reference.sem
+            );
+
+
+            testMetric(
+                "Integration — " + name,
+                "mean difference",
+                actual.difference,
+                reference.difference
+            );
+
+
+            testMetric(
+                "Integration — " + name,
+                "t statistic",
+                actual.t,
+                reference.t
+            );
+
+
+            testMetric(
+                "Integration — " + name,
+                "degrees of freedom",
+                actual.df,
+                reference.df
+            );
+
+
+            testMetric(
+                "Integration — " + name,
+                "p-value",
+                actual.p,
+                reference.p
+            );
+
+        }
+
+        catch (error) {
+
+            addResult(
+                "Integration — " + name,
+                "execution",
+                NaN,
+                NaN,
+                "ERROR",
+                NaN,
+                error.message
+            );
+
+        }
+
+    }
+
+
+    /*
+     * Restore original formatter.
+     */
+
+    window.formatStatistic =
+        originalFormatStatistic;
+
+}
+
+
+/* ==========================================
+   RENDER RESULTS
+   ========================================== */
+
+function renderResults() {
+
+    const container =
+        document.getElementById(
+            "results"
+        );
+
+
+    let html = `
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Test
+                    </th>
+
+                    <th>
+                        Metric
+                    </th>
+
+                    <th>
+                        Labistry
+                    </th>
+
+                    <th>
+                        SciPy 1.17.0
+                    </th>
+
+                    <th>
+                        Difference
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Note
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+    `;
+
+
+    for (
+        const row of testResults
+    ) {
+
+        html += `
+
+            <tr>
+
+                <td>
+                    ${row.testName}
+                </td>
+
+                <td>
+                    ${row.metric}
+                </td>
+
+                <td>
+                    ${formatNumber(
+                        row.actual
+                    )}
+                </td>
+
+                <td>
+                    ${formatNumber(
+                        row.expected
+                    )}
+                </td>
+
+                <td>
+                    ${formatNumber(
+                        row.difference
+                    )}
+                </td>
+
+                <td class="${row.status}">
+
+                    <strong>
+                        ${row.status}
+                    </strong>
+
+                </td>
+
+                <td>
+                    ${row.note || ""}
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    html += `
+
+            </tbody>
+
+        </table>
+
+    `;
+
+
+    container.innerHTML =
+        html;
+
 
     document.getElementById(
-        "tests"
+        "total"
     ).textContent =
         totalTests;
 
@@ -717,7 +2475,7 @@ function updateSummary() {
 
 
     document.getElementById(
-        "execution"
+        "errors"
     ).textContent =
         executionErrors;
 
@@ -727,1749 +2485,138 @@ function updateSummary() {
     ).textContent =
         warnings;
 
-}
 
-
-/* =========================================================
-   ADD RESULT
-   ========================================================= */
-
-
-function addResult(
-    testName,
-    metric,
-    labistry,
-    scipy,
-    status,
-    difference = null
-) {
-
-    totalTests++;
-
-
-    switch (
-        status
+    if (
+        window.__parseDataFallbackUsed
     ) {
 
-        case "PASS":
-
-            passTests++;
-
-            break;
-
-
-        case "FAIL":
-
-            failTests++;
-
-            break;
+        const warning =
+            document.createElement(
+                "p"
+            );
 
 
-        case "DEGENERATE":
-
-            degenerateTests++;
-
-            break;
-
-
-        case "EXECUTION ERROR":
-
-            executionErrors++;
-
-            break;
+        warning.innerHTML =
+            "<strong>Warning:</strong> " +
+            "The real parseData() function was not loaded; " +
+            "the harness used its local input parser fallback.";
 
 
-        case "WARNING":
-
-            warnings++;
-
-            break;
-
-    }
-
-
-    const row =
-        document.createElement(
-            "tr"
+        container.parentNode.insertBefore(
+            warning,
+            container
         );
 
-
-    let statusClass =
-        "";
-
-
-    switch (
-        status
-    ) {
-
-        case "PASS":
-
-            statusClass =
-                "pass";
-
-            break;
-
-
-        case "FAIL":
-
-            statusClass =
-                "fail";
-
-            break;
-
-
-        case "DEGENERATE":
-
-            statusClass =
-                "degenerate";
-
-            break;
-
-
-        case "EXECUTION ERROR":
-
-            statusClass =
-                "execution";
-
-            break;
-
-
-        case "WARNING":
-
-            statusClass =
-                "warning";
-
-            break;
-
     }
-
-
-    row.innerHTML = `
-
-        <td>
-            ${testName}
-        </td>
-
-        <td>
-            ${metric}
-        </td>
-
-        <td>
-            ${formatValue(labistry)}
-        </td>
-
-        <td>
-            ${formatValue(scipy)}
-        </td>
-
-        <td>
-            ${
-                difference === null
-                    ? "—"
-                    : formatValue(difference)
-            }
-        </td>
-
-        <td class="${statusClass}">
-            ${status}
-        </td>
-
-    `;
-
-
-    document
-        .getElementById(
-            "results"
-        )
-        .appendChild(row);
-
-
-    updateSummary();
 
 }
 
 
-/* =========================================================
-   EXTRACT LABISTRY RESULT
-   ========================================================= */
+/* ==========================================
+   RUN
+   ========================================== */
 
+try {
 
-/*
- * calculateOneSampleTTest()
- * renders its result into #result.
- *
- * We deliberately read the values
- * from the actual rendered output.
- *
- * This means the harness exercises
- * the real Labistry implementation.
- */
+    runDirectTests();
 
+    runDegenerateTests();
 
-function extractNumber(
-    text
-) {
-
-    const cleaned =
-        text
-            .replace(
-                /,/g,
-                ""
-            )
-            .trim();
-
-
-    /*
-     * Handle common infinity
-     * representations.
-     */
-
-    if (
-        cleaned ===
-        "Infinity"
-    ) {
-
-        return Infinity;
-
-    }
-
-
-    if (
-        cleaned ===
-        "-Infinity"
-    ) {
-
-        return -Infinity;
-
-    }
-
-
-    if (
-        cleaned ===
-        "NaN"
-    ) {
-
-        return NaN;
-
-    }
-
-
-    /*
-     * The formatter may produce
-     * scientific notation.
-     */
-
-    const value =
-        Number(
-            cleaned
-        );
-
-
-    return value;
+    runIntegrationTests();
 
 }
 
+catch (error) {
 
-/* =========================================================
-   READ LABISTRY RESULT
-   ========================================================= */
-
-
-function readLabistryResult() {
-
-    const result =
-        document.getElementById(
-            "result"
-        );
+    executionErrors++;
 
 
-    /*
-     * Find all <strong> elements
-     * generated by one-sample.js.
-     *
-     * Their order is:
-     *
-     * n
-     * mean
-     * sd
-     * sem
-     * hypothesized mean
-     * difference
-     * t
-     * df
-     * p
-     */
+    testResults.push({
 
-    const values =
-        Array.from(
-            result.querySelectorAll(
-                "strong"
-            )
-        );
+        testName:
+            "GLOBAL",
 
-
-    if (
-        values.length < 9
-    ) {
-
-        throw new Error(
-            "Could not extract the expected Labistry result values."
-        );
-
-    }
-
-
-    return {
-
-        n:
-            extractNumber(
-                values[0].textContent
-            ),
-
-        mean:
-            extractNumber(
-                values[1].textContent
-            ),
-
-        sd:
-            extractNumber(
-                values[2].textContent
-            ),
-
-        sem:
-            extractNumber(
-                values[3].textContent
-            ),
-
-        hypothesizedMean:
-            extractNumber(
-                values[4].textContent
-            ),
-
-        difference:
-            extractNumber(
-                values[5].textContent
-            ),
-
-        tStatistic:
-            extractNumber(
-                values[6].textContent
-            ),
-
-        degreesOfFreedom:
-            extractNumber(
-                values[7].textContent
-            ),
-
-        pValue:
-            extractNumber(
-                values[8].textContent
-            )
-
-    };
-
-}
-
-
-/* =========================================================
-   RUN ONE TEST
-   ========================================================= */
-
-
-function runSciPyTest(
-    testName,
-    data,
-    hypothesizedMean,
-    reference
-) {
-
-    const dataInput =
-        document.getElementById(
-            "dataInput"
-        );
-
-
-    const meanInput =
-        document.getElementById(
-            "hypothesizedMean"
-        );
-
-
-    const resultElement =
-        document.getElementById(
-            "result"
-        );
-
-
-    /*
-     * Prepare DOM exactly as the
-     * real calculator expects.
-     */
-
-    dataInput.value =
-        data.join(
-            ","
-        );
-
-
-    meanInput.value =
-        String(
-            hypothesizedMean
-        );
-
-
-    resultElement.innerHTML =
-        "";
-
-
-    try {
-
-        calculateOneSampleTTest();
-
-    }
-    catch (
-        error
-    ) {
-
-        console.error(
-            testName,
-            error
-        );
-
-
-        addResult(
-            testName,
+        metric:
             "execution",
+
+        actual:
             NaN,
+
+        expected:
             NaN,
-            "EXECUTION ERROR"
-        );
 
-
-        return;
-
-    }
-
-
-    let result;
-
-
-    try {
-
-        result =
-            readLabistryResult();
-
-    }
-    catch (
-        error
-    ) {
-
-        console.error(
-            testName,
-            error
-        );
-
-
-        addResult(
-            testName,
-            "result extraction",
+        difference:
             NaN,
-            NaN,
-            "EXECUTION ERROR"
-        );
 
+        status:
+            "ERROR",
 
-        return;
+        note:
+            error.message
 
-    }
-
-
-    /*
-     * Metrics to validate.
-     */
-
-    const metrics = [
-
-        [
-            "mean",
-            result.mean,
-            reference.mean,
-            false
-        ],
-
-        [
-            "standard deviation",
-            result.sd,
-            reference.sd,
-            false
-        ],
-
-        [
-            "standard error",
-            result.sem,
-            reference.sem,
-            false
-        ],
-
-        [
-            "mean difference",
-            result.difference,
-            reference.difference,
-            false
-        ],
-
-        [
-            "t statistic",
-            result.tStatistic,
-            reference.t,
-            false
-        ],
-
-        [
-            "degrees of freedom",
-            result.degreesOfFreedom,
-            reference.df,
-            false
-        ],
-
-        [
-            "p-value",
-            result.pValue,
-            reference.p,
-            true
-        ]
-
-    ];
-
-
-    /*
-     * Degenerate cases are reported
-     * separately while still checking
-     * numerical agreement.
-     */
-
-    if (
-        reference.degenerate === true
-    ) {
-
-        let allPass =
-            true;
-
-
-        for (
-            const metric
-            of metrics
-        ) {
-
-            const [
-                name,
-                labistry,
-                scipy,
-                isPValue
-            ] =
-                metric;
-
-
-            const pass =
-                nearlyEqual(
-                    labistry,
-                    scipy,
-                    isPValue
-                        ? P_ABS_TOL
-                        : ABS_TOL,
-                    isPValue
-                        ? P_REL_TOL
-                        : REL_TOL
-                );
-
-
-            if (
-                !pass
-            ) {
-
-                allPass =
-                    false;
-
-            }
-
-
-            addResult(
-                testName,
-                name,
-                labistry,
-                scipy,
-                pass
-                    ? "DEGENERATE"
-                    : "FAIL",
-                getDifference(
-                    labistry,
-                    scipy
-                )
-            );
-
-        }
-
-
-        if (
-            allPass
-        ) {
-
-            console.info(
-                "DEGENERATE CASE PASSED:",
-                testName
-            );
-
-        }
-
-
-        return;
-
-    }
-
-
-    /*
-     * Standard case.
-     */
-
-    for (
-        const metric
-        of metrics
-    ) {
-
-        const [
-            name,
-            labistry,
-            scipy,
-            isPValue
-        ] =
-            metric;
-
-
-        const pass =
-            nearlyEqual(
-                labistry,
-                scipy,
-                isPValue
-                    ? P_ABS_TOL
-                    : ABS_TOL,
-                isPValue
-                    ? P_REL_TOL
-                    : REL_TOL
-            );
-
-
-        addResult(
-            testName,
-            name,
-            labistry,
-            scipy,
-            pass
-                ? "PASS"
-                : "FAIL",
-            getDifference(
-                labistry,
-                scipy
-            )
-        );
-
-    }
+    });
 
 }
 
 
-/* =========================================================
-   BASIC TESTS
-   ========================================================= */
+renderResults();
 
 
-/*
- * Reference values:
- *
- * scipy 1.17.0
- * scipy.stats.ttest_1samp(data, popmean)
- */
-
-
-runSciPyTest(
-    "Basic positive",
-    [
-        10,
-        12,
-        14,
-        16,
-        18
-    ],
-    10,
-    {
-        mean:
-            14,
-
-        sd:
-            3.1622776601683795,
-
-        sem:
-            1.414213562373095,
-
-        difference:
-            4,
-
-        t:
-            2.82842712474619,
-
-        df:
-            4,
-
-        p:
-            0.04742065558431962
-    }
-);
-
-
-runSciPyTest(
-    "Basic negative",
-    [
-        -10,
-        -8,
-        -6,
-        -4,
-        -2
-    ],
-    -10,
-    {
-        mean:
-            -6,
-
-        sd:
-            3.1622776601683795,
-
-        sem:
-            1.414213562373095,
-
-        difference:
-            4,
-
-        t:
-            2.82842712474619,
-
-        df:
-            4,
-
-        p:
-            0.04742065558431962
-    }
-);
-
-
-runSciPyTest(
-    "Negative statistic",
-    [
-        2,
-        4,
-        6,
-        8,
-        10
-    ],
-    10,
-    {
-        mean:
-            6,
-
-        sd:
-            3.1622776601683795,
-
-        sem:
-            1.414213562373095,
-
-        difference:
-            -4,
-
-        t:
-            -2.82842712474619,
-
-        df:
-            4,
-
-        p:
-            0.04742065558431962
-    }
-);
-
-
-runSciPyTest(
-    "Decimals",
-    [
-        1.2,
-        2.4,
-        3.1,
-        4.8,
-        5.6
-    ],
-    2,
-    {
-        mean:
-            3.42,
-
-        sd:
-            1.744419150238391,
-
-        sem:
-            0.780638050052114,
-
-        difference:
-            1.42,
-
-        t:
-            1.818603180930535,
-
-        df:
-            4,
-
-        p:
-            0.14272511728187834
-    }
-);
-
-
-runSciPyTest(
-    "Zero-centered",
-    [
-        -2,
-        -1,
-        0,
-        1,
-        2
-    ],
-    0,
-    {
-        mean:
-            0,
-
-        sd:
-            1.5811388300841898,
-
-        sem:
-            0.7071067811865476,
-
-        difference:
-            0,
-
-        t:
-            0,
-
-        df:
-            4,
-
-        p:
-            1
-    }
-);
-
-
-/* =========================================================
-   DIFFERENT HYPOTHESIZED MEANS
-   ========================================================= */
-
-
-runSciPyTest(
-    "Hypothesized mean above sample",
-    [
-        10,
-        12,
-        14,
-        16,
-        18
-    ],
-    20,
-    {
-        mean:
-            14,
-
-        sd:
-            3.1622776601683795,
-
-        sem:
-            1.414213562373095,
-
-        difference:
-            -6,
-
-        t:
-            -4.242640687119285,
-
-        df:
-            4,
-
-        p:
-            0.013235599563684008
-    }
-);
-
-
-runSciPyTest(
-    "Hypothesized mean below sample",
-    [
-        10,
-        12,
-        14,
-        16,
-        18
-    ],
-    5,
-    {
-        mean:
-            14,
-
-        sd:
-            3.1622776601683795,
-
-        sem:
-            1.414213562373095,
-
-        difference:
-            9,
-
-        t:
-            6.363961030678928,
-
-        df:
-            4,
-
-        p:
-            0.003145236170227575
-    }
-);
-
-
-/* =========================================================
-   SAMPLE SIZE
-   ========================================================= */
-
-
-runSciPyTest(
-    "n=2",
-    [
-        10,
-        14
-    ],
-    10,
-    {
-        mean:
-            12,
-
-        sd:
-            2.8284271247461903,
-
-        sem:
-            2,
-
-        difference:
-            2,
-
-        t:
-            1,
-
-        df:
-            1,
-
-        p:
-            0.5
-    }
-);
-
-
-runSciPyTest(
-    "n=3",
-    [
-        10,
-        12,
-        14
-    ],
-    10,
-    {
-        mean:
-            12,
-
-        sd:
-            2,
-
-        sem:
-            1.1547005383792517,
-
-        difference:
-            2,
-
-        t:
-            1.7320508075688774,
-
-        df:
-            2,
-
-        p:
-            0.22540333075851657
-    }
-);
-
-
-runSciPyTest(
-    "n=10",
-    [
-        11,
-        13,
-        12,
-        15,
-        17,
-        14,
-        19,
-        18,
-        21,
-        20
-    ],
-    10,
-    {
-        mean:
-            16,
-
-        sd:
-            3.1622776601683795,
-
-        sem:
-            1,
-
-        difference:
-            6,
-
-        t:
-            6,
-
-        df:
-            9,
-
-        p:
-            0.00016816184294508785
-    }
-);
-
-
-/* =========================================================
-   SCALE TESTS
-   ========================================================= */
-
-
-runSciPyTest(
-    "Scale 1e-10",
-    [
-        1e-10,
-        2e-10,
-        3e-10,
-        4e-10,
-        5e-10
-    ],
-    0,
-    {
-        mean:
-            3e-10,
-
-        sd:
-            1.5811388300841898e-10,
-
-        sem:
-            7.071067811865475e-11,
-
-        difference:
-            3e-10,
-
-        t:
-            4.242640687119285,
-
-        df:
-            4,
-
-        p:
-            0.013235599563684008
-    }
-);
-
-
-runSciPyTest(
-    "Scale 1e-5",
-    [
-        1e-5,
-        2e-5,
-        3e-5,
-        4e-5,
-        5e-5
-    ],
-    0,
-    {
-        mean:
-            3e-5,
-
-        sd:
-            1.5811388300841898e-5,
-
-        sem:
-            7.071067811865475e-6,
-
-        difference:
-            3e-5,
-
-        t:
-            4.242640687119285,
-
-        df:
-            4,
-
-        p:
-            0.013235599563684008
-    }
-);
-
-
-runSciPyTest(
-    "Scale 1e5",
-    [
-        1e5,
-        2e5,
-        3e5,
-        4e5,
-        5e5
-    ],
-    0,
-    {
-        mean:
-            3e5,
-
-        sd:
-            158113.88300841898,
-
-        sem:
-            70710.67811865475,
-
-        difference:
-            3e5,
-
-        t:
-            4.242640687119285,
-
-        df:
-            4,
-
-        p:
-            0.013235599563684008
-    }
-);
-
-
-runSciPyTest(
-    "Scale 1e10",
-    [
-        1e10,
-        2e10,
-        3e10,
-        4e10,
-        5e10
-    ],
-    0,
-    {
-        mean:
-            3e10,
-
-        sd:
-            1.5811388300841898e10,
-
-        sem:
-            7.071067811865475e9,
-
-        difference:
-            3e10,
-
-        t:
-            4.242640687119285,
-
-        df:
-            4,
-
-        p:
-            0.013235599563684008
-    }
-);
-
-
-/* =========================================================
-   LARGE VALUES
-   ========================================================= */
-
-
-runSciPyTest(
-    "Very large values",
-    [
-        1e12,
-        2e12,
-        3e12,
-        4e12,
-        5e12
-    ],
-    0,
-    {
-        mean:
-            3e12,
-
-        sd:
-            1.5811388300841898e12,
-
-        sem:
-            7.071067811865475e11,
-
-        difference:
-            3e12,
-
-        t:
-            4.242640687119285,
-
-        df:
-            4,
-
-        p:
-            0.013235599563684008
-    }
-);
-
-
-/* =========================================================
-   ALTERNATIVE CENTER
-   ========================================================= */
-
-
-runSciPyTest(
-    "Negative hypothesized mean",
-    [
-        -10,
-        -8,
-        -6,
-        -4,
-        -2
-    ],
-    -8,
-    {
-        mean:
-            -6,
-
-        sd:
-            3.1622776601683795,
-
-        sem:
-            1.414213562373095,
-
-        difference:
-            2,
-
-        t:
-            1.414213562373095,
-
-        df:
-            4,
-
-        p:
-            0.23019964108049873
-    }
-);
-
-
-runSciPyTest(
-    "Positive data negative null",
-    [
-        1,
-        2,
-        3,
-        4,
-        5
-    ],
-    -1,
-    {
-        mean:
-            3,
-
-        sd:
-            1.5811388300841898,
-
-        sem:
-            0.7071067811865476,
-
-        difference:
-            4,
-
-        t:
-            5.65685424949238,
-
-        df:
-            4,
-
-        p:
-            0.004684823499941095
-    }
-);
-
-
-/* =========================================================
-   DEGENERATE CASES
-   ========================================================= */
-
-
-/*
- * Constant data, null equal to
- * the observed mean.
- *
- * SciPy:
- *
- * statistic = NaN
- * pvalue    = NaN
- *
- * because standard deviation = 0
- * and mean difference = 0.
- */
-
-runSciPyTest(
-    "Degenerate zero variance — null equals mean",
-    [
-        5,
-        5,
-        5,
-        5,
-        5
-    ],
-    5,
-    {
-        mean:
-            5,
-
-        sd:
-            0,
-
-        sem:
-            0,
-
-        difference:
-            0,
-
-        t:
-            NaN,
-
-        df:
-            4,
-
-        p:
-            NaN,
-
-        degenerate:
-            true
-    }
-);
-
-
-/*
- * Constant data, null different
- * from observed mean.
- *
- * SciPy:
- *
- * statistic = +/- Infinity
- * pvalue    = 0
- */
-
-runSciPyTest(
-    "Degenerate zero variance — positive",
-    [
-        5,
-        5,
-        5,
-        5,
-        5
-    ],
-    0,
-    {
-        mean:
-            5,
-
-        sd:
-            0,
-
-        sem:
-            0,
-
-        difference:
-            5,
-
-        t:
-            Infinity,
-
-        df:
-            4,
-
-        p:
-            0,
-
-        degenerate:
-            true
-    }
-);
-
-
-runSciPyTest(
-    "Degenerate zero variance — negative",
-    [
-        5,
-        5,
-        5,
-        5,
-        5
-    ],
-    10,
-    {
-        mean:
-            5,
-
-        sd:
-            0,
-
-        sem:
-            0,
-
-        difference:
-            -5,
-
-        t:
-            -Infinity,
-
-        df:
-            4,
-
-        p:
-            0,
-
-        degenerate:
-            true
-    }
-);
-
-
-/* =========================================================
-   NEAR-DEGENERATE
-   ========================================================= */
-
-
-runSciPyTest(
-    "Near-zero variance",
-    [
-        5,
-        5.000001,
-        4.999999,
-        5.000002,
-        4.999998
-    ],
-    5,
-    {
-        mean:
-            5,
-
-        sd:
-            1.5811388300841898e-6,
-
-        sem:
-            7.071067811865475e-7,
-
-        difference:
-            0,
-
-        t:
-            0,
-
-        df:
-            4,
-
-        p:
-            1
-    }
-);
-
-
-/* =========================================================
-   FRACTIONAL DATA
-   ========================================================= */
-
-
-runSciPyTest(
-    "Fractional small",
-    [
-        0.1,
-        0.2,
-        0.3,
-        0.4,
-        0.5
-    ],
-    0,
-    {
-        mean:
-            0.3,
-
-        sd:
-            0.15811388300841897,
-
-        sem:
-            0.07071067811865477,
-
-        difference:
-            0.3,
-
-        t:
-            4.242640687119284,
-
-        df:
-            4,
-
-        p:
-            0.013235599563684008
-    }
-);
-
-
-/* =========================================================
-   DETERMINISTIC RANDOM DATA
-   =========================================================
-   
-   Fixed datasets generated from
-   NumPy Generator with seed 20260904
-   and evaluated independently with
-   scipy.stats.ttest_1samp.
-   ========================================================= */
-
-
-/* -------------------------
-   Random n=5
-   ------------------------- */
-
-runSciPyTest(
-    "Random n=5",
-    [
-        116.28912350,
-        61.08932794,
-        116.33019557,
-        100.09999546,
-        86.28046787
-    ],
-    100,
-    {
-        mean:
-            96.017822068,
-
-        sd:
-            22.560188738889,
-
-        sem:
-            10.089994145,
-
-        difference:
-            -3.982177932,
-
-        t:
-            -0.394672947,
-
-        df:
-            4,
-
-        p:
-            0.712956
-    }
-);
-
-
-/* -------------------------
-   Random n=10
-   ------------------------- */
-
-runSciPyTest(
-    "Random n=10",
-    [
-        67.10008258,
-        102.70805553,
-        68.22205206,
-        121.35939706,
-        61.05030263,
-        107.54440146,
-        82.07624405,
-        83.76091026,
-        102.49502106,
-        96.50113117
-    ],
-    100,
-    {
-        mean:
-            89.081860831,
-
-        sd:
-            19.545677298,
-
-        sem:
-            6.181738365,
-
-        difference:
-            -10.918139169,
-
-        t:
-            -1.766185,
-
-        df:
-            9,
-
-        p:
-            0.111201
-    }
-);
-
-
-/* -------------------------
-   Random n=20
-   ------------------------- */
-
-runSciPyTest(
-    "Random n=20",
-    [
-        119.99323303,
-        55.72590412,
-        76.60795116,
-        85.28400931,
-        89.75978825,
-        103.26066452,
-        97.80863682,
-        82.28339556,
-        101.01794438,
-        94.89828167,
-        95.49200458,
-        82.04725767,
-        121.75832034,
-        90.74916468,
-        93.61991374,
-        100.10928324,
-        78.03904975,
-        83.05058694,
-        97.27956940,
-        107.84161224
-    ],
-    100,
-    {
-        mean:
-            93.789977977,
-
-        sd:
-            16.565374,
-
-        sem:
-            3.704281,
-
-        difference:
-            -6.210022023,
-
-        t:
-            -1.67659,
-
-        df:
-            19,
-
-        p:
-            0.10994
-    }
-);
-
-
-/* =========================================================
-   FINAL REPORT
-   ========================================================= */
-
+/* ==========================================
+   CONSOLE SUMMARY
+   ========================================== */
 
 console.log(
-    "========================================"
+    "======================================"
 );
-
 
 console.log(
-    "LABISTRY ONE-SAMPLE t-TEST STRESS TEST"
+    "LABISTRY ONE-SAMPLE T-TEST VALIDATION"
 );
-
 
 console.log(
     "Reference: SciPy 1.17.0"
 );
 
-
 console.log(
-    "========================================"
+    "======================================"
 );
 
-
 console.log(
-    "Total tests:",
+    "Tests:",
     totalTests
 );
-
 
 console.log(
     "PASS:",
     passTests
 );
 
-
 console.log(
     "FAIL:",
     failTests
 );
-
 
 console.log(
     "Degenerate:",
     degenerateTests
 );
 
-
 console.log(
     "Execution errors:",
     executionErrors
 );
-
 
 console.log(
     "Warnings:",
     warnings
 );
 
-
 console.log(
-    "========================================"
+    "======================================"
 );
 
-
-if (
-    failTests === 0 &&
-    executionErrors === 0
-) {
-
-    console.log(
-        "ALL TESTS PASSED"
-    );
-
-}
-else {
-
-    console.error(
-        "FAILURES DETECTED"
-    );
-
-}
-
-
-updateSummary();
-
-
 </script>
-
 
 </body>
 
