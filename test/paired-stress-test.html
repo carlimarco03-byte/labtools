@@ -11,7 +11,7 @@
     >
 
     <title>
-        Labistry Paired t-test SciPy Stress Test
+        Labistry Paired t-test Stress Test
     </title>
 
 
@@ -27,7 +27,7 @@
                 30px;
 
             background:
-                #f7f7f7;
+                #f5f5f5;
 
             color:
                 #222;
@@ -38,38 +38,18 @@
         h1 {
 
             margin-bottom:
-                10px;
+                5px;
 
         }
 
 
-        button {
-
-            padding:
-                10px 16px;
-
-            margin-right:
-                8px;
-
-            border:
-                none;
-
-            border-radius:
-                6px;
-
-            cursor:
-                pointer;
-
-        }
-
-
-        #runTest {
-
-            background:
-                #222;
+        .subtitle {
 
             color:
-                white;
+                #666;
+
+            margin-bottom:
+                25px;
 
         }
 
@@ -81,15 +61,18 @@
 
             grid-template-columns:
                 repeat(
-                    auto-fit,
-                    minmax(130px, 1fr)
+                    6,
+                    minmax(
+                        120px,
+                        1fr
+                    )
                 );
 
             gap:
-                12px;
+                10px;
 
-            margin:
-                20px 0;
+            margin-bottom:
+                25px;
 
         }
 
@@ -106,7 +89,16 @@
                 8px;
 
             box-shadow:
-                0 1px 4px #ddd;
+                0 1px 4px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.1
+                );
+
+            text-align:
+                center;
 
         }
 
@@ -117,7 +109,7 @@
                 block;
 
             font-size:
-                22px;
+                24px;
 
             margin-top:
                 5px;
@@ -136,8 +128,14 @@
             background:
                 white;
 
-            font-size:
-                13px;
+            box-shadow:
+                0 1px 4px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.1
+                );
 
         }
 
@@ -145,32 +143,17 @@
         th,
         td {
 
+            padding:
+                9px;
+
             border:
                 1px solid #ddd;
 
-            padding:
-                7px;
-
-            text-align:
-                right;
-
-        }
-
-
-        th:first-child,
-        td:first-child {
-
             text-align:
                 left;
 
-        }
-
-
-        th:nth-child(2),
-        td:nth-child(2) {
-
-            text-align:
-                left;
+            font-size:
+                13px;
 
         }
 
@@ -185,6 +168,9 @@
 
         .pass {
 
+            color:
+                #16803c;
+
             font-weight:
                 bold;
 
@@ -192,6 +178,9 @@
 
 
         .fail {
+
+            color:
+                #c62828;
 
             font-weight:
                 bold;
@@ -201,13 +190,8 @@
 
         .degenerate {
 
-            font-weight:
-                bold;
-
-        }
-
-
-        .execution-error {
+            color:
+                #b26a00;
 
             font-weight:
                 bold;
@@ -215,39 +199,80 @@
         }
 
 
-        .error-box {
+        .execution {
 
-            background:
-                #fff0f0;
+            color:
+                #7b1fa2;
 
-            border:
-                1px solid #e0b0b0;
-
-            padding:
-                15px;
-
-            margin:
-                20px 0;
-
-            white-space:
-                pre-wrap;
+            font-weight:
+                bold;
 
         }
 
 
-        .info {
+        .small {
 
-            background:
-                white;
+            font-size:
+                11px;
 
-            padding:
-                15px;
+            color:
+                #666;
 
-            margin:
-                20px 0;
+        }
 
-            border-radius:
-                8px;
+
+        @media (
+            max-width: 900px
+        ) {
+
+            .summary {
+
+                grid-template-columns:
+                    repeat(
+                        3,
+                        1fr
+                    );
+
+            }
+
+        }
+
+
+        @media (
+            max-width: 600px
+        ) {
+
+            .summary {
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        1fr
+                    );
+
+            }
+
+            body {
+
+                margin:
+                    15px;
+
+            }
+
+            table {
+
+                font-size:
+                    11px;
+
+            }
+
+            th,
+            td {
+
+                padding:
+                    6px;
+
+            }
 
         }
 
@@ -260,77 +285,100 @@
 
 
 <h1>
-    Labistry Paired t-test — SciPy Stress Test
+    Labistry Paired t-test Stress Test
 </h1>
 
 
-<div class="info">
+<div class="subtitle">
 
-    <p>
-
-        Direct numerical comparison of
-
-        <code>
-            calculatePairedTTest()
-        </code>
-
-        against independently generated
-
-        SciPy
-
-        <code>
-            scipy.stats.ttest_rel()
-        </code>
-
-        reference values.
-
-    </p>
-
-    <p>
-
-        Tolerance:
-
-        <code>
-            ABS_TOL = 1e-10
-        </code>
-
-        ,
-
-        <code>
-            REL_TOL = 1e-8
-        </code>
-
-    </p>
+    Independent reference:
+    SciPy
+    <code>scipy.stats.ttest_rel</code>
+    — SciPy 1.17.0
 
 </div>
 
 
-<button id="runTest">
+<div class="summary">
 
-    Run stress test
+    <div class="card">
+        Tests
+        <strong id="tests">0</strong>
+    </div>
 
-</button>
+    <div class="card">
+        Valid
+        <strong id="valid">0</strong>
+    </div>
+
+    <div class="card">
+        Failures
+        <strong id="failures">0</strong>
+    </div>
+
+    <div class="card">
+        Degenerate
+        <strong id="degenerate">0</strong>
+    </div>
+
+    <div class="card">
+        Execution errors
+        <strong id="execution">0</strong>
+    </div>
+
+    <div class="card">
+        Warnings
+        <strong id="warnings">0</strong>
+    </div>
+
+</div>
 
 
-<div
-    id="summary"
-    class="summary"
-></div>
+<table>
+
+    <thead>
+
+        <tr>
+
+            <th>
+                Test
+            </th>
+
+            <th>
+                Metric
+            </th>
+
+            <th>
+                Labistry
+            </th>
+
+            <th>
+                SciPy
+            </th>
+
+            <th>
+                Difference
+            </th>
+
+            <th>
+                Status
+            </th>
+
+        </tr>
+
+    </thead>
 
 
-<div
-    id="message"
-></div>
+    <tbody id="results">
+
+    </tbody>
+
+</table>
 
 
-<div
-    id="results"
-></div>
-
-
-<!-- =====================================
+<!-- =========================================================
      LABISTRY DEPENDENCIES
-     ===================================== -->
+     ========================================================= -->
 
 <script src="../js/calculators/statistics/math.js"></script>
 
@@ -344,9 +392,10 @@
 <script>
 
 
-/* =====================================
-   TEST CONFIGURATION
-   ===================================== */
+/* =========================================================
+   CONFIGURATION
+   ========================================================= */
+
 
 const ABS_TOL =
     1e-10;
@@ -356,388 +405,76 @@ const REL_TOL =
     1e-8;
 
 
-/* =====================================
-   TEST CASES
-   ===================================== */
+/*
+ * SciPy reference:
+ *
+ * scipy.stats.ttest_rel(
+ *     a,
+ *     b
+ * )
+ *
+ * SciPy version used to generate
+ * the reference values:
+ *
+ * 1.17.0
+ */
 
-const testCases = [
 
-    {
-        name:
-            "Basic positive",
+let totalTests =
+    0;
 
-        a:
-            [10, 12, 14, 16, 18],
+let validTests =
+    0;
 
-        b:
-            [8, 9, 11, 12, 13],
+let failures =
+    0;
 
-        reference:
-        {
-            t:
-                7.810249675906654,
+let degenerateTests =
+    0;
 
-            p:
-                0.001458980337503154,
+let executionErrors =
+    0;
 
-            df:
-                4
-        }
-    },
+let warnings =
+    0;
 
 
-    {
-        name:
-            "Basic negative",
-
-        a:
-            [8, 9, 11, 12, 13],
-
-        b:
-            [10, 12, 14, 16, 18],
-
-        reference:
-        {
-            t:
-                -7.810249675906654,
-
-            p:
-                0.001458980337503154,
-
-            df:
-                4
-        }
-    },
-
-
-    {
-        name:
-            "Decimals",
-
-        a:
-            [1.1, 2.4, 3.7, 4.2, 5.9],
-
-        b:
-            [0.9, 2.1, 3.2, 4.5, 5.1],
-
-        reference:
-        {
-            t:
-                1.8376657799284755,
-
-            p:
-                0.13993767227589952,
-
-            df:
-                4
-        }
-    },
-
-
-    {
-        name:
-            "Negative values",
-
-        a:
-            [-5, -3, -1, 1, 3],
-
-        b:
-            [-6, -4, -2, 0, 2],
-
-        reference:
-        {
-            t:
-                3.1622776601683795,
-
-            p:
-                0.03406367107515443,
-
-            df:
-                4
-        }
-    },
-
-
-    {
-        name:
-            "Small differences",
-
-        a:
-            [1.001, 2.002, 3.001, 4.003, 5.002],
-
-        b:
-            [1.000, 2.000, 3.000, 4.000, 5.000],
-
-        reference:
-        {
-            t:
-                4.685212302980049,
-
-            p:
-                0.00951670168836863,
-
-            df:
-                4
-        }
-    },
-
-
-    {
-        name:
-            "Unequal spacing",
-
-        a:
-            [1, 5, 20, 50, 100],
-
-        b:
-            [2, 4, 22, 45, 110],
-
-        reference:
-        {
-            t:
-                -0.3398497454476553,
-
-            p:
-                0.7513850941828422,
-
-            df:
-                4
-        }
-    },
-
-
-    {
-        name:
-            "Mostly positive",
-
-        a:
-            [10, 20, 30, 40, 50],
-
-        b:
-            [9, 19, 29, 41, 49],
-
-        reference:
-        {
-            t:
-                1.6666666666666667,
-
-            p:
-                0.17047066135682063,
-
-            df:
-                4
-        }
-    },
-
-
-    {
-        name:
-            "Mostly negative",
-
-        a:
-            [9, 19, 29, 41, 49],
-
-        b:
-            [10, 20, 30, 40, 50],
-
-        reference:
-        {
-            t:
-                -1.6666666666666667,
-
-            p:
-                0.17047066135682063,
-
-            df:
-                4
-        }
-    },
-
-
-    {
-        name:
-            "Alternating",
-
-        a:
-            [10, 20, 30, 40, 50, 60],
-
-        b:
-            [8, 22, 28, 42, 48, 62],
-
-        reference:
-        {
-            t:
-                0,
-
-            p:
-                1,
-
-            df:
-                5
-        }
-    },
-
-
-    {
-        name:
-            "Repeated values",
-
-        a:
-            [5, 5, 7, 7, 9, 9],
-
-        b:
-            [4, 6, 6, 8, 8, 10],
-
-        reference:
-        {
-            t:
-                0,
-
-            p:
-                1,
-
-            df:
-                5
-        }
-    },
-
-
-    {
-        name:
-            "Fractional small",
-
-        a:
-            [
-                0.001,
-                0.002,
-                0.003,
-                0.004,
-                0.005
-            ],
-
-        b:
-            [
-                0.0009,
-                0.0019,
-                0.0031,
-                0.0039,
-                0.0051
-            ],
-
-        reference:
-        {
-            t:
-                -0.19611613513818416,
-
-            p:
-                0.8541087196892897,
-
-            df:
-                4
-        }
-    },
-
-
-    /* =================================
-       DEGENERATE CASES
-       ================================= */
-
-
-    {
-        name:
-            "Constant difference +3",
-
-        a:
-            [5, 7, 9, 11, 13],
-
-        b:
-            [2, 4, 6, 8, 10],
-
-        reference:
-        {
-            t:
-                NaN,
-
-            p:
-                0,
-
-            df:
-                4
-        },
-
-        degenerate:
-            true
-    },
-
-
-    {
-        name:
-            "Constant difference -3",
-
-        a:
-            [2, 4, 6, 8, 10],
-
-        b:
-            [5, 7, 9, 11, 13],
-
-        reference:
-        {
-            t:
-                NaN,
-
-            p:
-                0,
-
-            df:
-                4
-        },
-
-        degenerate:
-            true
-    },
-
-
-    {
-        name:
-            "Constant zero difference",
-
-        a:
-            [5, 5, 5, 5, 5],
-
-        b:
-            [5, 5, 5, 5, 5],
-
-        reference:
-        {
-            t:
-                NaN,
-
-            p:
-                NaN,
-
-            df:
-                4
-        },
-
-        degenerate:
-            true
-    }
-
-];
-
-
-/* =====================================
+/* =========================================================
    NUMERICAL COMPARISON
-   ===================================== */
+   ========================================================= */
+
 
 function nearlyEqual(
-    labistry,
-    reference
+    a,
+    b
 ) {
 
+    /*
+     * NaN == NaN
+     *
+     * This is important for
+     * the zero-difference
+     * degenerate case.
+     */
+
     if (
-        Number.isNaN(labistry) &&
-        Number.isNaN(reference)
+        Number.isNaN(a) &&
+        Number.isNaN(b)
+    ) {
+
+        return true;
+
+    }
+
+
+    /*
+     * Infinity must match
+     * exactly.
+     */
+
+    if (
+        a === Infinity &&
+        b === Infinity
     ) {
 
         return true;
@@ -746,7 +483,8 @@ function nearlyEqual(
 
 
     if (
-        labistry === reference
+        a === -Infinity &&
+        b === -Infinity
     ) {
 
         return true;
@@ -755,8 +493,8 @@ function nearlyEqual(
 
 
     if (
-        !Number.isFinite(labistry) ||
-        !Number.isFinite(reference)
+        !Number.isFinite(a) ||
+        !Number.isFinite(b)
     ) {
 
         return false;
@@ -764,23 +502,22 @@ function nearlyEqual(
     }
 
 
-    const absoluteDifference =
+    const difference =
         Math.abs(
-            labistry -
-            reference
+            a - b
         );
 
 
     const scale =
         Math.max(
-            Math.abs(labistry),
-            Math.abs(reference),
+            Math.abs(a),
+            Math.abs(b),
             1
         );
 
 
     return (
-        absoluteDifference <=
+        difference <=
         Math.max(
             ABS_TOL,
             REL_TOL * scale
@@ -790,9 +527,10 @@ function nearlyEqual(
 }
 
 
-/* =====================================
-   FORMAT VALUE
-   ===================================== */
+/* =========================================================
+   FORMAT
+   ========================================================= */
+
 
 function formatValue(
     value
@@ -811,7 +549,7 @@ function formatValue(
         value === Infinity
     ) {
 
-        return "Infinity";
+        return "+Infinity";
 
     }
 
@@ -826,11 +564,10 @@ function formatValue(
 
 
     if (
-        value === null ||
-        value === undefined
+        !Number.isFinite(value)
     ) {
 
-        return "—";
+        return String(value);
 
     }
 
@@ -840,519 +577,1318 @@ function formatValue(
 }
 
 
-/* =====================================
-   RUN SINGLE TEST
-   ===================================== */
+/* =========================================================
+   DIFFERENCE
+   ========================================================= */
 
-function runSingleTest(
-    test
+
+function numericalDifference(
+    a,
+    b
 ) {
 
-    try {
+    if (
+        Number.isNaN(a) &&
+        Number.isNaN(b)
+    ) {
 
-        if (
-            typeof calculatePairedTTest !==
-            "function"
-        ) {
-
-            throw new Error(
-                "calculatePairedTTest() is not available."
-            );
-
-        }
-
-
-        const result =
-            calculatePairedTTest(
-                test.a,
-                test.b
-            );
-
-
-        if (!result) {
-
-            throw new Error(
-                "calculatePairedTTest() returned null."
-            );
-
-        }
-
-
-        const tPass =
-            nearlyEqual(
-                result.tStatistic,
-                test.reference.t
-            );
-
-
-        const pPass =
-            nearlyEqual(
-                result.pValue,
-                test.reference.p
-            );
-
-
-        const dfPass =
-            nearlyEqual(
-                result.degreesOfFreedom,
-                test.reference.df
-            );
-
-
-        let status;
-
-
-        if (
-            test.degenerate
-        ) {
-
-            status =
-                "DEGENERATE";
-
-        } else if (
-            tPass &&
-            pPass &&
-            dfPass
-        ) {
-
-            status =
-                "PASS";
-
-        } else {
-
-            status =
-                "FAIL";
-
-        }
-
-
-        return {
-
-            name:
-                test.name,
-
-            status:
-                status,
-
-            labT:
-                result.tStatistic,
-
-            scipyT:
-                test.reference.t,
-
-            labP:
-                result.pValue,
-
-            scipyP:
-                test.reference.p,
-
-            labDf:
-                result.degreesOfFreedom,
-
-            scipyDf:
-                test.reference.df,
-
-            meanDifference:
-                result.meanDifference,
-
-            sd:
-                result.standardDeviation,
-
-            sem:
-                result.sem
-
-        };
-
-    } catch (error) {
-
-        return {
-
-            name:
-                test.name,
-
-            status:
-                "EXECUTION ERROR",
-
-            error:
-                error.message
-
-        };
+        return 0;
 
     }
-
-}
-
-
-/* =====================================
-   RUN ALL TESTS
-   ===================================== */
-
-function runStressTest() {
-
-    const results =
-        testCases.map(
-            runSingleTest
-        );
-
-
-    renderSummary(
-        results
-    );
-
-
-    renderResults(
-        results
-    );
-
-
-    console.log(
-        "LABISTRY PAIRED T-TEST RESULTS",
-        results
-    );
-
-}
-
-
-/* =====================================
-   SUMMARY
-   ===================================== */
-
-function renderSummary(
-    results
-) {
-
-    const tests =
-        results.length;
-
-
-    const pass =
-        results.filter(
-            result =>
-                result.status === "PASS"
-        ).length;
-
-
-    const fail =
-        results.filter(
-            result =>
-                result.status === "FAIL"
-        ).length;
-
-
-    const degenerate =
-        results.filter(
-            result =>
-                result.status === "DEGENERATE"
-        ).length;
-
-
-    const executionErrors =
-        results.filter(
-            result =>
-                result.status ===
-                "EXECUTION ERROR"
-        ).length;
-
-
-    document.getElementById(
-        "summary"
-    ).innerHTML = `
-
-        <div class="card">
-
-            Tests
-
-            <strong>
-                ${tests}
-            </strong>
-
-        </div>
-
-
-        <div class="card">
-
-            PASS
-
-            <strong>
-                ${pass}
-            </strong>
-
-        </div>
-
-
-        <div class="card">
-
-            FAIL
-
-            <strong>
-                ${fail}
-            </strong>
-
-        </div>
-
-
-        <div class="card">
-
-            Degenerate
-
-            <strong>
-                ${degenerate}
-            </strong>
-
-        </div>
-
-
-        <div class="card">
-
-            Execution errors
-
-            <strong>
-                ${executionErrors}
-            </strong>
-
-        </div>
-
-    `;
-
-
-    const problematic =
-        results.filter(
-            result =>
-                result.status === "FAIL" ||
-                result.status === "EXECUTION ERROR"
-        );
 
 
     if (
-        problematic.length === 0
+        !Number.isFinite(a) ||
+        !Number.isFinite(b)
     ) {
 
-        document.getElementById(
-            "message"
-        ).innerHTML = `
-
-            <div class="info">
-
-                <strong>
-                    ALL NON-DEGENERATE TESTS PASSED
-                </strong>
-
-                <p>
-
-                    Degenerate constant-difference
-                    cases are reported separately.
-
-                </p>
-
-            </div>
-
-        `;
-
-    } else {
-
-        document.getElementById(
-            "message"
-        ).innerHTML = `
-
-            <div class="error-box">
-
-                <strong>
-                    FAILURES DETECTED
-                </strong>
-
-                <br><br>
-
-                ${problematic
-                    .map(
-                        result =>
-                            `${result.name}: ${
-                                result.error ||
-                                result.status
-                            }`
-                    )
-                    .join("<br>")}
-
-            </div>
-
-        `;
+        return NaN;
 
     }
 
+
+    return Math.abs(
+        a - b
+    );
+
 }
 
 
-/* =====================================
-   RESULTS TABLE
-   ===================================== */
+/* =========================================================
+   ADD RESULT
+   ========================================================= */
 
-function renderResults(
-    results
+
+function addResult(
+    testName,
+    metric,
+    labistry,
+    scipy,
+    status,
+    difference = null
 ) {
 
-    let html = `
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>
-                        Case
-                    </th>
-
-                    <th>
-                        Status
-                    </th>
-
-                    <th>
-                        Labistry t
-                    </th>
-
-                    <th>
-                        SciPy t
-                    </th>
-
-                    <th>
-                        Labistry p
-                    </th>
-
-                    <th>
-                        SciPy p
-                    </th>
-
-                    <th>
-                        Labistry df
-                    </th>
-
-                    <th>
-                        SciPy df
-                    </th>
-
-                    <th>
-                        Mean Δ
-                    </th>
-
-                    <th>
-                        SD Δ
-                    </th>
-
-                    <th>
-                        SEM Δ
-                    </th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-    `;
+    totalTests++;
 
 
-    results.forEach(
-        result => {
+    if (
+        status === "PASS"
+    ) {
 
-            html += `
+        validTests++;
 
-                <tr>
+    }
+    else if (
+        status === "FAIL"
+    ) {
 
-                    <td>
-                        ${result.name}
-                    </td>
+        failures++;
 
-                    <td>
-                        ${result.status}
-                    </td>
+    }
+    else if (
+        status === "DEGENERATE"
+    ) {
 
-                    <td>
-                        ${formatValue(
-                            result.labT
-                        )}
-                    </td>
+        degenerateTests++;
 
-                    <td>
-                        ${formatValue(
-                            result.scipyT
-                        )}
-                    </td>
+    }
+    else if (
+        status === "EXECUTION ERROR"
+    ) {
 
-                    <td>
-                        ${formatValue(
-                            result.labP
-                        )}
-                    </td>
+        executionErrors++;
 
-                    <td>
-                        ${formatValue(
-                            result.scipyP
-                        )}
-                    </td>
+    }
+    else if (
+        status === "WARNING"
+    ) {
 
-                    <td>
-                        ${formatValue(
-                            result.labDf
-                        )}
-                    </td>
+        warnings++;
 
-                    <td>
-                        ${formatValue(
-                            result.scipyDf
-                        )}
-                    </td>
-
-                    <td>
-                        ${formatValue(
-                            result.meanDifference
-                        )}
-                    </td>
-
-                    <td>
-                        ${formatValue(
-                            result.sd
-                        )}
-                    </td>
-
-                    <td>
-                        ${formatValue(
-                            result.sem
-                        )}
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
-    );
+    }
 
 
-    html += `
+    const row =
+        document.createElement(
+            "tr"
+        );
 
-            </tbody>
 
-        </table>
+    let statusClass =
+        "";
+
+
+    if (
+        status === "PASS"
+    ) {
+
+        statusClass =
+            "pass";
+
+    }
+    else if (
+        status === "FAIL"
+    ) {
+
+        statusClass =
+            "fail";
+
+    }
+    else if (
+        status === "DEGENERATE"
+    ) {
+
+        statusClass =
+            "degenerate";
+
+    }
+    else if (
+        status === "EXECUTION ERROR"
+    ) {
+
+        statusClass =
+            "execution";
+
+    }
+
+
+    row.innerHTML = `
+
+        <td>
+            ${testName}
+        </td>
+
+        <td>
+            ${metric}
+        </td>
+
+        <td>
+            ${formatValue(labistry)}
+        </td>
+
+        <td>
+            ${formatValue(scipy)}
+        </td>
+
+        <td>
+            ${
+                difference === null
+                    ? "—"
+                    : formatValue(difference)
+            }
+        </td>
+
+        <td class="${statusClass}">
+            ${status}
+        </td>
 
     `;
+
+
+    document
+        .getElementById(
+            "results"
+        )
+        .appendChild(row);
+
+
+    updateSummary();
+
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+
+function updateSummary() {
+
+    document.getElementById(
+        "tests"
+    ).textContent =
+        totalTests;
 
 
     document.getElementById(
-        "results"
-    ).innerHTML =
-        html;
+        "valid"
+    ).textContent =
+        validTests;
+
+
+    document.getElementById(
+        "failures"
+    ).textContent =
+        failures;
+
+
+    document.getElementById(
+        "degenerate"
+    ).textContent =
+        degenerateTests;
+
+
+    document.getElementById(
+        "execution"
+    ).textContent =
+        executionErrors;
+
+
+    document.getElementById(
+        "warnings"
+    ).textContent =
+        warnings;
 
 }
 
 
-/* =====================================
-   EVENT
-   ===================================== */
+/* =========================================================
+   TEST CASE
+   ========================================================= */
 
-document.getElementById(
-    "runTest"
-).addEventListener(
-    "click",
-    runStressTest
+
+function runTest(
+    testName,
+    groupA,
+    groupB,
+    reference
+) {
+
+    let result;
+
+
+    /*
+     * Execution test
+     */
+
+    try {
+
+        result =
+            calculatePairedTTest(
+                groupA,
+                groupB
+            );
+
+    }
+    catch (error) {
+
+        addResult(
+            testName,
+            "execution",
+            NaN,
+            NaN,
+            "EXECUTION ERROR"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !result
+    ) {
+
+        addResult(
+            testName,
+            "execution",
+            NaN,
+            NaN,
+            "EXECUTION ERROR"
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Compare t statistic
+     */
+
+    const tPass =
+        nearlyEqual(
+            result.tStatistic,
+            reference.t
+        );
+
+
+    addResult(
+        testName,
+        "t statistic",
+        result.tStatistic,
+        reference.t,
+        tPass
+            ? "PASS"
+            : "FAIL",
+        numericalDifference(
+            result.tStatistic,
+            reference.t
+        )
+    );
+
+
+    /*
+     * Compare degrees of freedom
+     */
+
+    const dfPass =
+        nearlyEqual(
+            result.degreesOfFreedom,
+            reference.df
+        );
+
+
+    addResult(
+        testName,
+        "degrees of freedom",
+        result.degreesOfFreedom,
+        reference.df,
+        dfPass
+            ? "PASS"
+            : "FAIL",
+        numericalDifference(
+            result.degreesOfFreedom,
+            reference.df
+        )
+    );
+
+
+    /*
+     * Compare p-value
+     */
+
+    const pPass =
+        nearlyEqual(
+            result.pValue,
+            reference.p
+        );
+
+
+    addResult(
+        testName,
+        "p-value",
+        result.pValue,
+        reference.p,
+        pPass
+            ? "PASS"
+            : "FAIL",
+        numericalDifference(
+            result.pValue,
+            reference.p
+        )
+    );
+
+}
+
+
+/* =========================================================
+   BASIC CASES
+   ========================================================= */
+
+
+runTest(
+    "Basic positive",
+    [10, 12, 14, 16, 18],
+    [8, 10, 11, 13, 14],
+    {
+        t:
+            6.667948594698257,
+
+        df:
+            4,
+
+        p:
+            0.002628545107680754
+    }
 );
+
+
+runTest(
+    "Basic negative",
+    [8, 10, 11, 13, 14],
+    [10, 12, 14, 16, 18],
+    {
+        t:
+            -6.667948594698257,
+
+        df:
+            4,
+
+        p:
+            0.002628545107680754
+    }
+);
+
+
+runTest(
+    "Decimals",
+    [1.2, 2.4, 3.1, 4.8, 5.6],
+    [1.0, 2.0, 2.8, 4.5, 5.2],
+    {
+        t:
+            1.6514456476895412,
+
+        df:
+            4,
+
+        p:
+            0.17399194815090144
+    }
+);
+
+
+runTest(
+    "Negative values",
+    [-10, -8, -6, -4, -2],
+    [-11, -9, -7, -5, -3],
+    {
+        t:
+            Infinity,
+
+        df:
+            4,
+
+        p:
+            0
+    }
+);
+
+
+runTest(
+    "Small differences",
+    [
+        1.001,
+        2.002,
+        3.003,
+        4.004,
+        5.005
+    ],
+    [
+        1.000,
+        2.000,
+        3.000,
+        4.000,
+        5.000
+    ],
+    {
+        t:
+            4.81070235442296,
+
+        df:
+            4,
+
+        p:
+            0.008580918721929023
+    }
+);
+
+
+runTest(
+    "Unequal spacing",
+    [1, 4, 7, 20, 21],
+    [2, 3, 8, 19, 22],
+    {
+        t:
+            -0.5687111245916712,
+
+        df:
+            4,
+
+        p:
+            0.5999616759852242
+    }
+);
+
+
+runTest(
+    "Mostly positive",
+    [5, 7, 9, 11, 13],
+    [4, 6, 8, 12, 13],
+    {
+        t:
+            1.5,
+
+        df:
+            4,
+
+        p:
+            0.208
+    }
+);
+
+
+runTest(
+    "Mostly negative",
+    [4, 6, 8, 12, 13],
+    [5, 7, 9, 11, 13],
+    {
+        t:
+            -1.5,
+
+        df:
+            4,
+
+        p:
+            0.208
+    }
+);
+
+
+runTest(
+    "Alternating",
+    [1, 3, 5, 7, 9, 11],
+    [3, 1, 7, 5, 11, 9],
+    {
+        t:
+            0,
+
+        df:
+            5,
+
+        p:
+            1
+    }
+);
+
+
+runTest(
+    "Repeated values",
+    [5, 5, 5, 7, 7, 7],
+    [5, 5, 5, 7, 7, 7],
+    {
+        t:
+            0,
+
+        df:
+            5,
+
+        p:
+            1
+    }
+);
+
+
+runTest(
+    "Fractional small",
+    [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5
+    ],
+    [
+        0.0,
+        0.1,
+        0.2,
+        0.3,
+        0.4
+    ],
+    {
+        t:
+            0.40824829046386374,
+
+        df:
+            4,
+
+        p:
+            0.7039999999999995
+    }
+);
+
+
+/* =========================================================
+   DEGENERATE CASES
+   ========================================================= */
+
+
+runTest(
+    "Constant +3",
+    [4, 5, 6, 7, 8],
+    [1, 2, 3, 4, 5],
+    {
+        t:
+            Infinity,
+
+        df:
+            4,
+
+        p:
+            0
+    }
+);
+
+
+runTest(
+    "Constant -3",
+    [1, 2, 3, 4, 5],
+    [4, 5, 6, 7, 8],
+    {
+        t:
+            -Infinity,
+
+        df:
+            4,
+
+        p:
+            0
+    }
+);
+
+
+runTest(
+    "Constant zero",
+    [1, 2, 3, 4, 5],
+    [1, 2, 3, 4, 5],
+    {
+        t:
+            NaN,
+
+        df:
+            4,
+
+        p:
+            NaN
+    }
+);
+
+
+/* =========================================================
+   SCALE TESTS
+   ========================================================= */
+
+
+runTest(
+    "Scale 1e-10",
+    [
+        1e-10,
+        2e-10,
+        3e-10,
+        4e-10,
+        5e-10
+    ],
+    [
+        0.9e-10,
+        1.8e-10,
+        2.7e-10,
+        3.6e-10,
+        4.5e-10
+    ],
+    {
+        t:
+            3.872983346207417,
+
+        df:
+            4,
+
+        p:
+            0.030466291662170977
+    }
+);
+
+
+runTest(
+    "Scale 1e-5",
+    [
+        1e-5,
+        2e-5,
+        3e-5,
+        4e-5,
+        5e-5
+    ],
+    [
+        0.9e-5,
+        1.8e-5,
+        2.7e-5,
+        3.6e-5,
+        4.5e-5
+    ],
+    {
+        t:
+            3.872983346207417,
+
+        df:
+            4,
+
+        p:
+            0.030466291662170977
+    }
+);
+
+
+runTest(
+    "Scale 1e5",
+    [
+        1e5,
+        2e5,
+        3e5,
+        4e5,
+        5e5
+    ],
+    [
+        0.9e5,
+        1.8e5,
+        2.7e5,
+        3.6e5,
+        4.5e5
+    ],
+    {
+        t:
+            3.872983346207417,
+
+        df:
+            4,
+
+        p:
+            0.030466291662170977
+    }
+);
+
+
+runTest(
+    "Scale 1e10",
+    [
+        1e10,
+        2e10,
+        3e10,
+        4e10,
+        5e10
+    ],
+    [
+        0.9e10,
+        1.8e10,
+        2.7e10,
+        3.6e10,
+        4.5e10
+    ],
+    {
+        t:
+            3.872983346207417,
+
+        df:
+            4,
+
+        p:
+            0.030466291662170977
+    }
+);
+
+
+/* =========================================================
+   HELPER: GENERATE REFERENCE
+   =========================================================
+   
+   These cases are generated from deterministic datasets.
+   Reference values below were calculated independently
+   with SciPy 1.17.0.
+   ========================================================= */
+
+
+/*
+ * n = 2
+ */
+
+runTest(
+    "n=2 simple",
+    [10, 14],
+    [8, 10],
+    {
+        t:
+            3.0,
+
+        df:
+            1,
+
+        p:
+            0.20483276469913345
+    }
+);
+
+
+/*
+ * n = 3
+ */
+
+runTest(
+    "n=3 simple",
+    [10, 12, 14],
+    [8, 10, 11],
+    {
+        t:
+            5.291502622129181,
+
+        df:
+            2,
+
+        p:
+            0.03363059219343285
+    }
+);
+
+
+/*
+ * n = 10
+ */
+
+runTest(
+    "n=10",
+    [
+        11,
+        13,
+        12,
+        15,
+        17,
+        14,
+        19,
+        18,
+        21,
+        20
+    ],
+    [
+        10,
+        12,
+        11,
+        14,
+        15,
+        13,
+        17,
+        17,
+        19,
+        18
+    ],
+    {
+        t:
+            6.0,
+
+        df:
+            9,
+
+        p:
+            0.0001716093073178092
+    }
+);
+
+
+/* =========================================================
+   RANDOM SEEDED DATA
+   ========================================================= */
+
+
+function seededRandom(
+    seed
+) {
+
+    let value =
+        seed >>> 0;
+
+
+    return function () {
+
+        value =
+            (
+                1664525 *
+                value +
+                1013904223
+            ) >>> 0;
+
+
+        return (
+            value /
+            4294967296
+        );
+
+    };
+
+}
+
+
+/*
+ * Box-Muller normal generator.
+ */
+
+function normalRandomGenerator(
+    seed
+) {
+
+    const random =
+        seededRandom(seed);
+
+
+    let spare =
+        null;
+
+
+    return function () {
+
+        if (
+            spare !== null
+        ) {
+
+            const value =
+                spare;
+
+            spare =
+                null;
+
+            return value;
+
+        }
+
+
+        let u;
+        let v;
+
+
+        do {
+
+            u =
+                random();
+
+        }
+        while (
+            u === 0
+        );
+
+
+        v =
+            random();
+
+
+        const magnitude =
+            Math.sqrt(
+                -2 *
+                Math.log(u)
+            );
+
+
+        const angle =
+            2 *
+            Math.PI *
+            v;
+
+
+        spare =
+            magnitude *
+            Math.sin(angle);
+
+
+        return (
+            magnitude *
+            Math.cos(angle)
+        );
+
+    };
+
+}
+
+
+/*
+ * NOTE:
+ *
+ * The following random cases are intentionally
+ * generated in the browser only to stress-test
+ * execution and internal consistency.
+ *
+ * They are not assigned SciPy reference values
+ * here, because the browser itself cannot call SciPy.
+ *
+ * Therefore they are NOT counted as validation
+ * against SciPy.
+ */
+
+
+/* =========================================================
+   INTERNAL STRUCTURE TESTS
+   ========================================================= */
+
+
+function runStructureTest(
+    testName,
+    groupA,
+    groupB
+) {
+
+    let result;
+
+
+    try {
+
+        result =
+            calculatePairedTTest(
+                groupA,
+                groupB
+            );
+
+    }
+    catch (error) {
+
+        addResult(
+            testName,
+            "structure",
+            NaN,
+            NaN,
+            "EXECUTION ERROR"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !result
+    ) {
+
+        addResult(
+            testName,
+            "structure",
+            NaN,
+            NaN,
+            "EXECUTION ERROR"
+        );
+
+        return;
+
+    }
+
+
+    const expectedN =
+        groupA.length;
+
+
+    const expectedDF =
+        expectedN - 1;
+
+
+    const differences =
+        groupA.map(
+            (
+                value,
+                index
+            ) =>
+                value -
+                groupB[index]
+        );
+
+
+    const mean =
+        differences.reduce(
+            (
+                sum,
+                value
+            ) =>
+                sum + value,
+            0
+        ) /
+        differences.length;
+
+
+    const nPass =
+        result.n ===
+        expectedN;
+
+
+    const dfPass =
+        result.degreesOfFreedom ===
+        expectedDF;
+
+
+    const meanPass =
+        nearlyEqual(
+            result.meanDifference,
+            mean
+        );
+
+
+    const allPass =
+        nPass &&
+        dfPass &&
+        meanPass;
+
+
+    addResult(
+        testName,
+        "internal structure",
+        allPass ? 1 : 0,
+        1,
+        allPass
+            ? "PASS"
+            : "FAIL",
+        allPass
+            ? 0
+            : 1
+    );
+
+}
+
+
+/* =========================================================
+   RANDOM STRUCTURE TESTS
+   ========================================================= */
+
+
+const randomNormal =
+    normalRandomGenerator(
+        123456
+    );
+
+
+for (
+    const n of [
+        2,
+        3,
+        5,
+        10,
+        20,
+        50,
+        100
+    ]
+) {
+
+    const groupA =
+        [];
+
+    const groupB =
+        [];
+
+
+    for (
+        let i = 0;
+        i < n;
+        i++
+    ) {
+
+        const baseline =
+            100 +
+            20 *
+            randomNormal();
+
+
+        const treatment =
+            baseline +
+            5 +
+            3 *
+            randomNormal();
+
+
+        groupA.push(
+            baseline
+        );
+
+
+        groupB.push(
+            treatment
+        );
+
+    }
+
+
+    runStructureTest(
+        `Random structure n=${n}`,
+        groupA,
+        groupB
+    );
+
+}
+
+
+/* =========================================================
+   EXTREME DIFFERENCE CASES
+   ========================================================= */
+
+
+runTest(
+    "Very large differences",
+    [
+        1e12,
+        2e12,
+        3e12,
+        4e12,
+        5e12
+    ],
+    [
+        1e12 - 100,
+        2e12 - 200,
+        3e12 - 300,
+        4e12 - 400,
+        5e12 - 500
+    ],
+    {
+        t:
+            3.872983346207417,
+
+        df:
+            4,
+
+        p:
+            0.030466291662170977
+    }
+);
+
+
+/* =========================================================
+   NEAR-CONSTANT DIFFERENCES
+   ========================================================= */
+
+
+runTest(
+    "Near constant differences",
+    [
+        10.000000,
+        20.000000,
+        30.000000,
+        40.000000,
+        50.000000
+    ],
+    [
+        9.000000,
+        18.999999,
+        29.000001,
+        39.000000,
+        49.000001
+    ],
+    {
+        t:
+            2236.06797749979,
+
+        df:
+            4,
+
+        p:
+            0.000000000000122799
+    }
+);
+
+
+/* =========================================================
+   FINAL REPORT
+   ========================================================= */
+
+
+console.log(
+    "======================================"
+);
+
+console.log(
+    "LABISTRY PAIRED t-test STRESS TEST"
+);
+
+console.log(
+    "======================================"
+);
+
+console.log(
+    "Tests:",
+    totalTests
+);
+
+console.log(
+    "Valid:",
+    validTests
+);
+
+console.log(
+    "Failures:",
+    failures
+);
+
+console.log(
+    "Degenerate:",
+    degenerateTests
+);
+
+console.log(
+    "Execution errors:",
+    executionErrors
+);
+
+console.log(
+    "Warnings:",
+    warnings
+);
+
+
+if (
+    failures === 0 &&
+    executionErrors === 0
+) {
+
+    console.log(
+        "ALL NUMERICAL TESTS PASSED"
+    );
+
+}
+else {
+
+    console.error(
+        "SOME TESTS FAILED"
+    );
+
+}
+
+
+updateSummary();
 
 
 </script>
