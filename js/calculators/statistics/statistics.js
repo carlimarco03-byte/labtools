@@ -44,6 +44,12 @@ function calculateStatistics() {
 
             break;
 
+       case "paired":
+
+            calculatePairedTTestAnalysis();
+
+            break;
+
 
         default:
 
@@ -187,6 +193,11 @@ document.addEventListener(
                "oneSampleInputs"
            );
 
+       const pairedInputs =
+           document.getElementById(
+               "pairedInputs"
+           );
+
 
         /*
          * If the current HTML does not yet
@@ -274,6 +285,36 @@ document.addEventListener(
 
 }
 
+       /* ================================
+   PAIRED INPUTS
+   ================================ */
+
+if (pairedInputs) {
+
+    if (
+        analysisType.value ===
+        "paired"
+    ) {
+
+        pairedInputs.style.display =
+            "block";
+
+
+        if (input) {
+
+            input.parentElement.style.display =
+                "none";
+
+        }
+
+    } else {
+
+        pairedInputs.style.display =
+            "none";
+
+    }
+
+}
 
         /* =================================
            ANALYSIS TYPE CHANGE
