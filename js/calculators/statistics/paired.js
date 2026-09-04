@@ -213,16 +213,34 @@ function calculatePairedTTestAnalysis() {
     console.log("PAIRED TEST: function called");
 
 
-    const groupA =
-        parseGroupData(
-            "pairedGroupAInput"
-        );
+   const parsedGroupA =
+    parseGroupData(
+        "pairedGroupAInput"
+    );
 
 
-    const groupB =
-        parseGroupData(
-            "pairedGroupBInput"
-        );
+const parsedGroupB =
+    parseGroupData(
+        "pairedGroupBInput"
+    );
+
+
+if (
+    !parsedGroupA ||
+    !parsedGroupB
+) {
+
+    return;
+
+}
+
+
+const groupA =
+    parsedGroupA.data;
+
+
+const groupB =
+    parsedGroupB.data;
 
 
     console.log("Group A:", groupA);
