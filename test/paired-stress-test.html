@@ -28,10 +28,14 @@ th:first-child,td:first-child{text-align:left} th{background:#eee}
 <table><thead><tr><th>Test</th><th>Metric</th><th>Labistry</th><th>SciPy</th><th>Difference</th><th>Status</th></tr></thead><tbody id="results"></tbody></table>
 
 <!-- Adjust this path to your Labistry math/statistics controller if needed. -->
+<script src="../js/calculators/statistics/utils.js"></script>
 <script src="../js/calculators/statistics/math.js"></script>
-<script>
-    <script src="../js/calculators/statistics/paired.js"></script>
-<script>
+<script src="../js/calculators/statistics/descriptive.js"></script>
+<script src="../js/calculators/statistics/normality.js"></script>
+<script src="../js/calculators/statistics/two-groups.js"></script>
+<script src="../js/calculators/statistics/one-sample.js"></script>
+<script src="../js/calculators/statistics/paired.js"></script>
+<script src="../js/calculators/statistics/statistics.js"></script>
 const LABISTRY_FUNCTION = window.calculatePairedTTest;
 const ABS_TOL = 1e-10;
 const REL_TOL = 1e-8;
