@@ -259,64 +259,74 @@ to prepare a solution at a desired concentration.
 
 <script>
 
+function formatVolume(volume) {
 
-function calculate(){
+    if (volume < 1) {
 
+        return (volume * 1000).toFixed(2) + " µL";
 
-let c1 = Number(document.getElementById("c1").value);
+    }
 
-let c2 = Number(document.getElementById("c2").value);
-
-let v2 = Number(document.getElementById("v2").value);
-
-
-
-
-if(c1 <= 0 || c2 <=0 || v2 <=0){
-
-
-document.getElementById("result").innerHTML =
-
-"Please enter valid values.";
-
-
-return;
-
+    return volume.toFixed(2) + " mL";
 
 }
 
 
+function calculate() {
 
 
-let v1 = (c2*v2)/c1;
+    let c1 =
+        Number(
+            document.getElementById("c1").value
+        );
 
 
-let solvent = v2-v1;
+    let c2 =
+        Number(
+            document.getElementById("c2").value
+        );
 
 
+    let v2 =
+        Number(
+            document.getElementById("v2").value
+        );
 
 
-document.getElementById("result").innerHTML =
+    if (
+        c1 <= 0 ||
+        c2 <= 0 ||
+        v2 <= 0
+    ) {
+
+        document.getElementById("result").innerHTML =
+            "Please enter valid values.";
+
+        return;
+
+    }
 
 
-"<strong>Stock solution required:</strong><br>"
-+
-v1.toFixed(2)
-+
-" mL"
-+
-"<br><br>"
-+
-"<strong>Solvent required:</strong><br>"
-+
-solvent.toFixed(2)
-+
-" mL";
+    let v1 =
+        (c2 * v2) / c1;
 
+
+    let solvent =
+        v2 - v1;
+
+
+    document.getElementById("result").innerHTML =
+
+        "<strong>Stock solution required:</strong><br>" +
+        formatVolume(v1) +
+
+        "<br><br>" +
+
+        "<strong>Solvent required:</strong><br>" +
+        formatVolume(solvent);
 
 
 }
-
 
 </script>
 
