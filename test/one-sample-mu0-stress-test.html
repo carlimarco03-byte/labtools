@@ -2,197 +2,832 @@
 <html lang="en">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Labistry One-Sample t-Test μ₀ Stress Test</title>
+    <meta charset="UTF-8">
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 30px;
-    line-height: 1.5;
-}
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-h1, h2 {
-    margin-bottom: 10px;
-}
+    <title>
+        Labistry One-Sample t-Test μ₀ Stress Test
+    </title>
 
-button {
-    padding: 10px 16px;
-    margin: 5px 5px 15px 0;
-    cursor: pointer;
-}
 
-.summary {
-    margin: 15px 0;
-    padding: 12px;
-    border: 1px solid #ccc;
-}
+    <style>
 
-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-top: 15px;
-    font-size: 14px;
-}
+        body {
 
-th, td {
-    border: 1px solid #ccc;
-    padding: 7px;
-    text-align: left;
-    vertical-align: top;
-}
+            font-family:
+                Arial,
+                sans-serif;
 
-.pass {
-    font-weight: bold;
-}
+            margin:
+                30px;
 
-.fail {
-    font-weight: bold;
-}
+            background:
+                #f5f5f5;
 
-pre {
-    white-space: pre-wrap;
-    word-break: break-word;
-}
-</style>
+            color:
+                #222;
+
+        }
+
+
+        h1 {
+
+            margin-bottom:
+                8px;
+
+        }
+
+
+        .description {
+
+            margin-bottom:
+                25px;
+
+            color:
+                #555;
+
+        }
+
+
+        .summary {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    4,
+                    minmax(
+                        120px,
+                        1fr
+                    )
+                );
+
+            gap:
+                12px;
+
+            margin-bottom:
+                25px;
+
+        }
+
+
+        .summary-card {
+
+            background:
+                white;
+
+            border:
+                1px solid #ddd;
+
+            border-radius:
+                8px;
+
+            padding:
+                16px;
+
+        }
+
+
+        .summary-card strong {
+
+            display:
+                block;
+
+            font-size:
+                24px;
+
+            margin-top:
+                5px;
+
+        }
+
+
+        .results {
+
+            background:
+                white;
+
+            border:
+                1px solid #ddd;
+
+            border-radius:
+                8px;
+
+            overflow-x:
+                auto;
+
+        }
+
+
+        table {
+
+            width:
+                100%;
+
+            border-collapse:
+                collapse;
+
+            font-size:
+                14px;
+
+        }
+
+
+        th,
+        td {
+
+            padding:
+                10px;
+
+            border-bottom:
+                1px solid #eee;
+
+            text-align:
+                left;
+
+            white-space:
+                nowrap;
+
+        }
+
+
+        th {
+
+            background:
+                #fafafa;
+
+        }
+
+
+        .pass {
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .fail {
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .warning {
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .dependency {
+
+            background:
+                white;
+
+            border:
+                1px solid #ddd;
+
+            border-radius:
+                8px;
+
+            padding:
+                16px;
+
+            margin-bottom:
+                25px;
+
+        }
+
+
+        .dependency.ok {
+
+            border-left:
+                5px solid #2e7d32;
+
+        }
+
+
+        .dependency.error {
+
+            border-left:
+                5px solid #c62828;
+
+        }
+
+
+        .note {
+
+            margin-top:
+                20px;
+
+            padding:
+                15px;
+
+            background:
+                #fff;
+
+            border:
+                1px solid #ddd;
+
+            border-radius:
+                8px;
+
+            color:
+                #555;
+
+            line-height:
+                1.5;
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .summary {
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        1fr
+                    );
+
+            }
+
+            body {
+
+                margin:
+                    15px;
+
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<h1>Labistry One-Sample t-Test — μ₀ Stress Test</h1>
 
-<p>
-This harness tests the One-Sample t-test with hypothesized means
-different from zero, including negative values and extreme numerical scales.
-</p>
+<h1>
+    Labistry One-Sample t-Test μ₀ Stress Test
+</h1>
 
-<button onclick="runTests()">Run stress tests</button>
 
-<button onclick="location.reload()">Reset</button>
+<div class="description">
 
-<div id="summary" class="summary">
-Tests not run.
+    Independent validation of the real
+    <code>calculateOneSampleTTest()</code>
+    controller against an independent
+    reference implementation.
+
+    <br>
+
+    20 datasets × 3 metrics =
+    <strong>60 numerical comparisons</strong>.
+
 </div>
+
+
+<div
+    id="dependencyStatus"
+    class="dependency"
+>
+    Checking dependencies...
+</div>
+
+
+<div class="summary">
+
+    <div class="summary-card">
+
+        Test comparisons
+
+        <strong id="tests">
+            0
+        </strong>
+
+    </div>
+
+
+    <div class="summary-card">
+
+        Valid
+
+        <strong id="valid">
+            0
+        </strong>
+
+    </div>
+
+
+    <div class="summary-card">
+
+        Failures
+
+        <strong id="failures">
+            0
+        </strong>
+
+    </div>
+
+
+    <div class="summary-card">
+
+        Warnings
+
+        <strong id="warnings">
+            0
+        </strong>
+
+    </div>
+
+</div>
+
+
+<div class="results">
 
 <table>
 
 <thead>
+
 <tr>
-    <th>Test</th>
-    <th>Metric</th>
-    <th>Labistry</th>
-    <th>Reference</th>
-    <th>Difference</th>
-    <th>Status</th>
+
+    <th>
+        Test
+    </th>
+
+    <th>
+        Metric
+    </th>
+
+    <th>
+        Labistry
+    </th>
+
+    <th>
+        Reference
+    </th>
+
+    <th>
+        Difference
+    </th>
+
+    <th>
+        Status
+    </th>
+
 </tr>
+
 </thead>
 
-<tbody id="results"></tbody>
+
+<tbody id="resultsBody">
+
+</tbody>
 
 </table>
 
+</div>
+
+
+<div class="note">
+
+    <strong>Validation criteria:</strong>
+
+    <br><br>
+
+    Absolute tolerance:
+    <code>1e-10</code>
+
+    <br>
+
+    Relative tolerance:
+    <code>1e-8</code>
+
+    <br><br>
+
+    The test deliberately includes positive,
+    negative and zero hypothesized means,
+    mixed-sign datasets, decimal values,
+    different sample sizes and extreme numerical scales.
+
+    <br><br>
+
+    The Labistry controller is executed directly
+    through the DOM. A temporary override of
+    <code>formatStatistic()</code>
+    captures the raw numerical values before
+    the normal six-decimal UI formatting occurs.
+
+</div>
+
+
+<!-- =========================================
+     HIDDEN LABISTRY DOM
+     ========================================= -->
+
+<textarea
+    id="dataInput"
+    style="display:none;"
+></textarea>
+
+
+<input
+    id="hypothesizedMean"
+    type="number"
+    style="display:none;"
+>
+
+
+<div
+    id="result"
+    style="display:none;"
+></div>
+
+
+<!-- =========================================
+     LABISTRY SOURCE FILES
+     ========================================= -->
+
+<script src="./utils.js"></script>
+
+<script src="./math.js"></script>
+
+<script src="./one-sample.js"></script>
+
+
+<!-- =========================================
+     STRESS TEST
+     ========================================= -->
 
 <script>
 
-/* ===================================
-   TOLERANCE
-   =================================== */
 
-const ABS_TOL = 1e-10;
-const REL_TOL = 1e-8;
+/* =========================================
+   TOLERANCES
+   ========================================= */
+
+const ABS_TOL =
+    1e-10;
+
+const REL_TOL =
+    1e-8;
 
 
-/* ===================================
-   HELPERS
-   =================================== */
+/* =========================================
+   TEST DATA
+   ========================================= */
 
-function nearlyEqual(a, b) {
+const testCases = [
 
-    if (Number.isNaN(a) && Number.isNaN(b)) {
-        return true;
+    {
+        name:
+            "n=3 μ₀=0",
+
+        data:
+            [1, 2, 3],
+
+        mu0:
+            0
+    },
+
+
+    {
+        name:
+            "n=3 positive μ₀",
+
+        data:
+            [2, 4, 6],
+
+        mu0:
+            3
+    },
+
+
+    {
+        name:
+            "n=3 negative μ₀",
+
+        data:
+            [-2, 0, 2],
+
+        mu0:
+            -1
+    },
+
+
+    {
+        name:
+            "n=3 μ₀=sample mean",
+
+        data:
+            [1, 3, 5],
+
+        mu0:
+            3
+    },
+
+
+    {
+        name:
+            "n=3 μ₀ far above mean",
+
+        data:
+            [1, 2, 3],
+
+        mu0:
+            100
+    },
+
+
+    {
+        name:
+            "n=5 negative data",
+
+        data:
+            [-5, -4, -3, -2, -1],
+
+        mu0:
+            -3
+    },
+
+
+    {
+        name:
+            "n=5 mixed signs",
+
+        data:
+            [-4, -1, 0, 3, 7],
+
+        mu0:
+            0
+    },
+
+
+    {
+        name:
+            "n=5 decimal data",
+
+        data:
+            [1.1, 1.7, 2.3, 2.9, 3.5],
+
+        mu0:
+            2
+    },
+
+
+    {
+        name:
+            "n=5 negative μ₀ / positive data",
+
+        data:
+            [2, 3, 4, 5, 6],
+
+        mu0:
+            -2
+    },
+
+
+    {
+        name:
+            "n=5 positive μ₀ / negative data",
+
+        data:
+            [-6, -5, -4, -3, -2],
+
+        mu0:
+            2
+    },
+
+
+    {
+        name:
+            "n=10 ordinary",
+
+        data:
+            [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+
+        mu0:
+            6.5
+    },
+
+
+    {
+        name:
+            "n=10 positive μ₀",
+
+        data:
+            [4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+
+        mu0:
+            8
+    },
+
+
+    {
+        name:
+            "n=10 negative μ₀",
+
+        data:
+            [-13, -12, -11, -10, -9, -8, -7, -6, -5, -4],
+
+        mu0:
+            -8
+    },
+
+
+    {
+        name:
+            "scale 1e-6",
+
+        data:
+            [1, 2, 3, 4, 5]
+                .map(
+                    x =>
+                        x * 1e-6
+                ),
+
+        mu0:
+            3e-6
+    },
+
+
+    {
+        name:
+            "scale 1e-12",
+
+        data:
+            [-5, -2, 1, 4, 7]
+                .map(
+                    x =>
+                        x * 1e-12
+                ),
+
+        mu0:
+            1e-12
+    },
+
+
+    {
+        name:
+            "scale 1e6",
+
+        data:
+            [1, 2, 3, 4, 5]
+                .map(
+                    x =>
+                        x * 1e6
+                ),
+
+        mu0:
+            3e6
+    },
+
+
+    {
+        name:
+            "scale 1e12",
+
+        data:
+            [-5, -2, 1, 4, 7]
+                .map(
+                    x =>
+                        x * 1e12
+                ),
+
+        mu0:
+            1e12
+    },
+
+
+    {
+        name:
+            "mixed signs + decimal μ₀",
+
+        data:
+            [
+                -7.5,
+                -2.25,
+                0.5,
+                3.75,
+                8.25
+            ],
+
+        mu0:
+            0.75
+    },
+
+
+    {
+        name:
+            "n=10 mixed signs",
+
+        data:
+            [
+                -9,
+                -5,
+                -2,
+                -1,
+                0,
+                2,
+                4,
+                6,
+                8,
+                11
+            ],
+
+        mu0:
+            1.5
+    },
+
+
+    {
+        name:
+            "n=10 μ₀ far below mean",
+
+        data:
+            [
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19
+            ],
+
+        mu0:
+            -100
     }
 
-    if (!Number.isFinite(a) || !Number.isFinite(b)) {
-        return a === b;
-    }
-
-    const difference =
-        Math.abs(a - b);
-
-    const scale =
-        Math.max(
-            Math.abs(a),
-            Math.abs(b),
-            1
-        );
-
-    return (
-        difference <= ABS_TOL ||
-        difference / scale <= REL_TOL
-    );
-}
+];
 
 
-function formatNumber(value) {
+/* =========================================
+   REFERENCE GAMMA
+   ========================================= */
 
-    if (Number.isNaN(value)) {
-        return "NaN";
-    }
-
-    if (!Number.isFinite(value)) {
-        return String(value);
-    }
-
-    return value.toExponential(12);
-}
-
-
-/* ===================================
-   REFERENCE MATH
-   =================================== */
-
-/*
- * Reference implementation using the
- * same mathematical definition as SciPy:
- *
- * t = (mean - μ0) / (s / sqrt(n))
- *
- * p = 2 * survival_probability(|t|)
- *
- * The regularized incomplete beta function
- * is implemented below to avoid dependencies.
- */
-
-
-/* ---------- logGamma ---------- */
-
-function logGamma(z) {
+function referenceLogGamma(z) {
 
     const coefficients = [
+
         676.5203681218851,
+
         -1259.1392167224028,
+
         771.32342877765313,
+
         -176.61502916214059,
+
         12.507343278686905,
+
         -0.13857109526572012,
+
         9.9843695780195716e-6,
+
         1.5056327351493116e-7
+
     ];
+
 
     if (z < 0.5) {
 
-        return Math.log(Math.PI) -
-            Math.log(Math.sin(Math.PI * z)) -
-            logGamma(1 - z);
+        return Math.log(Math.PI)
+            -
+            Math.log(
+                Math.sin(
+                    Math.PI * z
+                )
+            )
+            -
+            referenceLogGamma(
+                1 - z
+            );
 
     }
 
+
     z -= 1;
 
-    let x = 0.99999999999980993;
+
+    let x =
+        0.99999999999980993;
+
 
     for (
         let i = 0;
@@ -206,49 +841,108 @@ function logGamma(z) {
 
     }
 
+
     const t =
         z +
         coefficients.length -
         0.5;
 
+
     return (
-        0.5 * Math.log(2 * Math.PI) +
-        (z + 0.5) * Math.log(t) -
-        t +
-        Math.log(x)
-    );
+        0.5 *
+        Math.log(
+            2 * Math.PI
+        )
+    )
+    +
+    (z + 0.5) *
+    Math.log(t)
+    -
+    t
+    +
+    Math.log(x);
+
 }
 
 
-/* ---------- beta continued fraction ---------- */
+/* =========================================
+   REFERENCE BETA
+   ========================================= */
 
-function betaContinuedFraction(
+function referenceLogBeta(
     a,
-    b,
-    x
+    b
 ) {
 
-    const MAX_ITER = 200;
-    const EPS = 3e-14;
-    const FPMIN = 1e-300;
+    return (
+        referenceLogGamma(a)
+        +
+        referenceLogGamma(b)
+        -
+        referenceLogGamma(a + b)
+    );
 
-    let qab = a + b;
-    let qap = a + 1;
-    let qam = a - 1;
+}
 
-    let c = 1;
+
+/* =========================================
+   REFERENCE BETA CONTINUED FRACTION
+   ========================================= */
+
+function referenceBetaFraction(
+    x,
+    a,
+    b
+) {
+
+    const MAX_ITER =
+        200;
+
+    const EPS =
+        3e-14;
+
+    const FPMIN =
+        1e-300;
+
+
+    let qab =
+        a + b;
+
+    let qap =
+        a + 1;
+
+    let qam =
+        a - 1;
+
+
+    let c =
+        1;
+
     let d =
         1 -
         qab * x /
         qap;
 
-    if (Math.abs(d) < FPMIN) {
-        d = FPMIN;
+
+    if (
+        Math.abs(d)
+        <
+        FPMIN
+    ) {
+
+        d =
+            FPMIN;
+
     }
 
-    d = 1 / d;
 
-    let h = d;
+    d =
+        1 / d;
+
+
+    let h =
+        d;
+
 
     for (
         let m = 1;
@@ -256,7 +950,9 @@ function betaContinuedFraction(
         m++
     ) {
 
-        let m2 = 2 * m;
+        const m2 =
+            2 * m;
+
 
         let aa =
             m *
@@ -267,101 +963,179 @@ function betaContinuedFraction(
                 (a + m2)
             );
 
+
         d =
             1 +
             aa * d;
 
-        if (Math.abs(d) < FPMIN) {
-            d = FPMIN;
+
+        if (
+            Math.abs(d)
+            <
+            FPMIN
+        ) {
+
+            d =
+                FPMIN;
+
         }
+
 
         c =
             1 +
             aa / c;
 
-        if (Math.abs(c) < FPMIN) {
-            c = FPMIN;
+
+        if (
+            Math.abs(c)
+            <
+            FPMIN
+        ) {
+
+            c =
+                FPMIN;
+
         }
 
-        d = 1 / d;
 
-        h *= d * c;
+        d =
+            1 / d;
+
+        h *=
+            d * c;
+
 
         aa =
             -(
-                a + m
-            ) *
-            (
-                qab + m
-            ) *
-            x /
+                (a + m) *
+                (qab + m) *
+                x
+            )
+            /
             (
                 (a + m2) *
                 (qap + m2)
             );
 
+
         d =
             1 +
             aa * d;
 
-        if (Math.abs(d) < FPMIN) {
-            d = FPMIN;
+
+        if (
+            Math.abs(d)
+            <
+            FPMIN
+        ) {
+
+            d =
+                FPMIN;
+
         }
+
 
         c =
             1 +
             aa / c;
 
-        if (Math.abs(c) < FPMIN) {
-            c = FPMIN;
-        }
-
-        d = 1 / d;
-
-        const delta =
-            d * c;
-
-        h *= delta;
 
         if (
-            Math.abs(delta - 1) <
+            Math.abs(c)
+            <
+            FPMIN
+        ) {
+
+            c =
+                FPMIN;
+
+        }
+
+
+        d =
+            1 / d;
+
+
+        const delta =
+            d *
+            c;
+
+
+        h *=
+            delta;
+
+
+        if (
+            Math.abs(
+                delta - 1
+            )
+            <
             EPS
         ) {
+
             break;
+
         }
+
     }
 
+
     return h;
+
 }
 
 
-/* ---------- regularized incomplete beta ---------- */
+/* =========================================
+   REFERENCE REGULARIZED BETA
+   ========================================= */
 
-function regularizedIncompleteBeta(
+function referenceRegularizedBeta(
     x,
     a,
     b
 ) {
 
-    if (x <= 0) {
+    if (
+        x <= 0
+    ) {
+
         return 0;
+
     }
 
-    if (x >= 1) {
+
+    if (
+        x >= 1
+    ) {
+
         return 1;
+
     }
 
-    const logBeta =
-        logGamma(a) +
-        logGamma(b) -
-        logGamma(a + b);
+
+    const logFront =
+
+        a *
+        Math.log(x)
+
+        +
+
+        b *
+        Math.log1p(-x)
+
+        -
+
+        referenceLogBeta(
+            a,
+            b
+        );
+
 
     const front =
         Math.exp(
-            a * Math.log(x) +
-            b * Math.log1p(-x) -
-            logBeta
+            logFront
         );
+
 
     if (
         x <
@@ -370,424 +1144,856 @@ function regularizedIncompleteBeta(
     ) {
 
         return (
+
             front *
-            betaContinuedFraction(
+            referenceBetaFraction(
+                x,
                 a,
-                b,
-                x
-            ) /
+                b
+            )
+            /
             a
+
         );
 
     }
 
+
     return (
+
         1 -
+
         front *
-        betaContinuedFraction(
+        referenceBetaFraction(
+            1 - x,
             b,
-            a,
-            1 - x
-        ) /
+            a
+        )
+        /
         b
+
     );
+
 }
 
 
-/* ---------- Student-t CDF ---------- */
+/* =========================================
+   REFERENCE STUDENT t CDF
+   ========================================= */
 
-function studentTCDF(
+function referenceStudentTCDF(
     t,
     df
 ) {
 
-    if (!Number.isFinite(t) || df <= 0) {
+    if (
+        !Number.isFinite(t)
+        ||
+        !Number.isFinite(df)
+        ||
+        df <= 0
+    ) {
+
         return NaN;
+
     }
 
-    if (t === 0) {
+
+    if (
+        t === 0
+    ) {
+
         return 0.5;
+
     }
+
 
     const x =
         df /
-        (df + t * t);
+        (
+            df +
+            t * t
+        );
+
 
     const ib =
-        regularizedIncompleteBeta(
+        referenceRegularizedBeta(
             x,
             df / 2,
             0.5
         );
 
-    if (t > 0) {
-        return 1 - 0.5 * ib;
+
+    if (
+        t > 0
+    ) {
+
+        return (
+            1 -
+            0.5 * ib
+        );
+
     }
 
-    return 0.5 * ib;
+
+    return (
+        0.5 * ib
+    );
+
 }
 
 
-/* ===================================
-   REFERENCE ONE-SAMPLE T-TEST
-   =================================== */
+/* =========================================
+   REFERENCE TWO-TAILED P
+   ========================================= */
 
-function referenceOneSample(
-    data,
-    hypothesizedMean
+function referenceTwoTailedP(
+    t,
+    df
 ) {
 
-    const n = data.length;
+    if (
+        !Number.isFinite(t)
+        ||
+        !Number.isFinite(df)
+        ||
+        df <= 0
+    ) {
 
-    const mean =
-        data.reduce(
-            (sum, value) =>
-                sum + value,
-            0
-        ) / n;
-
-    let sumSquared =
-        0;
-
-    for (const value of data) {
-
-        const d =
-            value - mean;
-
-        sumSquared +=
-            d * d;
+        return NaN;
 
     }
 
-    const variance =
-        sumSquared /
-        (n - 1);
-
-    const sd =
-        Math.sqrt(variance);
-
-    const sem =
-        sd /
-        Math.sqrt(n);
-
-    const t =
-        (
-            mean -
-            hypothesizedMean
-        ) /
-        sem;
-
-    const df =
-        n - 1;
 
     const cdf =
-        studentTCDF(
+        referenceStudentTCDF(
             Math.abs(t),
             df
         );
 
-    const p =
+
+    return (
         2 *
         (
-            1 - cdf
-        );
+            1 -
+            cdf
+        )
+    );
 
-    return {
-        t,
-        df,
-        p
-    };
 }
 
 
-/* ===================================
-   LABISTRY IMPLEMENTATION
-   =================================== */
+/* =========================================
+   REFERENCE MEAN
+   ========================================= */
 
-function labistryOneSample(
+function referenceMean(
+    data
+) {
+
+    return (
+        data.reduce(
+            (
+                sum,
+                value
+            ) =>
+                sum + value,
+            0
+        )
+        /
+        data.length
+    );
+
+}
+
+
+/* =========================================
+   REFERENCE SAMPLE SD
+   ========================================= */
+
+function referenceSampleSD(
+    data
+) {
+
+    const mean =
+        referenceMean(
+            data
+        );
+
+
+    let sumSquares =
+        0;
+
+
+    for (
+        const value of data
+    ) {
+
+        const difference =
+            value - mean;
+
+        sumSquares +=
+            difference *
+            difference;
+
+    }
+
+
+    return Math.sqrt(
+        sumSquares /
+        (
+            data.length - 1
+        )
+    );
+
+}
+
+
+/* =========================================
+   REFERENCE ONE-SAMPLE t TEST
+   ========================================= */
+
+function referenceOneSample(
     data,
-    hypothesizedMean
+    mu0
 ) {
 
     const n =
         data.length;
 
-    const mean =
-        calculateMean(data);
 
-    const sd =
-        calculateStandardDeviation(
-            data,
-            true
+    const mean =
+        referenceMean(
+            data
         );
 
-    const sem =
-        calculateSEM(data);
 
-    const difference =
-        mean -
-        hypothesizedMean;
+    const sd =
+        referenceSampleSD(
+            data
+        );
+
+
+    const sem =
+        sd /
+        Math.sqrt(n);
+
 
     const t =
-        difference /
+        (
+            mean -
+            mu0
+        )
+        /
         sem;
+
 
     const df =
         n - 1;
 
-    const pValue =
-        calculateTTestPValue(
-            Math.abs(t),
+
+    const p =
+        referenceTwoTailedP(
+            t,
             df
         );
 
+
     return {
+
         t,
         df,
-        p: pValue
+        p
+
     };
+
 }
 
 
-/* ===================================
-   TEST DATA
-   =================================== */
+/* =========================================
+   NUMERICAL COMPARISON
+   ========================================= */
 
-const tests = [
+function nearlyEqual(
+    actual,
+    expected
+) {
 
-    {
-        name: "Normal data, μ₀ = 0",
-        data: [10, 11, 12, 13, 14],
-        mu0: 0
-    },
+    if (
+        !Number.isFinite(actual)
+        ||
+        !Number.isFinite(expected)
+    ) {
 
-    {
-        name: "Normal data, μ₀ = 10",
-        data: [10, 11, 12, 13, 14],
-        mu0: 10
-    },
+        return (
+            Number.isNaN(actual)
+            &&
+            Number.isNaN(expected)
+        );
 
-    {
-        name: "Normal data, μ₀ = 12",
-        data: [10, 11, 12, 13, 14],
-        mu0: 12
-    },
-
-    {
-        name: "Normal data, μ₀ = 14",
-        data: [10, 11, 12, 13, 14],
-        mu0: 14
-    },
-
-    {
-        name: "Negative data, μ₀ = -8",
-        data: [-10, -9, -8, -7, -6],
-        mu0: -8
-    },
-
-    {
-        name: "Negative data, μ₀ = -10",
-        data: [-10, -9, -8, -7, -6],
-        mu0: -10
-    },
-
-    {
-        name: "Mixed data, μ₀ = -1",
-        data: [-4, -2, 0, 2, 4],
-        mu0: -1
-    },
-
-    {
-        name: "Mixed data, μ₀ = 1",
-        data: [-4, -2, 0, 2, 4],
-        mu0: 1
-    },
-
-    {
-        name: "Decimal data, μ₀ = 0.15",
-        data: [0.10, 0.12, 0.15, 0.18, 0.20],
-        mu0: 0.15
-    },
-
-    {
-        name: "Decimal data, μ₀ = -0.15",
-        data: [-0.10, -0.12, -0.15, -0.18, -0.20],
-        mu0: -0.15
-    },
-
-    {
-        name: "Small scale 1e-6",
-        data: [1e-6, 2e-6, 3e-6, 4e-6, 5e-6],
-        mu0: 2e-6
-    },
-
-    {
-        name: "Small scale 1e-12",
-        data: [1e-12, 2e-12, 3e-12, 4e-12, 5e-12],
-        mu0: 2e-12
-    },
-
-    {
-        name: "Large scale 1e6",
-        data: [1e6, 2e6, 3e6, 4e6, 5e6],
-        mu0: 2e6
-    },
-
-    {
-        name: "Large scale 1e12",
-        data: [1e12, 2e12, 3e12, 4e12, 5e12],
-        mu0: 2e12
-    },
-
-    {
-        name: "μ₀ far below mean",
-        data: [10, 11, 12, 13, 14],
-        mu0: -100
-    },
-
-    {
-        name: "μ₀ far above mean",
-        data: [10, 11, 12, 13, 14],
-        mu0: 100
-    },
-
-    {
-        name: "μ₀ equals sample mean",
-        data: [3, 5, 7, 9, 11],
-        mu0: 7
-    },
-
-    {
-        name: "n = 3, negative μ₀",
-        data: [-2, 0, 2],
-        mu0: -1
-    },
-
-    {
-        name: "n = 3, positive μ₀",
-        data: [2, 4, 6],
-        mu0: 3
-    },
-
-    {
-        name: "n = 10, μ₀ = 5",
-        data: [2, 4, 5, 6, 7, 8, 9, 4, 6, 7],
-        mu0: 5
     }
 
-];
 
-
-/* ===================================
-   RUN TESTS
-   =================================== */
-
-function runTests() {
-
-    const results =
-        document.getElementById(
-            "results"
+    const difference =
+        Math.abs(
+            actual -
+            expected
         );
 
-    const summary =
-        document.getElementById(
-            "summary"
+
+    if (
+        difference <=
+        ABS_TOL
+    ) {
+
+        return true;
+
+    }
+
+
+    const scale =
+        Math.max(
+            Math.abs(actual),
+            Math.abs(expected),
+            1
         );
 
-    results.innerHTML = "";
 
-    let total = 0;
-    let valid = 0;
-    let failures = 0;
+    return (
+        difference <=
+        REL_TOL *
+        scale
+    );
 
-    for (const test of tests) {
+}
 
-        const lab =
-            labistryOneSample(
-                test.data,
-                test.mu0
+
+/* =========================================
+   FORMAT NUMBERS FOR TABLE
+   ========================================= */
+
+function displayNumber(
+    value
+) {
+
+    if (
+        Number.isNaN(value)
+    ) {
+
+        return "NaN";
+
+    }
+
+
+    if (
+        value === Infinity
+    ) {
+
+        return "+Infinity";
+
+    }
+
+
+    if (
+        value === -Infinity
+    ) {
+
+        return "-Infinity";
+
+    }
+
+
+    return Number(
+        value
+    ).toExponential(11);
+
+}
+
+
+/* =========================================
+   DEPENDENCY CHECK
+   ========================================= */
+
+function checkDependencies() {
+
+    const required = [
+
+        "parseData",
+
+        "validateParsedData",
+
+        "calculateMean",
+
+        "calculateStandardDeviation",
+
+        "calculateSEM",
+
+        "calculateTTestPValue",
+
+        "calculateOneSampleTTest"
+
+    ];
+
+
+    const missing =
+        required.filter(
+            name =>
+                typeof window[name]
+                !==
+                "function"
+        );
+
+
+    const element =
+        document.getElementById(
+            "dependencyStatus"
+        );
+
+
+    if (
+        missing.length === 0
+    ) {
+
+        element.className =
+            "dependency ok";
+
+
+        element.innerHTML =
+
+            "<strong>Dependencies OK</strong>"
+            +
+            "<br>"
+            +
+            "All required Labistry functions "
+            +
+            "are available.";
+
+        return true;
+
+    }
+
+
+    element.className =
+        "dependency error";
+
+
+    element.innerHTML =
+
+        "<strong>Missing dependencies</strong>"
+        +
+        "<br><br>"
+        +
+        missing.join(
+            "<br>"
+        );
+
+
+    return false;
+
+}
+
+
+/* =========================================
+   CAPTURE RAW LABISTRY OUTPUT
+   ========================================= */
+
+function runLabistry(
+    data,
+    mu0
+) {
+
+    const input =
+        document.getElementById(
+            "dataInput"
+        );
+
+
+    const muInput =
+        document.getElementById(
+            "hypothesizedMean"
+        );
+
+
+    input.value =
+        data.join(",");
+
+
+    muInput.value =
+        String(mu0);
+
+
+    const originalFormatter =
+        window.formatStatistic;
+
+
+    const captured = [];
+
+
+    window.formatStatistic =
+        function(value) {
+
+            captured.push(
+                value
             );
 
-        const ref =
-            referenceOneSample(
-                test.data,
-                test.mu0
+
+            return String(
+                value
             );
 
-        const metrics = [
-            ["t statistic", lab.t, ref.t],
-            ["Degrees of freedom", lab.df, ref.df],
-            ["p-value", lab.p, ref.p]
-        ];
+        };
 
-        for (const [
-            metric,
-            labValue,
-            refValue
-        ] of metrics) {
 
-            total++;
+    try {
 
-            const difference =
-                Math.abs(
-                    labValue -
-                    refValue
+        window.calculateOneSampleTTest();
+
+    }
+    finally {
+
+        window.formatStatistic =
+            originalFormatter;
+
+    }
+
+
+    /*
+     * calculateOneSampleTTest()
+     * calls formatStatistic() in this order:
+     *
+     * 0 = mean
+     * 1 = sd
+     * 2 = sem
+     * 3 = hypothesizedMean
+     * 4 = difference
+     * 5 = t
+     * 6 = df
+     * 7 = p-value
+     */
+
+
+    if (
+        captured.length < 8
+    ) {
+
+        throw new Error(
+            "Controller did not produce the expected 8 numerical outputs."
+        );
+
+    }
+
+
+    return {
+
+        t:
+            Number(
+                captured[5]
+            ),
+
+        df:
+            Number(
+                captured[6]
+            ),
+
+        p:
+            Number(
+                captured[7]
+            )
+
+    };
+
+}
+
+
+/* =========================================
+   ADD RESULT ROW
+   ========================================= */
+
+function addResult(
+    testName,
+    metric,
+    labistry,
+    reference
+) {
+
+    const body =
+        document.getElementById(
+            "resultsBody"
+        );
+
+
+    const difference =
+        Math.abs(
+            labistry -
+            reference
+        );
+
+
+    const pass =
+        nearlyEqual(
+            labistry,
+            reference
+        );
+
+
+    const row =
+        document.createElement(
+            "tr"
+        );
+
+
+    row.innerHTML = `
+
+        <td>
+            ${testName}
+        </td>
+
+        <td>
+            ${metric}
+        </td>
+
+        <td>
+            ${displayNumber(labistry)}
+        </td>
+
+        <td>
+            ${displayNumber(reference)}
+        </td>
+
+        <td>
+            ${displayNumber(difference)}
+        </td>
+
+        <td
+            class="${pass ? "pass" : "fail"}"
+        >
+            ${pass ? "PASS" : "FAIL"}
+        </td>
+
+    `;
+
+
+    body.appendChild(
+        row
+    );
+
+
+    return pass;
+
+}
+
+
+/* =========================================
+   RUN STRESS TEST
+   ========================================= */
+
+function runStressTest() {
+
+    if (
+        !checkDependencies()
+    ) {
+
+        return;
+
+    }
+
+
+    let tests =
+        0;
+
+    let valid =
+        0;
+
+    let failures =
+        0;
+
+    let warnings =
+        0;
+
+
+    const body =
+        document.getElementById(
+            "resultsBody"
+        );
+
+
+    body.innerHTML =
+        "";
+
+
+    for (
+        const testCase of testCases
+    ) {
+
+        let labistry;
+
+        let reference;
+
+
+        try {
+
+            reference =
+                referenceOneSample(
+                    testCase.data,
+                    testCase.mu0
                 );
 
-            const pass =
-                nearlyEqual(
-                    labValue,
-                    refValue
+
+            labistry =
+                runLabistry(
+                    testCase.data,
+                    testCase.mu0
                 );
 
-            if (pass) {
-                valid++;
-            } else {
+        }
+        catch (error) {
+
+            console.error(
+                testCase.name,
+                error
+            );
+
+
+            const metrics = [
+
+                ["t", NaN, reference?.t],
+
+                ["df", NaN, reference?.df],
+
+                ["p-value", NaN, reference?.p]
+
+            ];
+
+
+            for (
+                const [
+                    metric,
+                    actual,
+                    expected
+                ]
+                of metrics
+            ) {
+
+                tests++;
+
                 failures++;
+
+
+                addResult(
+                    testCase.name,
+                    metric,
+                    actual,
+                    expected
+                );
+
             }
 
-            const row =
-                document.createElement(
-                    "tr"
+
+            continue;
+
+        }
+
+
+        const metrics = [
+
+            [
+                "t statistic",
+                labistry.t,
+                reference.t
+            ],
+
+            [
+                "Degrees of freedom",
+                labistry.df,
+                reference.df
+            ],
+
+            [
+                "p-value",
+                labistry.p,
+                reference.p
+            ]
+
+        ];
+
+
+        for (
+            const [
+                metric,
+                actual,
+                expected
+            ]
+            of metrics
+        ) {
+
+            tests++;
+
+
+            const pass =
+                addResult(
+                    testCase.name,
+                    metric,
+                    actual,
+                    expected
                 );
 
-            row.innerHTML = `
-                <td>${test.name}</td>
-                <td>${metric}</td>
-                <td>${formatNumber(labValue)}</td>
-                <td>${formatNumber(refValue)}</td>
-                <td>${formatNumber(difference)}</td>
-                <td class="${pass ? "pass" : "fail"}">
-                    ${pass ? "PASS" : "FAIL"}
-                </td>
-            `;
 
-            results.appendChild(row);
+            if (
+                pass
+            ) {
+
+                valid++;
+
+            }
+            else {
+
+                failures++;
+
+            }
+
         }
+
     }
 
-    summary.innerHTML = `
-        <strong>Tests:</strong> ${total}
-        &nbsp;&nbsp;
-        <strong>Valid:</strong> ${valid}
-        &nbsp;&nbsp;
-        <strong>Failures:</strong> ${failures}
-    `;
+
+    document.getElementById(
+        "tests"
+    ).textContent =
+        tests;
+
+
+    document.getElementById(
+        "valid"
+    ).textContent =
+        valid;
+
+
+    document.getElementById(
+        "failures"
+    ).textContent =
+        failures;
+
+
+    document.getElementById(
+        "warnings"
+    ).textContent =
+        warnings;
+
 }
+
+
+/* =========================================
+   START
+   ========================================= */
+
+window.addEventListener(
+    "load",
+    runStressTest
+);
+
 
 </script>
 
-
-<!--
-    IMPORTANT:
-    Place this harness in the same project context as Labistry,
-    or adjust the following script paths if the harness is stored
-    in a different directory.
--->
-
-<script src="../js/calculators/statistics/utils.js"></script>
-<script src="../js/calculators/statistics/math.js"></script>
-<script src="../js/calculators/statistics/one-sample.js"></script>
 
 </body>
 
