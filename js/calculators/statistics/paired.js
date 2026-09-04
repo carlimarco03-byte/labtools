@@ -210,6 +210,9 @@ function calculatePairedTTest(
 
 function calculatePairedTTestAnalysis() {
 
+    console.log("PAIRED TEST: function called");
+
+
     const groupA =
         parseGroupData(
             "pairedGroupAInput"
@@ -222,62 +225,44 @@ function calculatePairedTTestAnalysis() {
         );
 
 
-    if (
-        !groupA ||
-        !groupB
-    ) {
+    console.log("Group A:", groupA);
+    console.log("Group B:", groupB);
+
+
+    if (!groupA || !groupB) {
+
+        console.log(
+            "PAIRED TEST: parseGroupData failed"
+        );
 
         return;
 
     }
 
-
-    /* ===============================
-       MINIMUM SAMPLE SIZE
-       =============================== */
 
     if (
         groupA.length < 2 ||
         groupB.length < 2
     ) {
 
-        const result =
-            document.getElementById(
-                "result"
-            );
-
-
-        if (result) {
-
-            result.innerHTML = `
-
-                <div class="statistics-error">
-
-                    <strong>
-                        Each group must contain
-                        at least 2 observations.
-                    </strong>
-
-                </div>
-
-            `;
-
-        }
+        console.log(
+            "PAIRED TEST: insufficient observations"
+        );
 
         return;
 
     }
 
-
-    /* ===============================
-       EQUAL SAMPLE SIZE
-       =============================== */
 
     if (
         groupA.length !==
         groupB.length
     ) {
 
+        console.log(
+            "PAIRED TEST: unequal lengths"
+        );
+
         const result =
             document.getElementById(
                 "result"
@@ -287,16 +272,12 @@ function calculatePairedTTestAnalysis() {
         if (result) {
 
             result.innerHTML = `
-
                 <div class="statistics-error">
-
                     <strong>
                         Both groups must contain
                         the same number of observations.
                     </strong>
-
                 </div>
-
             `;
 
         }
@@ -306,9 +287,10 @@ function calculatePairedTTestAnalysis() {
     }
 
 
-    /* ===============================
-       CALCULATE TEST
-       =============================== */
+    console.log(
+        "PAIRED TEST: calling calculatePairedTTest"
+    );
+
 
     const result =
         calculatePairedTTest(
@@ -317,16 +299,22 @@ function calculatePairedTTestAnalysis() {
         );
 
 
+    console.log(
+        "PAIRED TEST RESULT:",
+        result
+    );
+
+
     if (!result) {
+
+        console.log(
+            "PAIRED TEST: calculation returned null"
+        );
 
         return;
 
     }
 
-
-    /* ===============================
-       OUTPUT
-       =============================== */
 
     const output =
         document.getElementById(
@@ -334,7 +322,17 @@ function calculatePairedTTestAnalysis() {
         );
 
 
+    console.log(
+        "PAIRED TEST OUTPUT ELEMENT:",
+        output
+    );
+
+
     if (!output) {
+
+        console.log(
+            "PAIRED TEST: result element not found"
+        );
 
         return;
 
@@ -349,109 +347,64 @@ function calculatePairedTTestAnalysis() {
                 Paired t-test
             </h3>
 
-
             <div class="result-row">
-
-                <span>
-                    Sample size
-                </span>
-
-                <strong>
-                    ${result.n}
-                </strong>
-
+                <span>Sample size</span>
+                <strong>${result.n}</strong>
             </div>
 
-
             <div class="result-row">
-
-                <span>
-                    Mean difference
-                </span>
-
+                <span>Mean difference</span>
                 <strong>
                     ${formatStatistic(
                         result.meanDifference
                     )}
                 </strong>
-
             </div>
 
-
             <div class="result-row">
-
-                <span>
-                    SD of differences
-                </span>
-
+                <span>SD of differences</span>
                 <strong>
                     ${formatStatistic(
                         result.standardDeviation
                     )}
                 </strong>
-
             </div>
 
-
             <div class="result-row">
-
-                <span>
-                    SEM of differences
-                </span>
-
+                <span>SEM of differences</span>
                 <strong>
                     ${formatStatistic(
                         result.sem
                     )}
                 </strong>
-
             </div>
 
-
             <div class="result-row">
-
-                <span>
-                    t statistic
-                </span>
-
+                <span>t statistic</span>
                 <strong>
                     ${formatStatistic(
                         result.tStatistic
                     )}
                 </strong>
-
             </div>
 
-
             <div class="result-row">
-
-                <span>
-                    Degrees of freedom
-                </span>
-
+                <span>Degrees of freedom</span>
                 <strong>
                     ${formatStatistic(
                         result.degreesOfFreedom
                     )}
                 </strong>
-
             </div>
 
-
             <div class="result-row">
-
-                <span>
-                    p-value
-                </span>
-
+                <span>p-value</span>
                 <strong>
                     ${formatStatistic(
                         result.pValue
                     )}
                 </strong>
-
             </div>
-
 
         </div>
 
