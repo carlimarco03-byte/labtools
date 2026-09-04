@@ -29,12 +29,9 @@ code{background:#eee;padding:2px 4px;border-radius:4px}
 <table><thead><tr><th>Test</th><th>Metric</th><th>Labistry</th><th>SciPy</th><th>Difference</th><th>Status</th></tr></thead><tbody id="results"></tbody></table>
 
 <!-- Adjust this path to your Labistry math/statistics controller if needed. -->
-<script src="../js/calculators/statistics/math.js"></script>
-<!-- IMPORTANT: load the file containing calculateMean/calculateVariance/calculateStandardDeviation/calculateSEM. -->
 <script src="../js/calculators/statistics/descriptive.js"></script>
-    <script src="../js/calculators/statistics/paired.js"></script>
-<!-- IMPORTANT: load the REAL Labistry file containing calculatePairedTTest(). -->
-<script src="../js/calculators/statistics/statistics.js"></script>
+<script src="../js/calculators/statistics/two-groups.js"></script>
+<script src="../js/calculators/statistics/paired.js"></script>
 <script>
 const ABS_TOL = 1e-10;
 const REL_TOL = 1e-8;
