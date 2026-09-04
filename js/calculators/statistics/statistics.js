@@ -31,12 +31,13 @@ function calculateStatistics() {
 
             break;
 
+
         case "one-sample":
-          
+
             calculateOneSampleTTest();
-          
+
             break;
-          
+
 
         case "two-group":
 
@@ -44,7 +45,8 @@ function calculateStatistics() {
 
             break;
 
-       case "paired":
+
+        case "paired":
 
             calculatePairedTTestAnalysis();
 
@@ -104,6 +106,18 @@ function resetStatistics() {
         );
 
 
+    const pairedGroupA =
+        document.getElementById(
+            "pairedGroupAInput"
+        );
+
+
+    const pairedGroupB =
+        document.getElementById(
+            "pairedGroupBInput"
+        );
+
+
     const result =
         document.getElementById(
             "result"
@@ -119,7 +133,7 @@ function resetStatistics() {
     }
 
 
-    /* Clear Group A */
+    /* Clear Two-Group inputs */
 
     if (groupA) {
 
@@ -128,26 +142,43 @@ function resetStatistics() {
     }
 
 
-    /* Clear Group B */
-
     if (groupB) {
 
         groupB.value = "";
 
     }
 
-   const hypothesizedMean =
-    document.getElementById(
-        "hypothesizedMean"
-    );
+
+    /* Clear Paired inputs */
+
+    if (pairedGroupA) {
+
+        pairedGroupA.value = "";
+
+    }
 
 
-if (hypothesizedMean) {
+    if (pairedGroupB) {
 
-    hypothesizedMean.value =
-        "0";
+        pairedGroupB.value = "";
 
-}
+    }
+
+
+    /* Reset hypothesized mean */
+
+    const hypothesizedMean =
+        document.getElementById(
+            "hypothesizedMean"
+        );
+
+
+    if (hypothesizedMean) {
+
+        hypothesizedMean.value =
+            "0";
+
+    }
 
 
     /* Reset results */
@@ -188,24 +219,23 @@ document.addEventListener(
                 "twoGroupInputs"
             );
 
-       const oneSampleInputs =
-           document.getElementById(
-               "oneSampleInputs"
-           );
 
-       const pairedInputs =
-           document.getElementById(
-               "pairedInputs"
-           );
+        const oneSampleInputs =
+            document.getElementById(
+                "oneSampleInputs"
+            );
+
+
+        const pairedInputs =
+            document.getElementById(
+                "pairedInputs"
+            );
 
 
         /*
          * If the current HTML does not yet
-         * contain these elements, simply stop.
-         *
-         * This allows the JavaScript files
-         * to be prepared before the HTML
-         * is updated.
+         * contain the analysis selector or
+         * two-group container, stop.
          */
 
         if (
@@ -222,99 +252,112 @@ document.addEventListener(
            UPDATE ANALYSIS INTERFACE
            ================================= */
 
-       function updateAnalysisInterface() {
-
-    /* ================================
-       TWO-GROUP INPUTS
-       ================================ */
-
-    if (
-        analysisType.value ===
-        "two-group"
-    ) {
-
-        twoGroupInputs.style.display =
-            "block";
+        function updateAnalysisInterface() {
 
 
-        if (input) {
+            /* ================================
+               TWO-GROUP INPUTS
+               ================================ */
 
-            input.parentElement.style.display =
-                "none";
+            if (
+                analysisType.value ===
+                "two-group"
+            ) {
+
+                twoGroupInputs.style.display =
+                    "block";
+
+
+                if (input) {
+
+                    input.parentElement.style.display =
+                        "none";
+
+                }
+
+            } else {
+
+                twoGroupInputs.style.display =
+                    "none";
+
+            }
+
+
+            /* ================================
+               ONE-SAMPLE INPUTS
+               ================================ */
+
+            if (oneSampleInputs) {
+
+                if (
+                    analysisType.value ===
+                    "one-sample"
+                ) {
+
+                    oneSampleInputs.style.display =
+                        "block";
+
+                } else {
+
+                    oneSampleInputs.style.display =
+                        "none";
+
+                }
+
+            }
+
+
+            /* ================================
+               PAIRED INPUTS
+               ================================ */
+
+            if (pairedInputs) {
+
+                if (
+                    analysisType.value ===
+                    "paired"
+                ) {
+
+                    pairedInputs.style.display =
+                        "block";
+
+                } else {
+
+                    pairedInputs.style.display =
+                        "none";
+
+                }
+
+            }
+
+
+            /* ================================
+               MAIN DATA INPUT
+               ================================ */
+
+            if (input) {
+
+                if (
+                    analysisType.value ===
+                        "two-group" ||
+                    analysisType.value ===
+                        "paired"
+                ) {
+
+                    input.parentElement.style.display =
+                        "none";
+
+                } else {
+
+                    input.parentElement.style.display =
+                        "block";
+
+                }
+
+            }
 
         }
 
-    } else {
-
-        twoGroupInputs.style.display =
-            "none";
-
-
-        if (input) {
-
-            input.parentElement.style.display =
-                "block";
-
-        }
-
-    }
-
-
-    /* ================================
-       ONE-SAMPLE INPUTS
-       ================================ */
-
-    if (oneSampleInputs) {
-
-        if (
-            analysisType.value ===
-            "one-sample"
-        ) {
-
-            oneSampleInputs.style.display =
-                "block";
-
-        } else {
-
-            oneSampleInputs.style.display =
-                "none";
-
-        }
-
-    }
-
-}
-
-       /* ================================
-   PAIRED INPUTS
-   ================================ */
-
-if (pairedInputs) {
-
-    if (
-        analysisType.value ===
-        "paired"
-    ) {
-
-        pairedInputs.style.display =
-            "block";
-
-
-        if (input) {
-
-            input.parentElement.style.display =
-                "none";
-
-        }
-
-    } else {
-
-        pairedInputs.style.display =
-            "none";
-
-    }
-
-}
 
         /* =================================
            ANALYSIS TYPE CHANGE
