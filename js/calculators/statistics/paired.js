@@ -115,64 +115,94 @@ function calculatePairedTTest(
 
 
     /* ===============================
-   T STATISTIC
-   =============================== */
+       T STATISTIC
+       =============================== */
 
-let tStatistic;
+    let tStatistic;
 
 
-if (sem === 0) {
+    if (sem === 0) {
 
-    if (meanDifference === 0) {
+        if (meanDifference === 0) {
 
-        tStatistic =
-            NaN;
+            tStatistic =
+                NaN;
+
+        } else {
+
+            tStatistic =
+                meanDifference > 0
+                    ? Infinity
+                    : -Infinity;
+
+        }
 
     } else {
 
         tStatistic =
-            meanDifference > 0
-                ? Infinity
-                : -Infinity;
+            meanDifference /
+            sem;
 
     }
 
-} else {
 
-    tStatistic =
-        meanDifference /
-        sem;
+    /* ===============================
+       P-VALUE
+       =============================== */
+
+    let pValue;
+
+
+    if (Number.isFinite(tStatistic)) {
+
+        pValue =
+            calculateTTestPValue(
+                Math.abs(tStatistic),
+                degreesOfFreedom
+            );
+
+    } else if (
+        tStatistic === Infinity ||
+        tStatistic === -Infinity
+    ) {
+
+        pValue =
+            0;
+
+    } else {
+
+        pValue =
+            NaN;
+
+    }
+
+
+    /* ===============================
+       RESULT
+       =============================== */
+
+    return {
+
+        n,
+
+        differences,
+
+        meanDifference,
+
+        standardDeviation,
+
+        sem,
+
+        tStatistic,
+
+        degreesOfFreedom,
+
+        pValue
+
+    };
 
 }
 
-
-/* ===============================
-   P-VALUE
-   =============================== */
-
-let pValue;
-
-
-if (Number.isFinite(tStatistic)) {
-
-    pValue =
-        calculateTTestPValue(
-            Math.abs(tStatistic),
-            degreesOfFreedom
-        );
-
-} else if (
-    tStatistic === Infinity ||
-    tStatistic === -Infinity
-) {
-
-    pValue = 0;
-
-} else {
-
-    pValue = NaN;
-
-}
 
 /* ===================================
    PAIRED T-TEST CONTROLLER
@@ -202,15 +232,46 @@ function calculatePairedTTestAnalysis() {
     }
 
 
+    /* ===============================
+       MINIMUM SAMPLE SIZE
+       =============================== */
+
     if (
         groupA.length < 2 ||
         groupB.length < 2
     ) {
 
+        const result =
+            document.getElementById(
+                "result"
+            );
+
+
+        if (result) {
+
+            result.innerHTML = `
+
+                <div class="statistics-error">
+
+                    <strong>
+                        Each group must contain
+                        at least 2 observations.
+                    </strong>
+
+                </div>
+
+            `;
+
+        }
+
         return;
 
     }
 
+
+    /* ===============================
+       EQUAL SAMPLE SIZE
+       =============================== */
 
     if (
         groupA.length !==
@@ -245,6 +306,10 @@ function calculatePairedTTestAnalysis() {
     }
 
 
+    /* ===============================
+       CALCULATE TEST
+       =============================== */
+
     const result =
         calculatePairedTTest(
             groupA,
@@ -258,6 +323,10 @@ function calculatePairedTTestAnalysis() {
 
     }
 
+
+    /* ===============================
+       OUTPUT
+       =============================== */
 
     const output =
         document.getElementById(
