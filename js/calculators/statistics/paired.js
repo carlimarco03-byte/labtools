@@ -115,47 +115,64 @@ function calculatePairedTTest(
 
 
     /* ===============================
-       T STATISTIC
-       =============================== */
+   T STATISTIC
+   =============================== */
 
-    const tStatistic =
+let tStatistic;
+
+
+if (sem === 0) {
+
+    if (meanDifference === 0) {
+
+        tStatistic =
+            NaN;
+
+    } else {
+
+        tStatistic =
+            meanDifference > 0
+                ? Infinity
+                : -Infinity;
+
+    }
+
+} else {
+
+    tStatistic =
         meanDifference /
         sem;
 
+}
 
-    /* ===============================
-       P-VALUE
-       =============================== */
 
-    const pValue =
+/* ===============================
+   P-VALUE
+   =============================== */
+
+let pValue;
+
+
+if (Number.isFinite(tStatistic)) {
+
+    pValue =
         calculateTTestPValue(
             Math.abs(tStatistic),
             degreesOfFreedom
         );
 
+} else if (
+    tStatistic === Infinity ||
+    tStatistic === -Infinity
+) {
 
-    return {
+    pValue = 0;
 
-        n,
+} else {
 
-        differences,
-
-        meanDifference,
-
-        standardDeviation,
-
-        sem,
-
-        tStatistic,
-
-        degreesOfFreedom,
-
-        pValue
-
-    };
+    pValue = NaN;
 
 }
-
 
 /* ===================================
    PAIRED T-TEST CONTROLLER
